@@ -1,0 +1,43 @@
+@reference "tailwindcss";
+
+/* Main layout */
+.container {
+  @apply w-full relative flex flex-col gap-6;
+}
+
+/* Section title */
+.title {
+  @apply text-lg font-semibold text-(--text-primary) tracking-tight;
+}
+
+/* Timeline container */
+.timelineContainer {
+  @apply flex flex-col gap-4;
+}
+
+/* Each log card wrapper */
+.logWrapper {
+  @apply relative transition-all duration-300 hover:-translate-y-0.5;
+}
+
+/* Optional dot (modern minimalist) */
+.logWrapper::before {
+  content: "";
+  @apply absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-(--accent-color) opacity-70;
+}
+
+/* Empty state */
+.empty {
+  @apply flex flex-col items-center justify-center text-center 
+  px-6 py-16 rounded-xl border border-(--border-color)
+  bg-(--background-secondary) text-(--text-secondary)
+  shadow-sm transition-all duration-300;
+}
+
+.empty:hover {
+  @apply border-(--accent-color) shadow-md;
+}
+
+.empty p {
+  @apply text-base font-medium m-0 opacity-80;
+}

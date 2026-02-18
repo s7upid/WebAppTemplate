@@ -1,0 +1,15 @@
+{
+  "name": "test-coverage-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Coverage extraction and badge update scripts",
+  "scripts": {
+    "extract": "node 4-extract-results.js",
+    "badges": "node 5-update-readme-badges.js"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.5.3"
+  }
+}
+

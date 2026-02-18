@@ -1,0 +1,46 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "description": "Full-stack web app template — .NET backend + React/Vite frontend",
+  "private": true,
+  "scripts": {
+    "setup": "npm run setup:client && npm run setup:server",
+    "setup:client": "cd Template.Client && npm install",
+    "setup:server": "dotnet restore Template.Server/Template.Server.csproj",
+
+    "dev": "echo \"Run 'npm run dev:client' and 'npm run dev:server' in separate terminals\"",
+    "dev:client": "cd Template.Client && npm run dev",
+    "dev:server": "dotnet run --project Template.Server/Template.Server.csproj",
+
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd Template.Client && npm run build",
+    "build:server": "dotnet build Template.Server/Template.Server.csproj",
+    "build:all": "dotnet build Template.slnx",
+
+    "test": "npm run test:client && npm run test:server",
+    "test:client": "cd Template.Client && npm test",
+    "test:server": "dotnet test Template.Tests/Template.Tests.csproj",
+    "test:client:watch": "cd Template.Client && npm run test:watch",
+    "test:client:coverage": "cd Template.Client && npm run test:coverage",
+
+    "lint": "cd Template.Client && npm run lint",
+
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:build": "docker compose build --no-cache",
+    "docker:logs": "docker compose logs -f",
+    "docker:reset": "docker compose down -v && docker compose up -d",
+
+    "db:migrate": "dotnet ef database update --project Template.Data --startup-project Template.Server",
+    "db:migration:add": "dotnet ef migrations add --project Template.Data --startup-project Template.Server",
+
+    "clean": "npm run clean:client && npm run clean:server",
+    "clean:client": "cd Template.Client && npm run clean",
+    "clean:server": "dotnet clean Template.slnx",
+    "clean:all": "npm run clean && cd Template.Client && rimraf node_modules"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}

@@ -1,0 +1,115 @@
+@reference "tailwindcss";
+
+.header {
+  @apply flex items-center justify-between mb-4;
+}
+.sectionTitle {
+  @apply text-base font-semibold;
+}
+:global(.dark) .sectionTitle {
+  @apply text-gray-100;
+}
+.usersIcon {
+  @apply h-5 w-5 text-gray-500;
+}
+:global(.dark) .usersIcon {
+  @apply text-gray-300;
+}
+
+.loadingContainer {
+  @apply flex items-center justify-center min-h-48;
+}
+.emptyContainer {
+  @apply flex flex-col items-center justify-center p-6 text-center;
+}
+.emptyIcon {
+  @apply h-8 w-8 text-gray-400 mb-2;
+}
+:global(.dark) .emptyIcon {
+  @apply text-gray-500;
+}
+.emptyText {
+  @apply text-sm text-gray-500;
+}
+:global(.dark) .emptyText {
+  @apply text-gray-400;
+}
+
+.usersGrid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+.userCard {
+  @apply bg-white border border-gray-200 rounded-lg p-4 cursor-pointer overflow-hidden transform-gpu transition-all duration-200 ease-out hover:shadow-lg hover:scale-[1.02] hover:-translate-y-0.5 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2;
+}
+:global(.dark) .userCard {
+  @apply bg-gray-800 border-gray-700;
+}
+.userCard:hover {
+  @apply bg-gray-50;
+}
+:global(.dark) .userCard:hover {
+  @apply bg-gray-700;
+}
+:global(.dark) .userCard {
+  @apply border-gray-700;
+}
+.cardContent {
+  @apply flex items-start gap-3;
+}
+.avatar {
+  @apply w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center;
+}
+:global(.dark) .avatar {
+  @apply bg-gray-700;
+}
+.avatarImage {
+  @apply w-12 h-12 rounded-full object-cover border-2 border-gray-200;
+}
+:global(.dark) .avatarImage {
+  @apply border-gray-600;
+}
+.avatarIcon {
+  @apply w-6 h-6 text-gray-500;
+}
+:global(.dark) .avatarIcon {
+  @apply text-gray-300;
+}
+.info {
+  @apply flex-1 min-w-0;
+}
+.name {
+  @apply text-sm font-medium text-gray-900 truncate;
+}
+:global(.dark) .name {
+  @apply text-gray-100;
+}
+.emailRow {
+  @apply flex items-center gap-2 text-sm text-gray-500;
+}
+:global(.dark) .emailRow {
+  @apply text-gray-400;
+}
+.emailTruncate {
+  @apply truncate;
+}
+.emailIcon {
+  @apply w-3.5 h-3.5;
+}
+.actions {
+  @apply mt-2;
+}
+.statusBadge {
+  @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+}
+.statusActive {
+  @apply bg-green-100 text-green-800;
+}
+:global(.dark) .statusActive {
+  @apply bg-green-900/30 text-green-300;
+}
+.statusInactive {
+  @apply bg-gray-100 text-gray-800;
+}
+:global(.dark) .statusInactive {
+  @apply bg-gray-700 text-gray-300;
+}

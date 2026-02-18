@@ -1,0 +1,33 @@
+@reference "tailwindcss";
+
+.form {
+  @apply space-y-6;
+}
+
+.formContent {
+  @apply space-y-6;
+}
+
+.formFields {
+  @apply space-y-4;
+}
+
+.field {
+  @apply space-y-2;
+}
+
+.label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+.input {
+  @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+}
+
+.errorText {
+  @apply text-sm text-red-600;
+}
+
+.errorAlert {
+  @apply p-4 bg-red-50 border border-red-200 rounded-md text-red-800;
+}

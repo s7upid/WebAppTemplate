@@ -1,0 +1,32 @@
+@reference "tailwindcss";
+
+.container {
+  @apply w-full;
+}
+.content {
+  @apply max-w-md mx-auto text-center p-6;
+}
+.iconBg {
+  @apply w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3;
+}
+:global(.dark) .iconBg {
+  @apply bg-red-900/20;
+}
+.icon {
+  @apply w-5 h-5 text-red-600;
+}
+:global(.dark) .icon {
+  @apply text-red-400;
+}
+.title {
+  @apply text-lg font-semibold;
+}
+.description {
+  @apply text-sm text-gray-500;
+}
+.details {
+  @apply mt-2 flex items-center justify-center gap-2 text-sm text-gray-500;
+}
+.detailsIcon {
+  @apply w-4 h-4;
+}

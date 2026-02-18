@@ -1,0 +1,69 @@
+@reference "tailwindcss";
+
+.header {
+  @apply flex items-center justify-between mb-4;
+}
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium;
+}
+.badgeSystem {
+  @apply bg-purple-100 text-purple-800;
+}
+:global(.dark) .badgeSystem {
+  @apply bg-purple-900/30 text-purple-300;
+}
+.badgeCustom {
+  @apply bg-gray-100 text-gray-800;
+}
+:global(.dark) .badgeCustom {
+  @apply bg-gray-700 text-gray-300;
+}
+.emptyState {
+  @apply text-center text-gray-500 py-4;
+}
+:global(.dark) .emptyState {
+  @apply text-gray-400;
+}
+.sectionTitle {
+  @apply text-base font-semibold;
+}
+:global(.dark) .sectionTitle {
+  @apply text-gray-100;
+}
+
+.grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+.item {
+  @apply bg-white flex items-start gap-3 p-3 rounded-lg border border-gray-200 overflow-hidden transform-gpu transition-all duration-200 ease-out hover:shadow-lg hover:scale-[1.02] hover:-translate-y-0.5 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2;
+}
+:global(.dark) .item {
+  @apply bg-gray-800 border-gray-700;
+}
+.item:hover {
+  @apply bg-gray-50;
+}
+:global(.dark) .item:hover {
+  @apply bg-gray-700;
+}
+:global(.dark) .item {
+  @apply border-gray-700;
+}
+.checkIcon {
+  @apply h-5 w-5 text-green-500 mt-0.5;
+}
+.itemContent {
+  @apply flex-1 min-w-0;
+}
+.permName {
+  @apply text-sm font-medium;
+}
+:global(.dark) .permName {
+  @apply text-gray-100;
+}
+.permKey {
+  @apply text-xs text-gray-500;
+}
+:global(.dark) .permKey {
+  @apply text-gray-400;
+}

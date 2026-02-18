@@ -1,0 +1,227 @@
+@reference "tailwindcss";
+
+.container {
+  @apply min-h-screen bg-gray-50 flex flex-col;
+}
+:global(.dark) .container {
+  @apply bg-gray-800;
+}
+
+.mobileSidebarOverlay {
+  @apply fixed inset-0 z-40 lg:hidden;
+}
+.sidebarOverlay {
+  @apply fixed inset-0 bg-black/30;
+}
+:global(.dark) .sidebarOverlay {
+  @apply bg-black/50;
+}
+.sidebar {
+  @apply fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 z-50;
+}
+:global(.dark) .sidebar {
+  @apply bg-gray-800 border-gray-600;
+}
+
+.desktopSidebar {
+  @apply hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col;
+  @apply transition-all duration-300;
+}
+.desktopSidebarCollapsed {
+  @apply lg:w-16;
+}
+.desktopSidebarContent {
+  @apply flex flex-col flex-grow bg-white border-r border-gray-200;
+}
+:global(.dark) .desktopSidebarContent {
+  @apply bg-gray-800 border-gray-600;
+}
+.desktopHeader {
+  @apply flex h-16 items-center px-4 justify-between;
+}
+.desktopNav {
+  @apply flex-1 space-y-1 px-2 py-4;
+}
+
+/* Sidebar toggle button */
+.sidebarToggleBtn {
+  @apply p-1.5 rounded-lg transition-colors;
+  @apply text-gray-500 hover:bg-gray-100 hover:text-gray-700;
+}
+:global(.dark) .sidebarToggleBtn {
+  @apply text-gray-400 hover:bg-gray-700 hover:text-gray-200;
+}
+
+/* Collapsed nav link */
+.navLinkCollapsed {
+  @apply flex items-center justify-center p-2 rounded-md transition-colors;
+  @apply text-gray-600 hover:bg-gray-50 hover:text-gray-900;
+}
+:global(.dark) .navLinkCollapsed {
+  @apply text-gray-300 hover:bg-gray-700 hover:text-white;
+}
+.navIconCollapsed {
+  @apply h-5 w-5;
+}
+.desktopSidebarFooter {
+  @apply px-2 py-2 border-t border-gray-200;
+}
+:global(.dark) .desktopSidebarFooter {
+  @apply border-gray-700;
+}
+.desktopFooterLink {
+  @apply flex items-center px-2 py-1 text-xs text-gray-500 hover:text-gray-700 transition-colors;
+}
+:global(.dark) .desktopFooterLink {
+  @apply text-gray-400 hover:text-gray-200;
+}
+
+.sidebarTitle {
+  @apply text-lg font-semibold;
+}
+:global(.dark) .sidebarTitle {
+  @apply text-white;
+}
+.navLink {
+  @apply flex items-center px-2 py-2 text-sm text-gray-600 rounded-md hover:bg-gray-50 hover:text-gray-900;
+}
+:global(.dark) .navLink {
+  @apply text-gray-300 hover:bg-gray-700 hover:text-white;
+}
+.navLinkActive {
+  @apply bg-blue-100 text-blue-900;
+}
+:global(.dark) .navLinkActive {
+  @apply bg-blue-900 text-blue-100;
+}
+.navIcon {
+  @apply mr-3 h-5 w-5;
+}
+
+.mainContent {
+  @apply lg:pl-64 flex-1 flex flex-col;
+  @apply transition-all duration-300;
+}
+.mainContentCollapsed {
+  @apply lg:pl-16;
+}
+
+.topBar {
+  @apply sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8;
+}
+:global(.dark) .topBar {
+  @apply border-gray-600 bg-gray-700;
+}
+.topBarContent {
+  @apply flex flex-1 gap-x-4 self-stretch lg:gap-x-6;
+}
+.topBarSpacer {
+  @apply flex flex-1;
+}
+.topBarActions {
+  @apply flex items-center gap-x-4 lg:gap-x-6;
+}
+
+.mobileMenuBtn {
+  @apply -m-2.5 p-2.5 text-gray-700 hover:text-gray-900 lg:hidden;
+}
+:global(.dark) .mobileMenuBtn {
+  @apply text-gray-300 hover:text-white;
+}
+.mobileMenuIcon {
+  @apply h-6 w-6;
+}
+.mobileCloseIcon {
+  @apply h-6 w-6;
+}
+.mobileNav {
+  @apply flex-1 space-y-1 px-2 py-4;
+}
+
+.actionBtn {
+  @apply px-3 py-1 text-sm inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 hover:text-gray-900;
+}
+:global(.dark) .actionBtn {
+  @apply text-gray-300 hover:text-white;
+}
+
+/* Submenu styles */
+.navItemContainer {
+  @apply relative w-full;
+}
+
+.navItemWithSubmenu {
+  @apply flex items-center justify-between w-full;
+}
+
+.navItemContent {
+  @apply flex items-center flex-1;
+}
+
+.submenuToggle {
+  @apply ml-auto transition-transform duration-200 flex-shrink-0;
+}
+
+.submenuToggleOpen {
+  @apply rotate-90;
+}
+
+.submenu {
+  @apply ml-4 mt-1 space-y-1 overflow-hidden transition-all duration-200;
+}
+
+.submenuOpen {
+  @apply max-h-96 opacity-100;
+}
+
+.submenuClosed {
+  @apply max-h-0 opacity-0;
+}
+
+.submenuLink {
+  @apply flex items-center px-2 py-2 text-sm text-gray-500 rounded-md hover:bg-gray-50 hover:text-gray-700 transition-colors w-full;
+}
+
+:global(.dark) .submenuLink {
+  @apply text-gray-400 hover:bg-gray-700 hover:text-gray-300;
+}
+
+.submenuLinkActive {
+  @apply bg-blue-50 text-blue-700;
+}
+
+:global(.dark) .submenuLinkActive {
+  @apply bg-blue-900 text-blue-200;
+}
+
+/* Mobile sidebar visibility */
+.mobileSidebarVisible {
+  @apply block;
+}
+
+.mobileSidebarHidden {
+  @apply hidden;
+}
+
+.pageContent {
+  @apply py-6;
+}
+.pageContainer {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.footer {
+  @apply border-t border-gray-200 bg-white mt-auto;
+}
+:global(.dark) .footer {
+  @apply border-gray-700 bg-gray-800;
+}
+.footerContent {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4;
+}
+.footerCopyright {
+  @apply text-center text-sm text-gray-500;
+}
+:global(.dark) .footerCopyright {
+  @apply text-gray-400;
+}

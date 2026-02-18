@@ -1,0 +1,87 @@
+@reference "tailwindcss";
+
+/* Modern Variant */
+.modern {
+  @apply bg-(--card-background)/60 backdrop-blur-xl border border-(--border-color)
+  rounded-xl p-4 transition-all duration-300 ease-in-out cursor-pointer
+  shadow-sm hover:shadow-lg hover:border-(--accent-color) hover:-translate-y-1 flex flex-col gap-3;
+}
+
+.header {
+  @apply flex items-center gap-3;
+}
+
+.iconWrapper {
+  @apply shrink-0 w-10 h-10 rounded-full flex items-center justify-center;
+}
+
+.headerContent {
+  @apply flex-1 min-w-0;
+}
+
+.modern .title {
+  @apply text-base font-semibold text-(--text-primary) leading-tight;
+}
+
+.metaItem {
+  @apply flex items-center gap-1.5 text-sm text-(--text-secondary) mt-0.5;
+}
+
+.description {
+  @apply text-sm leading-relaxed text-(--text-secondary) my-1;
+}
+
+.footer {
+  @apply flex items-center justify-between gap-4 pt-3 border-t border-(--border-color);
+}
+
+.modern .timestamp {
+  @apply flex items-center gap-1.5 text-xs text-(--text-secondary);
+}
+
+.statusBadge {
+  @apply flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+}
+
+.statusBadge.success {
+  @apply bg-(--success-color)/10 text-(--success-color);
+}
+
+.statusBadge.error {
+  @apply bg-(--error-color)/10 text-(--error-color);
+}
+
+/* Compact Variant */
+.compact {
+  @apply flex items-center justify-between gap-4 p-3 rounded-lg border
+  border-transparent bg-(--background-secondary)/50
+  transition-all duration-200 cursor-pointer hover:border-(--accent-color);
+}
+
+.compact.error {
+  @apply hover:border-(--error-color);
+}
+
+.compactMain {
+  @apply flex items-center gap-3 min-w-0;
+}
+
+.compact .title {
+  @apply text-sm font-medium text-(--text-primary) truncate;
+}
+
+.user {
+  @apply text-xs text-(--text-secondary) hidden sm:block truncate;
+}
+
+.compactMeta {
+  @apply flex items-center gap-3 text-xs text-(--text-secondary) shrink-0;
+}
+
+.successIcon {
+  @apply text-(--success-color);
+}
+
+.errorIcon {
+  @apply text-(--error-color);
+}

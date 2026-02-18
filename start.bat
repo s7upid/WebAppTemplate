@@ -1,0 +1,38 @@
+@echo off
+echo ========================================
+echo Starting Application
+echo ========================================
+echo.
+
+echo [1/3] Starting PostgreSQL Docker container...
+docker compose up -d db
+if %ERRORLEVEL% neq 0 (
+    echo ERROR: Failed to start PostgreSQL container!
+    echo Make sure Docker Desktop is running.
+    pause
+    exit /b 1
+)
+
+echo Waiting for PostgreSQL to be ready...
+:wait_db
+docker compose exec db pg_isready -U postgres -d template >nul 2>&1
+if %ERRORLEVEL% neq 0 (
+    timeout /t 2 /nobreak >nul
+    goto wait_db
+)
+echo PostgreSQL is ready on port 5444.
+echo.
+
+echo [2/3] Starting .NET Backend Server...
+start "Template Server" cmd /k "cd /d %~dp0 && dotnet run --project Template.Server/Template.Server.csproj"
+
+echo [3/3] Starting Vite Frontend Dev Server...
+start "Template Client" cmd /k "cd /d %~dp0Template.Client && npm run dev"
+
+echo.
+echo ========================================
+echo All services are starting:
+echo   Database: localhost:5444 (PostgreSQL)
+echo   Backend:  http://localhost:5249
+echo   Frontend: http://localhost:3000
+echo ========================================

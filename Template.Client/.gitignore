@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Production builds
+/build
+/dist
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage and test output
+coverage/
+*.lcov
+.nyc_output/
+.c8_output/
+coverage-report.json
+coverage-summary.json
+test-results/
+test-reports/
+test-results.txt
+
+# Cypress artifacts
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+cypress/reports/
+cypress/results/
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional caches
+.npm
+.eslintcache
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor
+.vscode/
+.idea/
+*.suo
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.pem
+tmp/
+temp/

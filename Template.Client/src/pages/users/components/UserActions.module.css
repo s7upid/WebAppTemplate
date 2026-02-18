@@ -1,0 +1,31 @@
+@reference "tailwindcss";
+
+.container {
+  @apply space-y-8;
+}
+
+.sectionHeader {
+  @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+:global(.dark) .sectionHeader {
+  @apply text-gray-100;
+}
+
+/* Quick Actions Card */
+.quickActionsCard {
+  @apply bg-white rounded-lg border border-gray-200 p-6;
+}
+
+:global(.dark) .quickActionsCard {
+  @apply bg-gray-700 border-gray-600;
+}
+
+/* Danger Zone Card */
+.dangerZoneCard {
+  @apply bg-white rounded-lg border border-gray-200 p-6;
+}
+
+:global(.dark) .dangerZoneCard {
+  @apply bg-gray-700 border-gray-600;
+}

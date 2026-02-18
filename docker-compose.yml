@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:15
+    container_name: template-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: template
+    ports:
+      # Expose 5432 (internal) to 5444 (host external)
+      - "5444:5432"
+    command: postgres -c 'listen_addresses=*'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d template"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  backend:
+    build:
+      context: ../
+      dockerfile: Template/Template.Server/Dockerfile
+    container_name: template-server
+    ports:
+      - "5249:5249"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Configure ASP.NET Core to listen on port 5249
+      ASPNETCORE_URLS: "http://+:5249"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      # Use internal port 5432 for PostgreSQL connection
+      ConnectionStrings__DbConnectionString: "Host=db;Port=5432;Database=template;Username=postgres;Password=example;Timeout=1024;Command Timeout=6000;Include Error Detail=true;"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5249/api/Auth/me || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./Template.Client
+      dockerfile: Dockerfile
+    container_name: template-client
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy

@@ -1,0 +1,95 @@
+@reference "tailwindcss";
+
+.userInfo {
+  @apply flex items-center gap-x-2;
+}
+
+.userIcon {
+  @apply h-5 w-5 text-blue-600;
+}
+:global(.dark) .userIcon {
+  @apply text-blue-400;
+}
+
+.userChevron {
+  @apply w-4 h-4 text-gray-400;
+}
+:global(.dark) .userChevron {
+  @apply text-gray-500;
+}
+
+.userMenuButton {
+  @apply flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors;
+}
+:global(.dark) .userMenuButton {
+  @apply hover:bg-gray-700;
+}
+
+.relative {
+  @apply relative;
+}
+
+.hiddenLg {
+  @apply hidden lg:block;
+}
+
+.hiddenLgBlock {
+  @apply hidden lg:block;
+}
+
+.logoutBtn {
+  @apply flex items-center gap-x-2 text-sm text-gray-700 hover:text-gray-900;
+}
+:global(.dark) .logoutBtn {
+  @apply text-gray-300 hover:text-white;
+}
+
+.logoutIcon {
+  @apply h-4 w-4;
+}
+
+.userDropdown {
+  @apply absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50;
+}
+:global(.dark) .userDropdown {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.userDropdownContent {
+  @apply py-1;
+}
+
+.userDropdownItem {
+  @apply w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 transition-colors;
+}
+:global(.dark) .userDropdownItem {
+  @apply text-gray-200 hover:bg-gray-600;
+}
+
+.dropdownIcon {
+  @apply w-4 h-4 mr-2;
+}
+:global(.dark) .dropdownIcon {
+  @apply w-4 h-4;
+}
+
+.userAvatar {
+  @apply flex h-8 w-8 items-center justify-center rounded-full bg-blue-100;
+}
+:global(.dark) .userAvatar {
+  @apply bg-blue-900;
+}
+
+.userName {
+  @apply text-sm font-medium text-gray-900;
+}
+:global(.dark) .userName {
+  @apply text-white;
+}
+
+.userEmail {
+  @apply text-xs text-gray-500;
+}
+:global(.dark) .userEmail {
+  @apply text-gray-400;
+}

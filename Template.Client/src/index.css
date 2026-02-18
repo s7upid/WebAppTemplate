@@ -1,0 +1,335 @@
+@import "tailwindcss";
+
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+.main-content {
+  @apply py-6;
+}
+
+.space-y-6 {
+  @apply space-y-6;
+}
+
+.pending-user-actions {
+  @apply flex gap-2;
+}
+
+.pending-user-item {
+  @apply flex flex-col h-full;
+}
+
+.pending-user-item .card {
+  @apply flex-1;
+}
+
+.flex-center-gap-1 {
+  @apply flex items-center gap-1;
+}
+
+.flex-center-mt-4 {
+  @apply flex justify-center mt-4;
+}
+
+.input-label {
+  @apply block font-medium text-gray-700 text-sm mb-1;
+}
+
+.dark .input-label {
+  @apply text-gray-200;
+}
+
+.input-field {
+  @apply bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md text-gray-900 w-full shadow-sm px-3 py-2 py-2.5 rounded-lg resize-none;
+}
+
+.dark .input-field {
+  @apply bg-gray-800 border-gray-600 text-gray-100;
+}
+
+.input-field:disabled {
+  @apply bg-gray-100 border-gray-200 cursor-not-allowed text-gray-500;
+}
+
+.input-error {
+  @apply text-red-600 text-xs;
+}
+
+.password-input {
+  @apply relative;
+}
+
+.password-toggle-btn {
+  @apply absolute inset-y-0 right-2  items-center mt-6 cursor-pointer;
+}
+
+.dark .password-toggle-btn {
+  @apply text-gray-400;
+}
+
+.dark .password-toggle-btn:hover {
+  @apply text-gray-300;
+}
+
+.modal-actions {
+  @apply flex justify-end pt-4 space-x-3;
+}
+
+.modal-user-info {
+  @apply bg-gray-50 p-4 rounded-lg;
+}
+
+.modal-user-avatar {
+  @apply bg-blue-100 flex h-10 items-center justify-center rounded-full w-10;
+}
+
+.modal-user-avatar-text {
+  @apply font-medium text-blue-600 text-sm;
+}
+
+/* Centered auth form container */
+.auth-form-container {
+  @apply w-full max-w-md space-y-8 mx-auto min-h-[calc(100vh-4rem)] flex flex-col justify-center py-8;
+}
+
+.form-button-full {
+  @apply w-full;
+}
+
+.form-footer {
+  @apply mt-6 text-center;
+}
+
+.text-sm-secondary {
+  @apply text-sm text-gray-600;
+}
+
+.dark .text-sm-secondary {
+  @apply text-gray-400;
+}
+
+.text-sm-secondary strong {
+  @apply font-semibold text-gray-900;
+}
+
+.dark .text-sm-secondary strong {
+  @apply text-gray-100;
+}
+
+.text-sm-secondary-with-margin {
+  @apply text-sm text-gray-600 mt-1;
+}
+
+.dark .text-sm-secondary-with-margin {
+  @apply text-gray-400;
+}
+
+.text-sm-secondary-with-margin strong {
+  @apply font-semibold text-gray-900;
+}
+
+.dark .text-sm-secondary-with-margin strong {
+  @apply text-gray-100;
+}
+
+.form-section-header {
+  @apply flex font-medium items-center mb-3 text-base;
+}
+
+.form-section-header-small {
+  @apply flex font-medium items-center mb-3 text-sm;
+}
+
+.modal-user-info-with-margin {
+  @apply bg-gray-50 p-4 rounded-lg mt-4;
+}
+
+.dark .modal-user-info-with-margin {
+  @apply bg-gray-800;
+}
+
+.form-modal-avatar-upload {
+  @apply border-2 border-dashed border-gray-300 cursor-pointer flex hover:border-gray-400 items-center justify-center px-4 py-3 rounded-lg transition-colors w-full;
+}
+
+.form-modal-avatar-content {
+  @apply flex flex-col items-center;
+}
+
+.form-modal-upload-icon {
+  @apply h-6 mb-2 text-gray-400 w-6;
+}
+
+.form-modal-text-sm-gray {
+  @apply text-gray-600 text-sm;
+}
+
+.form-modal-text-xs-gray {
+  @apply mt-1 text-gray-500 text-xs;
+}
+
+.form-modal-avatar-container {
+  @apply inline-block relative;
+}
+
+.form-modal-avatar-preview {
+  @apply border-2 border-gray-200 h-24 object-cover rounded-full w-24;
+}
+
+.form-modal-avatar-remove-btn {
+  @apply -right-2 -top-2 absolute bg-red-500 flex h-6 hover:bg-red-600 items-center justify-center rounded-full text-white text-xs transition-colors w-6;
+}
+
+.icon-size {
+  @apply w-4 h-4 mr-2;
+}
+
+.grid-page-item {
+  @apply h-full rounded-xl border border-gray-200 bg-white transition-all duration-200 ease-in-out cursor-pointer;
+}
+
+.dark .grid-page-item,
+.dark .modal-user-info {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.grid-page-item:hover {
+  @apply -translate-y-0.5 shadow-md border-blue-200 bg-gray-50;
+}
+
+.dark .grid-page-item:hover {
+  @apply bg-gray-700 border-blue-600/50;
+}
+
+.audit-timestamp-container {
+  @apply flex flex-col gap-1;
+}
+
+.audit-timestamp-primary {
+  @apply text-sm font-medium text-gray-900;
+}
+
+.dark .audit-timestamp-primary {
+  @apply text-gray-100;
+}
+
+.audit-container {
+  @apply flex items-center gap-2;
+}
+
+.audit-event-text {
+  @apply font-semibold text-gray-900;
+}
+
+.dark .audit-event-text {
+  @apply text-gray-100;
+}
+
+.audit-description-wrapper {
+  @apply text-sm leading-snug text-gray-900 max-w-[28rem];
+}
+
+.dark .audit-description-wrapper {
+  @apply text-gray-100;
+}
+
+.audit-user-avatar {
+  @apply flex items-center justify-center h-8 w-8 shrink-0 rounded-full bg-blue-600 text-xs font-semibold text-white;
+}
+
+.audit-user-info {
+  @apply flex flex-col;
+}
+
+.audit-user-name {
+  @apply text-sm font-medium;
+}
+
+.audit-field {
+  @apply text-xs text-gray-600;
+}
+
+.dark .audit-field {
+  @apply text-gray-400;
+}
+
+.audit-change-view-button {
+  @apply flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[0.8125rem] cursor-pointer transition-all duration-200;
+}
+
+.audit-change-view-button:hover {
+  @apply text-white;
+}
+
+.audit-change-details {
+  @apply flex flex-col gap-5;
+}
+
+.audit-change-event-info {
+  @apply flex flex-col gap-2 pb-4 border-b border-gray-200;
+}
+
+.audit-change-event-type {
+  @apply text-base font-semibold text-gray-900;
+}
+
+.dark .audit-change-event-type {
+  @apply text-gray-100;
+}
+
+.audit-change-event-time {
+  @apply text-[0.8125rem] text-gray-600;
+}
+
+.dark .audit-change-event-time {
+  @apply text-gray-400;
+}
+
+.audit-change-section {
+  @apply flex flex-col gap-2;
+}
+
+.audit-change-label-before {
+  @apply text-xs font-semibold uppercase tracking-wider text-red-500;
+}
+
+.audit-change-label-after {
+  @apply text-xs font-semibold uppercase tracking-wider text-green-500;
+}
+
+.audit-change-value-before {
+  @apply px-3 py-3 bg-red-500/10 border-l-4 border-red-500 rounded-md text-sm break-words whitespace-pre-wrap;
+}
+
+.audit-change-value-after {
+  @apply px-3 py-3 bg-green-500/10 border-l-4 border-green-500 rounded-md text-sm break-words whitespace-pre-wrap;
+}
+
+.audit-icon-success {
+  @apply text-green-500;
+}
+
+.audit-icon-info {
+  @apply text-blue-500;
+}
+
+.audit-icon-warning {
+  @apply text-yellow-500;
+}
+
+.audit-icon-error {
+  @apply text-red-500;
+}
+
+.audit-icon-default {
+  @apply text-gray-600;
+}
+
+.dark .audit-icon-default {
+  @apply text-gray-400;
+}

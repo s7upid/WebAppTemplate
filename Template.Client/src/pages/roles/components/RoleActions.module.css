@@ -1,0 +1,12 @@
+@reference "tailwindcss";
+
+.container {
+  @apply space-y-8;
+}
+
+.sectionHeader {
+  @apply text-lg font-semibold text-gray-900 mb-4;
+}
+:global(.dark) .sectionHeader {
+  @apply text-gray-100;
+}

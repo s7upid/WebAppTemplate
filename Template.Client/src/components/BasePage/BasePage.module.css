@@ -1,0 +1,25 @@
+@reference "tailwindcss";
+
+.errorBox {
+  @apply rounded-md bg-red-50 p-4;
+}
+
+:global(.dark) .errorBox {
+  @apply bg-red-900/20;
+}
+
+.errorBoxText {
+  @apply text-xs text-red-800;
+}
+
+:global(.dark) .errorBoxText {
+  @apply text-red-200;
+}
+
+.pageTabsContainer {
+  @apply border-b border-gray-200 bg-white mb-6;
+}
+
+:global(.dark) .pageTabsContainer {
+  @apply border-gray-700 bg-gray-800;
+}

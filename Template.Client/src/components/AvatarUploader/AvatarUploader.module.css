@@ -1,0 +1,61 @@
+@reference "tailwindcss";
+
+.avatarSection {
+  @apply flex flex-col items-center space-y-4;
+}
+
+.avatarContainer {
+  @apply relative;
+}
+
+.avatarImage {
+  @apply w-24 h-24 rounded-full object-cover border-4 border-gray-200;
+}
+
+:global(.dark) .avatarImage {
+  @apply border-gray-700;
+}
+
+.avatarPlaceholder {
+  @apply w-24 h-24 rounded-full bg-gray-100 border-4 border-gray-200 flex items-center justify-center;
+}
+
+:global(.dark) .avatarPlaceholder {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.avatarIcon {
+  @apply w-8 h-8 text-gray-400;
+}
+
+:global(.dark) .avatarIcon {
+  @apply text-gray-500;
+}
+
+.avatarActions {
+  @apply flex flex-col space-y-2;
+}
+
+.uploadButton {
+  @apply inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer;
+}
+
+:global(.dark) .uploadButton {
+  @apply border-gray-600 text-gray-200 bg-gray-800 hover:bg-gray-700 focus:ring-offset-gray-800;
+}
+
+.uploadIcon {
+  @apply w-4 h-4 mr-2;
+}
+
+.hiddenInput {
+  @apply hidden;
+}
+
+.removeButton {
+  @apply text-sm text-red-600 hover:text-red-800 focus:outline-none;
+}
+
+:global(.dark) .removeButton {
+  @apply text-red-400 hover:text-red-300;
+}

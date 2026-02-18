@@ -1,0 +1,34 @@
+@reference "tailwindcss";
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.container {
+  @apply flex flex-col items-center justify-center;
+}
+.text {
+  @apply mt-2 text-sm text-gray-500;
+}
+:global(.dark) .text {
+  @apply text-gray-400;
+}
+.spinnerBase {
+  @apply rounded-full border-b-2 border-current;
+  animation: spin 1s linear infinite;
+}
+/* sizes */
+.sizeSm {
+  @apply h-4 w-4;
+}
+.sizeMd {
+  @apply h-8 w-8;
+}
+.sizeLg {
+  @apply h-12 w-12;
+}

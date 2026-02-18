@@ -1,0 +1,104 @@
+@reference "tailwindcss";
+
+.grid2 {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid3 {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid4 {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 40rem) {
+  /* sm */
+  .grid2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  /* lg */
+  .grid3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid4 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 80rem) {
+  /* xl */
+  .grid4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Button */
+.button {
+  @apply w-full p-4 text-left border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200 cursor-pointer bg-white;
+}
+:global(.dark) .button {
+  @apply border-gray-700 hover:border-gray-600 hover:bg-gray-700 focus:ring-blue-400 bg-gray-800;
+}
+
+/* Inner layout */
+.item {
+  @apply flex items-center space-x-3;
+}
+.icon {
+  @apply w-5 h-5 text-gray-500;
+}
+:global(.dark) .icon {
+  @apply text-gray-400;
+}
+.title {
+  @apply text-sm font-medium text-gray-900;
+}
+:global(.dark) .title {
+  @apply text-gray-100;
+}
+.description {
+  @apply text-xs text-gray-500 mt-1;
+}
+:global(.dark) .description {
+  @apply text-gray-400;
+}
+
+/* Hover states affecting inner elements */
+.button:hover .icon {
+  @apply text-blue-700;
+}
+:global(.dark) .button:hover .icon {
+  @apply text-blue-300;
+}
+.button:hover .title {
+  @apply text-gray-800;
+}
+:global(.dark) .button:hover .title {
+  @apply text-gray-100;
+}
+.button:hover .description {
+  @apply text-gray-600;
+}
+:global(.dark) .button:hover .description {
+  @apply text-gray-300;
+}
+
+/* Active */
+.button:active {
+  @apply bg-gray-100 border-gray-400;
+}
+:global(.dark) .button:active {
+  @apply bg-gray-600 border-gray-500;
+}
