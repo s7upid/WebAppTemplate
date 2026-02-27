@@ -48,9 +48,8 @@ npm run cypress:open
 # Run specific test file
 npx cypress run --spec "cypress/e2e/auth/login.cy.ts"
 
-# Run with coverage (use test-coverage scripts)
-./test-coverage/3-run-fe-cypress-coverage.sh  # macOS / Linux
-test-coverage\3-run-fe-cypress-coverage.bat   # Windows
+# Run with coverage (from project root)
+./scripts/coverage/3-run-fe-cypress-coverage.command   # or full: ./scripts/generate-test-report.command
 ```
 
 ### Writing Your First Test
@@ -377,8 +376,7 @@ npx cypress run --browser firefox
 npx cypress run --browser edge
 
 # Run with coverage (from project root)
-./test-coverage/3-run-fe-cypress-coverage.sh  # macOS / Linux
-test-coverage\3-run-fe-cypress-coverage.bat   # Windows
+./scripts/coverage/3-run-fe-cypress-coverage.command   # or: npm run coverage (full pipeline)
 ```
 
 ### Advanced Options

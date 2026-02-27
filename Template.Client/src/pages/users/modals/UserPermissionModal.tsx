@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useUsersQuery, useToast, useRoleQuery, useAllPermissions } from "@/hooks";
 import { TEST_IDS } from "@/config/constants";
 import { PERMISSIONS_MODULE, UserManagementPermissions } from "@/config/modules";
-import { ModalPage, Button, LoadingSpinner } from "@/components";
+import { Dialog, Button, LoadingSpinner } from "@/components";
 import { Key, XCircle } from "lucide-react";
 import {
   UserResponse,
@@ -186,7 +186,7 @@ const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
   if (!user) return null;
 
   return (
-    <ModalPage
+    <Dialog
       isOpen={isOpen}
       onClose={onClose}
       title="Manage User Permissions"
@@ -294,7 +294,7 @@ const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
           </div>
         </div>
       </form>
-    </ModalPage>
+    </Dialog>
   );
 };
 

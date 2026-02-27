@@ -1,7 +1,7 @@
 import { Menu, X, ChevronRight, PanelLeftClose, PanelLeft } from "lucide-react";
 import React, { useState, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { usePermissions, useAuth } from "@/hooks";
+import { usePermissions, useAuth, useTheme } from "@/hooks";
 import { ThemeToggle } from "@/components";
 import PasswordChangeModal from "@/pages/password/PasswordChangeModal";
 import ProfileEditModal from "@/pages/profile/ProfileEditModal";
@@ -28,6 +28,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [openSubmenus, setOpenSubmenus] = useState<Set<string>>(new Set());
   const { user, logout } = useAuth();
   const { hasPermission, hasRole } = usePermissions();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const nav = useGenericNavigationFunctions();
 
@@ -317,7 +318,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className={styles.topBarContent}>
             <div className={styles.topBarSpacer} />
             <div className={styles.topBarActions}>
-              <ThemeToggle />
+              <ThemeToggle theme={theme} onToggle={toggleTheme} />
 
               <UserMenu
                 onEditProfile={openProfileModal}

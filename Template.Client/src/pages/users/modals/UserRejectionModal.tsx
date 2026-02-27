@@ -1,5 +1,5 @@
 import React from "react";
-import { ModalPage, ModalPortal, Button } from "@/components";
+import { Dialog, Button } from "@/components";
 import { UserResponse } from "@/models";
 import { XCircle } from "lucide-react";
 
@@ -19,13 +19,12 @@ const UserRejectionModal: React.FC<UserRejectionModalProps> = ({
   loading,
 }) => {
   return (
-    <ModalPortal>
-      <ModalPage
-        isOpen={isOpen}
-        onClose={onClose}
-        title="Reject User Registration"
-        size="md"
-      >
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Reject User Registration"
+      size="md"
+    >
         <div className="user-rejection-space-y-4">
           <div className="rejection-warning-container">
             <h3 className="rejection-warning-title">
@@ -67,8 +66,7 @@ const UserRejectionModal: React.FC<UserRejectionModalProps> = ({
             </Button>
           </div>
         </div>
-      </ModalPage>
-    </ModalPortal>
+    </Dialog>
   );
 };
 

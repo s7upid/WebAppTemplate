@@ -38,10 +38,10 @@ fi
 # Build test project
 dotnet build "$TEST_PROJECT"
 
-# Run coverlet.console to collect coverage
+# Run coverlet.console to collect coverage (unit tests only; integration tests require Docker)
 coverlet "$TEST_DLL" \
     --target "dotnet" \
-    --targetargs "test $TEST_PROJECT --no-build" \
+    --targetargs "test $TEST_PROJECT --no-build --filter Category=Unit" \
     --output "$COVERAGE_FILE" \
     --format lcov \
     --include "[Template.Server*]*" \

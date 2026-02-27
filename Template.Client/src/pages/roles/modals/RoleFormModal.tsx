@@ -1,5 +1,5 @@
 import React from "react";
-import { ModalPage, Button, Input } from "@/components";
+import { Dialog, Button, Input } from "@/components";
 import { PermissionSelector } from "@/pages";
 import { Save, XCircle } from "lucide-react";
 import { TEST_IDS, RoleManagementPermissions } from "@/config";
@@ -109,7 +109,7 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
   };
 
   return (
-    <ModalPage
+    <Dialog
       isOpen={isOpen}
       onClose={onClose}
       title={isEditMode ? "Edit Role" : "Create Role"}
@@ -171,7 +171,7 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
           </Button>
         </div>
       </form>
-    </ModalPage>
+    </Dialog>
   );
 };
 

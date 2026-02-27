@@ -5,19 +5,18 @@ import { Role } from "@/models";
 import { TEST_IDS } from "@/config";
 
 jest.mock("lucide-react", () => new Proxy({}, { get: () => () => null }));
-jest.mock("@/components/GridPage/GridPage", () => ({
-  __esModule: true,
-  default: ({ pagedResult, callbacks, testid }: any) => (
-    <div data-testid={`${testid}-grid`}>
-      {pagedResult.items.map((item: Role, i: number) => (
-        <div key={item.id}>{callbacks.renderItem(item, i)}</div>
+jest.mock("@/components", () => ({
+  PaginatedGrid: ({ items, renderCard, testId }: any) => (
+    <div data-testid={testId ? `${testId}-page` : "paginated-grid"}>
+      {items.map((item: Role, i: number) => (
+        <div key={(item as any).id ?? i}>{renderCard(item)}</div>
       ))}
     </div>
   ),
-}));
-jest.mock("@/components/EntityToolbar/EntityToolbar", () => ({
-  __esModule: true,
-  default: ({ onApply, onClear }: any) => (
+  Card: ({ children, title }: any) => (
+    <div><span data-testid="role-name">{title}</span>{children}</div>
+  ),
+  EntityToolbar: ({ onApply, onClear }: any) => (
     <div>
       <button
         onClick={() => onApply({ searchTerm: "", filters: { type: "system" } })}
@@ -111,7 +110,7 @@ describe("RoleGridPage", () => {
       </MemoryRouter>
     );
     expect(
-      screen.getByTestId(`${TEST_IDS.ROLE_PAGE}-grid`)
+      screen.getByTestId(`${TEST_IDS.ROLE_PAGE}-page`)
     ).toBeInTheDocument();
     expect(screen.getByTestId(TEST_IDS.ROLE_NAME)).toBeInTheDocument();
     fireEvent.click(screen.getByText("apply"));

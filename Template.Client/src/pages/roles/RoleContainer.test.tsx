@@ -48,10 +48,17 @@ jest.mock("@/components/BasePage/BasePage", () => ({
   __esModule: true,
   default: ({ children }: any) => <div>{children}</div>,
 }));
-jest.mock("@/components/ModalPortal/ModalPortal", () => ({
-  __esModule: true,
-  default: ({ children }: any) => <div>{children}</div>,
-}));
+jest.mock("@/components", () => {
+  const React = require("react");
+  const stubs = require("@/test/__mocks__/component-stubs").default;
+  return {
+    ...stubs,
+    ModalPortal: ({ children }: any) => <div>{children}</div>,
+    PermissionGuard: ({ children }: any) => (
+      <div data-testid={TEST_IDS.MOCK_PERMISSION_GUARD}>{children}</div>
+    ),
+  };
+});
 
 jest.mock("@/components/Guards/PermissionGuard", () => ({
   __esModule: true,

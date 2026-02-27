@@ -145,7 +145,7 @@ For complete features (like Reports, etc.), see **[Feature Development Workflow]
 
 ```
 1. Add permissions to PermissionKeys.cs   # Backend constants
-2. Run ./regenerate-models-for-fe.sh (macOS/Linux) or Regenerate-models-for-FE.bat (Windows)  # Generate TS constants
+2. Run ./scripts/regenerate-models.command (or `npm run regenerate-models`)  # Generate TS constants
 3. src/config/modules/featureModule.ts    # Module configuration
 4. Update src/config/modules/index.ts     # Export module
 5. src/services/entities/featureService.ts # API service
@@ -186,7 +186,7 @@ Use only for client state like auth or theme:
 
 ```
 1. Modify backend DTOs                    # Source of truth
-2. Run ./regenerate-models-for-fe.sh (macOS/Linux) or Regenerate-models-for-FE.bat (Windows)  # Generate TypeScript
+2. Run ./scripts/regenerate-models.command (or `npm run regenerate-models`)  # Generate TypeScript
 3. Types available in src/models/generated.ts
 ```
 
@@ -339,10 +339,8 @@ Frontend constants are automatically generated from the C# source:
 
 ```bash
 # Run from project root
-./regenerate-models-for-fe.sh  # macOS / Linux
-Regenerate-models-for-FE.bat   # Windows
-# Or manually:
-node generate-constants.js
+./scripts/regenerate-models.command   # or: npm run regenerate-models
+# Or manually: node generate-constants.js
 ```
 
 This generates `src/config/generated/permissionKeys.generated.ts`:
@@ -397,7 +395,7 @@ public async Task<IActionResult> AdminEndpoint() { ... }
 ### Adding New Constants
 
 1. **Add to `PermissionKeys.cs`** (backend)
-2. **Run `./regenerate-models-for-fe.sh` (macOS/Linux) or `Regenerate-models-for-FE.bat` (Windows)** (generates TypeScript)
+2. **Run `./scripts/regenerate-models.command` or `npm run regenerate-models`** (generates TypeScript)
 3. **Use the constants** in both frontend and backend
 
 > ⚠️ **Never use hardcoded permission or role strings!** Always use the centralized constants.
@@ -662,11 +660,9 @@ npm run test:coverage          # With coverage
 npm run cypress:open           # Interactive mode
 npm run cypress:run            # Headless mode
 
-# With Coverage (use test-coverage scripts from project root)
-./test-coverage/3-run-fe-cypress-coverage.sh  # macOS / Linux - Cypress with coverage
-test-coverage\3-run-fe-cypress-coverage.bat   # Windows - Cypress with coverage
-./test-coverage/0-run-all-coverage.sh         # macOS / Linux - All tests with coverage
-test-coverage\0-run-all-coverage.bat         # Windows - All tests with coverage
+# With Coverage (from project root)
+./scripts/coverage/3-run-fe-cypress-coverage.command   # Cypress only
+./scripts/generate-test-report.command   # Full pipeline; or: npm run coverage
 ```
 
 ## Components Reference

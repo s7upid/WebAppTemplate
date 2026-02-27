@@ -128,11 +128,11 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
             <p className="text-sm mt-1">{permissionsError}</p>
           </div>
         ) : permissionsData.length === 0 ? (
-          <div className="text-center text-gray-500 py-4">
+          <div className="text-center text-gray-500 dark:text-gray-400 py-4">
             No permissions available
           </div>
         ) : Object.keys(groupedPermissions).length === 0 ? (
-          <div className="text-center text-gray-500 py-4">
+          <div className="text-center text-gray-500 dark:text-gray-400 py-4">
             No permissions available
           </div>
         ) : (

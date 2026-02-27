@@ -1,6 +1,10 @@
 import { useGenericNavigationFunctions } from "@/utils";
-import { GridPage, EntityToolbar, EmptyState } from "@/components";
-import { GridCallbacks, PagedResult, UserResponse } from "@/models";
+import {
+  PaginatedGrid,
+  EntityToolbar,
+  EmptyState,
+} from "@/components";
+import { PagedResult, UserResponse } from "@/models";
 import { TEST_IDS } from "@/config";
 import { useGridFilters } from "@/hooks";
 import {
@@ -10,15 +14,6 @@ import {
   SORT_FIELDS,
 } from "../shared";
 
-interface UserGridPageProps {
-  paginationResult: PagedResult<UserResponse>;
-  paginationHandlers: any;
-  isLoading: boolean;
-  error?: string | null;
-  onRetry?: () => void;
-}
-
-// Empty result to show when loading to prevent stale data flicker
 const emptyResult: PagedResult<UserResponse> = {
   items: [],
   totalCount: 0,
@@ -26,6 +21,14 @@ const emptyResult: PagedResult<UserResponse> = {
   pageSize: 10,
   totalPages: 0,
 };
+
+interface UserGridPageProps {
+  paginationResult: PagedResult<UserResponse>;
+  paginationHandlers: any;
+  isLoading: boolean;
+  error?: string | null;
+  onRetry?: () => void;
+}
 
 const UserGridPage: React.FC<UserGridPageProps> = ({
   paginationResult,
@@ -35,13 +38,12 @@ const UserGridPage: React.FC<UserGridPageProps> = ({
   onRetry,
 }) => {
   const nav = useGenericNavigationFunctions();
-
-  const handleUserClick = (user: UserResponse) => {
-    nav.goToUserDetail(user.id!);
-  };
-
+  const handleUserClick = (user: UserResponse) => nav.goToUserDetail(user.id!);
   const { actionLoading, applyFilters, clearAll } =
     useGridFilters(paginationHandlers);
+
+  const result = isLoading ? emptyResult : (paginationResult ?? emptyResult);
+  const { items, totalCount, pageNumber, totalPages, pageSize } = result;
 
   if (error && !isLoading) {
     return (
@@ -63,19 +65,20 @@ const UserGridPage: React.FC<UserGridPageProps> = ({
         onApply={applyFilters}
         onClear={clearAll}
       />
-
-      <GridPage<UserResponse>
-        pagedResult={isLoading ? emptyResult : (paginationResult ?? emptyResult)}
-        gridConfig={USER_GRID_CONFIG}
-        callbacks={
-          {
-            onPageChange: paginationHandlers?.changePage,
-            onPageSizeChange: paginationHandlers?.changePageSize,
-            renderItem: (user) => renderUserGridItem(user, handleUserClick),
-          } as GridCallbacks<UserResponse>
-        }
-        testid={TEST_IDS.USER_PAGE}
+      <PaginatedGrid<UserResponse>
+        items={items}
         loading={isLoading}
+        renderCard={(user) => renderUserGridItem(user, handleUserClick)}
+        columns={3}
+        emptyTitle={USER_GRID_CONFIG.emptyStateTitle ?? "No items found"}
+        emptyDescription={USER_GRID_CONFIG.emptyStateDescription}
+        keyExtractor={(user) => user.id ?? ""}
+        pageNumber={pageNumber}
+        totalPages={totalPages}
+        totalCount={totalCount}
+        pageSize={pageSize}
+        paginationHandlers={paginationHandlers}
+        testId={TEST_IDS.USER_PAGE}
       />
     </>
   );

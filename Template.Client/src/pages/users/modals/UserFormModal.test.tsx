@@ -5,44 +5,42 @@ import { TEST_IDS } from "@/config/constants";
 import { mockUsers } from "@/mock/data";
 import { ToastProvider } from "@/hooks/ui/useToast";
 
-jest.mock("@/components/ModalPage/ModalPage", () => ({
-  __esModule: true,
-  default: ({ isOpen, onClose, title, children }: any) =>
-    isOpen ? (
-      <div data-testid={TEST_IDS.MODAL}>
-        <div>{title}</div>
-        <button data-testid={TEST_IDS.MODAL_CLOSE} onClick={onClose}>
-          Close
-        </button>
+jest.mock("@/components", () => {
+  const React = require("react");
+  const stubs = require("@/test/__mocks__/component-stubs").default;
+  return {
+    ...stubs,
+    Dialog: ({ isOpen, onClose, title, children }: any) =>
+      isOpen ? (
+        <div data-testid={TEST_IDS.MODAL}>
+          <div>{title}</div>
+          <button data-testid={TEST_IDS.MODAL_CLOSE} onClick={onClose}>
+            Close
+          </button>
+          {children}
+        </div>
+      ) : null,
+    Button: ({ children, onClick, loading, variant, type, form }: any) => (
+      <button
+        data-testid={`button-${variant || "default"}`}
+        onClick={onClick}
+        type={type}
+        form={form}
+        disabled={false}
+        data-loading={loading}
+      >
         {children}
-      </div>
-    ) : null,
-}));
-jest.mock("@/components/Button/Button", () => ({
-  __esModule: true,
-  default: ({ children, onClick, loading, variant, type, form }: any) => (
-    <button
-      data-testid={`button-${variant || "default"}`}
-      onClick={onClick}
-      type={type}
-      form={form}
-      disabled={false}
-      data-loading={loading}
-    >
-      {children}
-    </button>
-  ),
-}));
-jest.mock("@/components/Input/Input", () => ({
-  __esModule: true,
-  default: ({ label, error, ...rest }: any) => (
-    <label>
-      {label}
-      <input {...rest} />
-      {error && <p data-testid={TEST_IDS.ERROR_MESSAGE}>{error}</p>}
-    </label>
-  ),
-}));
+      </button>
+    ),
+    Input: ({ label, error, ...rest }: any) => (
+      <label>
+        {label}
+        <input {...rest} />
+        {error && <p data-testid={TEST_IDS.ERROR_MESSAGE}>{error}</p>}
+      </label>
+    ),
+  };
+});
 
 const permissions = { canEditUsers: true } as any;
 const user = mockUsers[1] as any;

@@ -3,6 +3,7 @@ namespace Template.Tests.Base;
 /// <summary>
 /// Base class for unit tests providing common setup and utilities
 /// </summary>
+[Trait("Category", "Unit")]
 public abstract class BaseUnitTest : IDisposable
 {
     protected readonly CancellationToken CancellationToken = CancellationToken.None;

@@ -1,8 +1,10 @@
 namespace Template.Data.Data;
 
+using System.Linq.Dynamic.Core;
+
 public static class FetchSortedPagedResults<T>
 {
-    public static async Task<PagedResult<T>> GetSortedPagedResult(
+    public static async Task<Template.Data.Common.PagedResult<T>> GetSortedPagedResult(
         PagedResultParams pageParams,
         IQueryable<T> query,
         CancellationToken token)
@@ -24,7 +26,7 @@ public static class FetchSortedPagedResults<T>
             ? pageParams.SortColumn!
             : $"{pageParams.SortColumn} descending";
 
-        query = query
+        query = (IQueryable<T>)query
             .OrderBy(sortExpression)
             .Skip((pageParams.Page - 1) * pageParams.PageSize)
             .Take(pageParams.PageSize);
@@ -33,7 +35,7 @@ public static class FetchSortedPagedResults<T>
             ? await query.ToListAsync(token)
             : [.. query];
 
-        return new PagedResult<T>
+        return new Template.Data.Common.PagedResult<T>
         {
             Items = results,
             TotalCount = totalCount,

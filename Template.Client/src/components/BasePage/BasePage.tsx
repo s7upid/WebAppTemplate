@@ -1,5 +1,4 @@
-import PageHeader from "../PageHeader/PageHeader";
-import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
+import { PageHeader, ErrorBoundary } from "@/components";
 import { TEST_IDS } from "@/config";
 import styles from "./BasePage.module.css";
 import React from "react";

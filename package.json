@@ -37,7 +37,11 @@
     "clean": "npm run clean:client && npm run clean:server",
     "clean:client": "cd Template.Client && npm run clean",
     "clean:server": "dotnet clean Template.slnx",
-    "clean:all": "npm run clean && cd Template.Client && rimraf node_modules"
+    "clean:all": "npm run clean && cd Template.Client && rimraf node_modules",
+    "start:full": "bash scripts/start.command",
+    "regenerate-models": "bash scripts/regenerate-models.command",
+    "clean:scripts": "bash scripts/clean.command",
+    "coverage": "bash scripts/generate-test-report.command"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

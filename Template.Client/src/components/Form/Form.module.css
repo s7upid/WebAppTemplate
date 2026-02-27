@@ -1,5 +1,0 @@
-@reference "tailwindcss";
-
-.spacing {
-  @apply space-y-8;
-}

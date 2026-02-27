@@ -354,7 +354,7 @@ export const getComponentMocks = () => {
   const ReactLib = require("react");
   const { TEST_IDS } = require("@/config/constants");
   return {
-    ModalPage: ({ isOpen, onClose, title, children, size }: any) =>
+    Dialog: ({ isOpen, onClose, title, children, size }: any) =>
       isOpen
         ? ReactLib.createElement(
             "div",

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  ModalPage,
+  Dialog,
   Button,
   Input,
   Dropdown,
@@ -131,7 +131,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
   };
 
   return (
-    <ModalPage
+    <Dialog
       isOpen={isOpen}
       onClose={onClose}
       title={
@@ -243,7 +243,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
           </Button>
         </div>
       </form>
-    </ModalPage>
+    </Dialog>
   );
 };
 

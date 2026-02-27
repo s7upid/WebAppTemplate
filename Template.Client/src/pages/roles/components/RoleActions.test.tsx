@@ -3,9 +3,28 @@ import RoleActions from "@/pages/roles/components/RoleActions";
 import { TEST_IDS } from "@/config";
 import { mockRoles } from "@/mock/data";
 
-jest.mock("@/components/DangerZone/DangerZone", () => ({
-  __esModule: true,
-  default: ({ onConfirm, testId }: any) => (
+jest.mock("@/components", () => ({
+  Button: ({ children, onClick, "data-testid": dataTestId }: any) => (
+    <button type="button" onClick={onClick} data-testid={dataTestId}>
+      {children}
+    </button>
+  ),
+  QuickActions: ({ actions, testId }: any) => (
+    <div data-testid={testId}>
+      {actions.map((a: any) => (
+        <button key={a.id} type="button" data-testid={a.testId} onClick={a.onClick}>
+          {a.description ? `${a.title} — ${a.description}` : a.title}
+        </button>
+      ))}
+    </div>
+  ),
+  Card: ({ children, title }: any) => (
+    <div>
+      {title && <h3>{title}</h3>}
+      {children}
+    </div>
+  ),
+  DangerZone: ({ onConfirm, testId }: any) => (
     <button data-testid={testId} onClick={onConfirm}>
       danger
     </button>

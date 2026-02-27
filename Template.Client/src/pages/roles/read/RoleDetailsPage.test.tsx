@@ -1,4 +1,5 @@
 // Use base test utilities to reduce duplication
+import React from "react";
 import { getRouteUtilsMocks } from "@/test/base-test-utils";
 
 import { render, screen } from "@testing-library/react";
@@ -68,17 +69,16 @@ jest.mock("@/hooks", () => {
   };
 });
 
-jest.mock("@/components/ModalPortal/ModalPortal", () => ({
-  __esModule: true,
-  default: ({ children }: any) => <div>{children}</div>,
-}));
-jest.mock("@/components/ConfirmationDialog/ConfirmationDialog", () => ({
-  __esModule: true,
-  default: () => <div />,
-}));
-jest.mock("@/components/LoadingSpinner/LoadingSpinner", () => ({
-  __esModule: true,
-  default: () => <div>Loading...</div>,
+jest.mock("@/components", () => ({
+  ModalPortal: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  ConfirmationDialog: () => <div />,
+  LoadingSpinner: () => <div>Loading...</div>,
+  EmptyState: ({ title, primaryAction }: { title?: string; primaryAction?: { label: string; onClick: () => void } }) => (
+    <div>
+      <span>{title}</span>
+      {primaryAction && <button type="button" onClick={primaryAction.onClick}>{primaryAction.label}</button>}
+    </div>
+  ),
 }));
 
 jest.mock("@/pages/roles/components/RoleActions", () => ({

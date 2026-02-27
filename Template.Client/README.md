@@ -214,8 +214,7 @@ TypeScript models and constants are auto-generated from the backend C# code:
 
 ```bash
 # From project root (run when backend models or permissions change)
-./regenerate-models-for-fe.sh        # macOS / Linux
-Regenerate-models-for-FE.bat         # Windows
+./scripts/regenerate-models.command   # or: npm run regenerate-models
 ```
 
 This generates:
@@ -289,8 +288,7 @@ npm run cypress:open
 npm run cypress:run
 
 # Run with coverage (from project root)
-./test-coverage/3-run-fe-cypress-coverage.sh # macOS / Linux
-test-coverage\3-run-fe-cypress-coverage.bat  # Windows
+./scripts/coverage/3-run-fe-cypress-coverage.command   # or full pipeline: ./scripts/generate-test-report.command
 ```
 ## 🔐 Authentication
 

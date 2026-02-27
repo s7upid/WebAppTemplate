@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, ModalPage } from "@/components";
+import { Button, Input, Dialog } from "@/components";
 import { useAuth, useToast } from "@/hooks";
 import { Lock, Eye, EyeOff, XCircle, Save } from "lucide-react";
 import { ChangePasswordRequest } from "@/models";
@@ -84,7 +84,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   };
 
   return (
-    <ModalPage
+    <Dialog
       isOpen={isOpen}
       onClose={handleClose}
       title="Change Password"
@@ -183,7 +183,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           </div>
         </form>
       </div>
-    </ModalPage>
+    </Dialog>
   );
 };
 

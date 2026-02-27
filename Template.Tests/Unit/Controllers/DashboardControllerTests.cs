@@ -32,7 +32,7 @@ public class DashboardControllerTests : BaseUnitTest
                 Success = true
             }
         };
-        var pagedResult = new PagedResult<AuditLog>
+        var pagedResult = new Template.Data.Common.PagedResult<AuditLog>
         {
             Items = logs,
             TotalCount = 1,

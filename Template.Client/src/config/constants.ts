@@ -183,7 +183,6 @@ export const TEST_IDS = {
   MOCK_CUSTOM_FOOTER: "mock-custom-footer",
   MOCK_SUB_NAV: "mock-sub-nav",
   MOCK_CUSTOM_CONTENT: "mock-custom-content",
-  COMPONENTS_REFERENCE_PAGE: "components-reference-page",
   COMPONENTS_TABS: "components-tabs",
   BUTTONS_SECTION: "buttons-section",
   BUTTON_PRIMARY: "button-primary",

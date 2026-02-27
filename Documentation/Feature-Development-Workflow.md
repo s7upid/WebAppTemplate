@@ -322,8 +322,7 @@ Run the regeneration script to generate TypeScript types and constants:
 
 ```bash
 # From project root
-./regenerate-models-for-fe.sh  # macOS / Linux
-Regenerate-models-for-FE.bat  # Windows
+./scripts/regenerate-models.command   # or: npm run regenerate-models
 ```
 
 This generates:
@@ -599,8 +598,7 @@ After adding new permissions to `PermissionKeys.cs`, regenerate the TypeScript c
 
 ```bash
 # From project root
-./regenerate-models-for-fe.sh  # macOS / Linux
-Regenerate-models-for-FE.bat  # Windows
+./scripts/regenerate-models.command   # or: npm run regenerate-models
 ```
 
 This generates **both** TypeScript models and permission constants:
@@ -724,7 +722,7 @@ Frontend (Template.Client)
 ```
 Backend:
 □ 1. Create database model (Template.Data/Models/)
-□ 2. Create migration if needed: ./add-migration.sh (macOS/Linux) or add-migration.bat (Windows)
+□ 2. Create migration if needed: ./scripts/add-migration.command
 □ 3. Create DTOs (Template.Server/DTOs/)
 □ 4. Create service interface (Services/Interfaces/)
 □ 5. Create service implementation (Services/)
@@ -736,7 +734,7 @@ Backend:
 □ 11. Write integration tests
 
 Frontend:
-□ 1. Regenerate models & constants: ./regenerate-models-for-fe.sh (macOS/Linux) or Regenerate-models-for-FE.bat (Windows)
+□ 1. Regenerate models & constants: ./scripts/regenerate-models.command or npm run regenerate-models
 □ 2. Create module config using PERMISSION_KEYS (config/modules/)
 □ 3. Update modules index (export module + add to MODULES map)
 □ 4. Create API service (services/entities/)

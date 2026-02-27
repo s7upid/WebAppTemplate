@@ -11,7 +11,6 @@ import {
   DASHBOARD_MODULE,
   DASHBOARD_MANAGEMENT_MODULE,
   AUDIT_MODULE,
-  COMPONENTS_MODULE,
 } from "@/config/modules";
 import {
   ProtectedRoute,
@@ -23,7 +22,6 @@ import {
 import ResetPasswordPage from "@/pages/password/ResetPasswordPage";
 import ConfirmEmailPage from "@/pages/auth/ConfirmEmailPage";
 import AuditLogsPage from "@/pages/audit/AuditLogsPage";
-import ComponentsReferencePage from "@/pages/components/ComponentsReferencePage";
 import {
   BrowserRouter as Router,
   Routes,
@@ -118,10 +116,6 @@ const AppRoutes: React.FC = () => {
                   <Route
                     path={AUDIT_MODULE.routes.base}
                     element={<AuditLogsPage />}
-                  />
-                  <Route
-                    path={COMPONENTS_MODULE.routes.base}
-                    element={<ComponentsReferencePage />}
                   />
                   <Route
                     path="*"

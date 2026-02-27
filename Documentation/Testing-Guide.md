@@ -62,11 +62,10 @@ dotnet test Template.Tests --filter "Category=Integration"
 
 ### Combined Testing
 
-Use the coverage scripts in `test-coverage/` folder:
+Use the coverage script in the `scripts/` folder (see [scripts/README.md](../scripts/README.md)):
 
 ```bash
-./test-coverage/0-run-all-coverage.sh  # macOS / Linux
-test-coverage\0-run-all-coverage.bat   # Windows - Run all tests with coverage
+./scripts/generate-test-report.command   # macOS / Linux / Git Bash; or: npm run coverage
 ```
 
 ## Test Structure
@@ -397,16 +396,14 @@ The test suite covers all major API endpoints:
 # Frontend unit test coverage
 npm run test:coverage
 
-# Frontend E2E test coverage (use test-coverage scripts)
-./test-coverage/3-run-fe-cypress-coverage.sh  # macOS / Linux
-test-coverage\3-run-fe-cypress-coverage.bat   # Windows
+# Frontend E2E test coverage (use scripts/coverage)
+./scripts/coverage/3-run-fe-cypress-coverage.command  # macOS / Linux / Git Bash
 
 # Backend test coverage
 dotnet test Template.Tests --collect:"XPlat Code Coverage"
 
 # All coverage reports
-./test-coverage/0-run-all-coverage.sh  # macOS / Linux
-test-coverage\0-run-all-coverage.bat   # Windows
+./scripts/generate-test-report.command   # or: npm run coverage
 ```
 
 ### Coverage Locations
@@ -418,10 +415,9 @@ test-coverage\0-run-all-coverage.bat   # Windows
 ### Update README Badges
 
 ```bash
-# From test-coverage directory
-cd test-coverage
-node 4-extract-results.js      # Extract coverage data
-node 5-update-readme-badges.js # Update badges
+# From repo root
+node scripts/coverage/4-extract-results.js      # Extract coverage data
+node scripts/coverage/5-update-readme-badges.js # Update badges
 ```
 
 ## Test Data Management
@@ -522,4 +518,4 @@ node scripts/test-cypress.js debug "cypress/e2e/auth.cy.ts"
 ## Related Documentation
 
 - **[Cypress Guide](./Cypress-Testing-Complete.md)** - E2E testing with Cypress
-- **[Coverage Scripts](../test-coverage/README.md)** - Test coverage generation
+- **[Scripts (incl. coverage)](../scripts/README.md)** - Test coverage and main scripts

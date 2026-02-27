@@ -1,11 +1,17 @@
+import React from "react";
 import { render, screen } from "@testing-library/react";
 import RoleUsersSection from "./RoleUsersSection";
 import { mockUsers } from "@/mock/data";
 import { UserStatus } from "@/models";
 
-jest.mock("@/components/LoadingSpinner/LoadingSpinner", () => ({
-  __esModule: true,
-  default: () => <div>Loading...</div>,
+jest.mock("@/components", () => ({
+  LoadingSpinner: () => <div>Loading...</div>,
+  Card: ({ title, children }: { title?: string; children?: React.ReactNode }) => (
+    <div>
+      {title && <h3>{title}</h3>}
+      {children}
+    </div>
+  ),
 }));
 
 describe("RoleUsersSection", () => {

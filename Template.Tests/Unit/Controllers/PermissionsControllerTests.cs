@@ -27,7 +27,7 @@ public class PermissionsControllerTests : BaseUnitTest
             new() { Id = Guid.NewGuid(), Key = "users:view", Name = "View Users" },
             new() { Id = Guid.NewGuid(), Key = "users:create", Name = "Create Users" }
         };
-        var pagedResult = new PagedResult<PermissionResponse>
+        var pagedResult = new Template.Data.Common.PagedResult<PermissionResponse>
         {
             Items = permissions,
             TotalCount = 2,
@@ -55,7 +55,7 @@ public class PermissionsControllerTests : BaseUnitTest
     {
         // Arrange
         var @params = new PagedResultParams { Page = 1, PageSize = 10 };
-        var pagedResult = new PagedResult<PermissionResponse>
+        var pagedResult = new Template.Data.Common.PagedResult<PermissionResponse>
         {
             Items = [],
             TotalCount = 0,

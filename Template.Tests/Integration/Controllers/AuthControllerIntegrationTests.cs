@@ -1,6 +1,7 @@
 namespace Template.Tests.Integration.Controllers;
 
 [Collection("PostgreSql")]
+[Trait("Category", "Integration")]
 public class AuthControllerIntegrationTests(PostgreSqlFixture fixture) : IAsyncLifetime, IDisposable
 {
     private readonly CustomWebApplicationFactory<Program> _factory = new(fixture);

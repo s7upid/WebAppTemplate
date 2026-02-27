@@ -35,7 +35,6 @@ global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Options;
 global using Npgsql;
 global using System.IdentityModel.Tokens.Jwt;
-global using System.Linq.Dynamic.Core;
 global using System.Net;
 global using System.Net.Http.Json;
 global using System.Security.Claims;

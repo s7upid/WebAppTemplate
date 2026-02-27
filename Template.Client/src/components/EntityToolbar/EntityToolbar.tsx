@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { SearchInput, FilterSelect, Button } from "@/components";
+import { SearchInput, Dropdown, Button } from "@/components";
 import styles from "./EntityToolbar.module.css";
 import { ToolbarFilterConfig, ToolbarSortField } from "@/models";
 
@@ -86,15 +86,14 @@ const EntityToolbar: React.FC<EntityToolbarProps> = ({
 
         <div className={styles.filters}>
           {filters.map((f) => (
-            <FilterSelect
+            <Dropdown
               key={f.key}
               label={f.label}
               value={localFilters[f.key] ?? ""}
               options={f.options}
-              placeholder={f.label}
-              onChange={(v: string) => handleFilterChange(f.key, v)}
+              placeholderOption={f.label}
+              onValueChange={(v: string) => handleFilterChange(f.key, v)}
               className={styles.filter}
-              selectClassName={styles.filterSelect}
             />
           ))}
         </div>

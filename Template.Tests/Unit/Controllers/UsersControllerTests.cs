@@ -27,7 +27,7 @@ public class UsersControllerTests : BaseUnitTest
             new() { Id = Guid.NewGuid(), Email = "user1@example.com" },
             new() { Id = Guid.NewGuid(), Email = "user2@example.com" }
         };
-        var pagedResult = new PagedResult<UserResponse>
+        var pagedResult = new Template.Data.Common.PagedResult<UserResponse>
         {
             Items = users,
             TotalCount = 2,

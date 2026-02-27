@@ -1,6 +1,6 @@
-import { GridPage, EntityToolbar } from "@/components";
-import { PagedResult, Permission, PermissionResponse } from "@/models";
-import { GridCallbacks } from "@/models/shared/grid";
+import React from "react";
+import { PaginatedGrid, EntityToolbar } from "@/components";
+import { PagedResult, PermissionResponse } from "@/models";
 import { TEST_IDS } from "@/config";
 import {
   FILTERS,
@@ -11,7 +11,7 @@ import {
 import { useGridFilters } from "@/hooks";
 
 interface PermissionGridPageProps {
-  paginationResult: PagedResult<Permission>;
+  paginationResult: PagedResult<PermissionResponse>;
   paginationHandlers: any;
   isLoading: boolean;
 }
@@ -24,6 +24,8 @@ const PermissionGridPage: React.FC<PermissionGridPageProps> = ({
   const { actionLoading, applyFilters, clearAll } =
     useGridFilters(paginationHandlers);
 
+  const { items, totalCount, pageNumber, totalPages, pageSize } = paginationResult;
+
   return (
     <>
       <EntityToolbar
@@ -34,19 +36,20 @@ const PermissionGridPage: React.FC<PermissionGridPageProps> = ({
         onApply={applyFilters}
         onClear={clearAll}
       />
-
-      <GridPage<PermissionResponse>
-        pagedResult={paginationResult}
-        gridConfig={PERMISSION_GRID_CONFIG}
-        callbacks={
-          {
-            renderItem: (permission) => renderPermissionGridItem(permission),
-            onPageChange: paginationHandlers?.changePage,
-            onPageSizeChange: paginationHandlers?.changePageSize,
-          } as GridCallbacks<PermissionResponse>
-        }
-        testid={TEST_IDS.PERMISSION_PAGE}
-        loading={isLoading && paginationResult.totalCount === 0}
+      <PaginatedGrid<PermissionResponse>
+        items={items}
+        loading={isLoading}
+        renderCard={(permission) => renderPermissionGridItem(permission)}
+        columns={3}
+        emptyTitle={PERMISSION_GRID_CONFIG.emptyStateTitle ?? "No items found"}
+        emptyDescription={PERMISSION_GRID_CONFIG.emptyStateDescription}
+        keyExtractor={(p) => p.id ?? p.key ?? ""}
+        pageNumber={pageNumber}
+        totalPages={totalPages}
+        totalCount={totalCount}
+        pageSize={pageSize}
+        paginationHandlers={paginationHandlers}
+        testId={TEST_IDS.PERMISSION_PAGE}
       />
     </>
   );

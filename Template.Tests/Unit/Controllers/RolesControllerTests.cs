@@ -27,7 +27,7 @@ public class RolesControllerTests : BaseUnitTest
             new() { Id = Guid.NewGuid(), Name = "Admin" },
             new() { Id = Guid.NewGuid(), Name = "User" }
         };
-        var pagedResult = new PagedResult<RoleResponse>
+        var pagedResult = new Template.Data.Common.PagedResult<RoleResponse>
         {
             Items = roles,
             TotalCount = 2,

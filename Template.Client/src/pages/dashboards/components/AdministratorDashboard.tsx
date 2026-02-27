@@ -3,12 +3,11 @@ import { useAuth, useDashboardQuery } from "@/hooks";
 import {
   PageHeader,
   LoadingSpinner,
-  DashboardCard,
+  Card,
   List,
-  ActionButtons,
+  Button,
   AuditLogTimeline,
 } from "@/components";
-import { ActionButton } from "@/models/shared/actionButton";
 import { Users, Shield, Key, Activity, Database, Settings } from "lucide-react";
 import { TEST_IDS } from "@/config";
 import { AuditLog } from "@/models";
@@ -31,11 +30,11 @@ const AdministratorDashboard: React.FC = () => {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <div className="text-red-500 text-lg">Failed to load dashboard data</div>
-        <div className="text-gray-500 text-sm">{error}</div>
+        <div className="text-red-500 dark:text-red-400 text-lg">Failed to load dashboard data</div>
+        <div className="text-gray-500 dark:text-gray-400 text-sm">{error}</div>
         <button
           onClick={() => refetch()}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
         >
           Retry
         </button>
@@ -51,65 +50,58 @@ const AdministratorDashboard: React.FC = () => {
         icon={Shield}
       />
 
-      <DashboardCard
-        title="Recent Audit Events"
-        icon={Activity}
-        testId="recent-audit-logs"
-      >
-        <AuditLogTimeline
+      <div data-testid="recent-audit-logs">
+        <Card title="Recent Audit Events" icon={Activity}>
+          <AuditLogTimeline
           logs={(recentLogs || []).filter(
             (log: AuditLog) => log.eventType !== "Login" && log.eventType !== "Logout"
           )}
           maxItems={10}
           emptyMessage="No recent activity logs"
-        />
-      </DashboardCard>
+          />
+        </Card>
+      </div>
 
-      <DashboardCard
-        title="Quick Actions"
-        icon={Settings}
-        testId="quick-actions"
-      >
-        <ActionButtons
-          actions={
-            [
-              {
-                id: "manage-users",
-                title: "Manage Users",
-                description: "Users",
-                onClick: () => {},
-                icon: Users,
-                testId: "manage-users",
-              },
-              {
-                id: "manage-roles",
-                title: "Manage Roles",
-                description: "Roles",
-                onClick: () => {},
-                icon: Key,
-                testId: "manage-roles",
-              },
-              {
-                id: "system-settings",
-                title: "System Settings",
-                description: "Settings",
-                onClick: () => {},
-                icon: Settings,
-                testId: "system-settings",
-              },
-            ] as ActionButton[]
-          }
-          columns={3}
-          testId="quick-actions-list"
-        />
-      </DashboardCard>
+      <div data-testid="quick-actions">
+        <Card title="Quick Actions" icon={Settings}>
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            data-testid="quick-actions-list"
+          >
+            <Button
+              variant="secondary"
+              icon={Users}
+              onClick={() => {}}
+              data-testid="manage-users"
+              className="w-full justify-start"
+            >
+              Manage Users — Users
+            </Button>
+            <Button
+              variant="secondary"
+              icon={Key}
+              onClick={() => {}}
+              data-testid="manage-roles"
+              className="w-full justify-start"
+            >
+              Manage Roles — Roles
+            </Button>
+            <Button
+              variant="secondary"
+              icon={Settings}
+              onClick={() => {}}
+              data-testid="system-settings"
+              className="w-full justify-start"
+            >
+              System Settings — Settings
+            </Button>
+          </div>
+        </Card>
+      </div>
 
-      <DashboardCard
-        title="Database Overview"
-        icon={Database}
-        testId="database-overview"
-      >
-        <List
+      <div data-testid="database-overview">
+        <Card title="Database Overview" icon={Database}>
+          <List
           items={[]}
           renderItem={(metric) => (
             <div className="db-metric-item">{metric}</div>
@@ -117,7 +109,8 @@ const AdministratorDashboard: React.FC = () => {
           listClassName="metrics-list"
           testId="metrics-list"
         />
-      </DashboardCard>
+        </Card>
+      </div>
     </div>
   );
 };

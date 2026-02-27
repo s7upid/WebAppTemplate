@@ -5,15 +5,16 @@ import { mockUsers } from "@/mock";
 import { TEST_IDS } from "@/config";
 
 jest.mock("@/components", () => ({
-  ActionButtons: ({ actions, testId }: any) => (
+  Button: ({ children, onClick, "data-testid": dataTestId }: any) => (
+    <button type="button" onClick={onClick} data-testid={dataTestId}>
+      {children}
+    </button>
+  ),
+  QuickActions: ({ actions, testId }: any) => (
     <div data-testid={testId}>
-      {actions.map((action: any) => (
-        <button
-          key={action.id}
-          data-testid={action.testId}
-          onClick={action.onClick}
-        >
-          {action.title}
+      {actions.map((a: any) => (
+        <button key={a.id} type="button" data-testid={a.testId} onClick={a.onClick}>
+          {a.description ? `${a.title} — ${a.description}` : a.title}
         </button>
       ))}
     </div>
@@ -65,9 +66,9 @@ describe("UserActions", () => {
       />
     );
 
-    expect(screen.getByText("Edit User")).toBeTruthy();
-    expect(screen.getByText("Manage Roles")).toBeTruthy();
-    expect(screen.getByText("Manage Permissions")).toBeTruthy();
+    expect(screen.getByRole("button", { name: /edit user/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /manage roles/i })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /manage permissions/i })).toBeTruthy();
     expect(screen.getByRole("button", { name: /delete user/i })).toBeTruthy();
   });
 
@@ -85,7 +86,7 @@ describe("UserActions", () => {
       />
     );
 
-    fireEvent.click(screen.getByText("Edit User"));
+    fireEvent.click(screen.getByRole("button", { name: /edit user/i }));
     expect(onEditUser).toHaveBeenCalledWith(mockUser);
   });
 
@@ -122,7 +123,7 @@ describe("UserActions", () => {
       />
     );
 
-    fireEvent.click(screen.getByText("Manage Roles"));
+    fireEvent.click(screen.getByRole("button", { name: /manage roles/i }));
     expect(onManageRoles).toHaveBeenCalledWith(mockUser);
   });
 
@@ -140,7 +141,7 @@ describe("UserActions", () => {
       />
     );
 
-    fireEvent.click(screen.getByText("Manage Permissions"));
+    fireEvent.click(screen.getByRole("button", { name: /manage permissions/i }));
     expect(onManagePermissions).toHaveBeenCalledWith(mockUser);
   });
 
@@ -171,9 +172,9 @@ describe("UserActions", () => {
       />
     );
 
-    expect(screen.queryByText("Edit User")).not.toBeTruthy();
-    expect(screen.queryByText("Manage Roles")).not.toBeTruthy();
-    expect(screen.queryByText("Manage Permissions")).not.toBeTruthy();
+    expect(screen.queryByRole("button", { name: /edit user/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /manage roles/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /manage permissions/i })).toBeNull();
     expect(screen.queryByText("Delete User")).not.toBeTruthy();
   });
 

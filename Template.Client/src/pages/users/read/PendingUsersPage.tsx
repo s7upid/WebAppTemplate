@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GridPage } from "@/components";
+import { PaginatedGrid } from "@/components";
 import { UserResponse, ApproveUserRequest, RoleResponse, PagedResult } from "@/models";
 import { UserApprovalModal, UserRejectionModal } from "../modals";
 import { TEST_IDS } from "@/config";
@@ -16,6 +16,14 @@ interface PendingUsersPageProps {
   isLoading?: boolean;
 }
 
+const emptyResult: PagedResult<UserResponse> = {
+  items: [],
+  totalCount: 0,
+  pageNumber: 1,
+  pageSize: 10,
+  totalPages: 0,
+};
+
 const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
   paginationResult: propsPaginationResult,
   paginationHandlers: propsPaginationHandlers,
@@ -29,7 +37,6 @@ const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
     isLoading: hookIsLoading,
   } = useUsersQuery();
 
-  // Use props if provided, otherwise fallback to hook values
   const paginationResult = propsPaginationResult ?? hookPaginationResult;
   const paginationHandlers = propsPaginationHandlers ?? hookPaginationHandlers;
   const isLoading = propsIsLoading ?? hookIsLoading;
@@ -58,12 +65,10 @@ const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
       await approveUser(selectedUser.id!, request);
       setModalType(null);
       setSelectedUser(null);
-      if (paginationHandlers?.refreshWithParams) {
-        paginationHandlers.refreshWithParams({
-          searchTerm: "",
-          filters: { status: "pending" },
-        });
-      }
+      paginationHandlers?.refreshWithParams?.({
+        searchTerm: "",
+        filters: { status: "pending" },
+      });
     } finally {
       setModalActionLoading(false);
     }
@@ -76,43 +81,36 @@ const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
       await rejectUser(selectedUser.id!);
       setModalType(null);
       setSelectedUser(null);
-      if (paginationHandlers?.refreshWithParams) {
-        paginationHandlers.refreshWithParams({
-          searchTerm: "",
-          filters: { status: "pending" },
-        });
-      }
+      paginationHandlers?.refreshWithParams?.({
+        searchTerm: "",
+        filters: { status: "pending" },
+      });
     } finally {
       setModalActionLoading(false);
     }
   };
 
-  // When loading, show empty result to prevent stale data flicker
-  const emptyResult: PagedResult<UserResponse> = {
-    items: [],
-    totalCount: 0,
-    pageNumber: 1,
-    pageSize: 10,
-    totalPages: 0,
-  };
+  const result = isLoading ? emptyResult : (paginationResult ?? emptyResult);
+  const { items, totalCount, pageNumber, totalPages, pageSize } = result;
 
   return (
     <div className="p-6" data-testid={TEST_IDS.PENDING_USERS_PAGE}>
-      <GridPage<UserResponse>
-        pagedResult={isLoading ? emptyResult : (paginationResult ?? emptyResult)}
-        gridConfig={PENDING_USER_GRID_CONFIG}
-        callbacks={{
-          renderItem: (user) =>
-            renderPendingUserGridItem(
-              user,
-              openApprovalModal,
-              openRejectionModal
-            ),
-          onPageChange: paginationHandlers?.changePage,
-          onPageSizeChange: paginationHandlers?.changePageSize,
-        }}
-        testid={TEST_IDS.PENDING_USERS_PAGE}
+      <PaginatedGrid<UserResponse>
+        items={items}
         loading={isLoading}
+        renderCard={(user) =>
+          renderPendingUserGridItem(user, openApprovalModal, openRejectionModal)
+        }
+        columns={3}
+        emptyTitle={PENDING_USER_GRID_CONFIG.emptyStateTitle ?? "No items"}
+        emptyDescription={PENDING_USER_GRID_CONFIG.emptyStateDescription}
+        keyExtractor={(user) => user.id ?? ""}
+        pageNumber={pageNumber}
+        totalPages={totalPages}
+        totalCount={totalCount}
+        pageSize={pageSize}
+        paginationHandlers={paginationHandlers}
+        testId={TEST_IDS.PENDING_USERS_PAGE}
       />
 
       {modalType === "approve" && selectedUser && (

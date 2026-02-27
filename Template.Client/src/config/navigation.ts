@@ -1,4 +1,3 @@
-import { ComponentsReferencePage } from "@/pages";
 import { NavigationItem } from "@/models";
 import AuditLogsPage from "@/pages/audit/AuditLogsPage";
 import PermissionContainer from "@/pages/permissions/PermissionContainer";
@@ -11,7 +10,6 @@ import {
   DASHBOARD_MANAGEMENT_MODULE,
   ACCESS_MODULE,
   AUDIT_MODULE,
-  COMPONENTS_MODULE,
 } from "@/config/modules";
 import { SubmenuConfig } from "@/config/modules/types";
 
@@ -27,7 +25,6 @@ const MODULE_COMPONENTS: Record<string, React.ComponentType> = {
   roles: RoleContainer,
   permissions: PermissionContainer,
   audit: AuditLogsPage,
-  components: ComponentsReferencePage,
 };
 
 const getComponentForModule = (moduleId: string): React.ComponentType => {
@@ -102,19 +99,6 @@ const generateNavigationConfig = (): NavigationItem[] => {
       component: getComponentForModule(AUDIT_MODULE.id),
       testId: AUDIT_MODULE.testIds.nav,
       showInNav: true,
-    },
-    {
-      id: COMPONENTS_MODULE.id,
-      name: COMPONENTS_MODULE.labels.menuLabel,
-      href: COMPONENTS_MODULE.routes.base,
-      routePath: COMPONENTS_MODULE.routes.root,
-      icon: COMPONENTS_MODULE.icon,
-      roles: [ROLE_KEYS.ADMINISTRATOR],
-      component: getComponentForModule(COMPONENTS_MODULE.id),
-      testId: COMPONENTS_MODULE.testIds.nav,
-      showInNav: true,
-      position: "footer",
-      devOnlySuperAdmin: true,
     },
   ];
 };

@@ -501,8 +501,7 @@ The application uses PostgreSQL with the following main tables:
 
 ```bash
 # Create new migration (interactive - prompts for name)
-./add-migration.sh                   # macOS / Linux (from project root)
-add-migration.bat                    # Windows (from project root)
+./scripts/add-migration.command      # from project root (macOS/Linux/Git Bash)
 
 # Or manually:
 dotnet ef migrations add <MigrationName> \

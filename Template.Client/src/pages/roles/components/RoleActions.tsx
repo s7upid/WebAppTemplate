@@ -1,6 +1,6 @@
 import React from "react";
 import { RoleResponse } from "@/models";
-import { DangerZone, ActionButtons, Card } from "@/components";
+import { DangerZone, Card, QuickActions } from "@/components";
 import { Edit, ShieldAlert, Zap } from "lucide-react";
 import { RoleManagementPermissions, TEST_IDS } from "@/config";
 import styles from "./RoleActions.module.css";
@@ -28,18 +28,18 @@ const RoleActions: React.FC<RoleActionsProps> = ({
       onClick: () => onEditRole?.(role),
       requiresPermission: permissions.canEditRoles,
     },
-  ].filter((action) => action.requiresPermission);
+  ].filter((a) => a.requiresPermission);
 
   return (
     <div className={styles.container}>
       {permissions.canEditRoles && (
-        <Card title="Quick Actions" icon={Zap} iconSize="sm">
-          <ActionButtons
-            actions={quickActions}
-            columns={3}
-            testId="user-quick-actions"
-          />
-        </Card>
+        <QuickActions
+          title="Quick Actions"
+          icon={Zap}
+          iconSize="sm"
+          actions={quickActions.map(({ requiresPermission: _, ...a }) => a)}
+          testId="user-quick-actions"
+        />
       )}
 
       {permissions.canDeleteRoles && !role.isSystem && (

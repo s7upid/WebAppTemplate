@@ -1,1 +1,1 @@
-export { default as ComponentsReferencePage } from "./ComponentsReferencePage";
+// Components reference page removed; no exports.

@@ -18,14 +18,18 @@ jest.mock("@/hooks", () => ({
   }),
 }));
 
-jest.mock("@/components/LoadingSpinner/LoadingSpinner", () => ({
-  __esModule: true,
-  default: (props: { "data-testid"?: string }) => (
-    <div data-testid={props["data-testid"] || TEST_IDS.LOADING_SPINNER}>
-      loading
-    </div>
-  ),
-}));
+jest.mock("@/components", () => {
+  const React = require("react");
+  const stubs = require("@/test/__mocks__/component-stubs").default;
+  return {
+    ...stubs,
+    LoadingSpinner: (props: { "data-testid"?: string }) => (
+      <div data-testid={props["data-testid"] || TEST_IDS.LOADING_SPINNER}>
+        loading
+      </div>
+    ),
+  };
+});
 
 describe("DashboardFactory", () => {
   function renderWithAuth(value: unknown) {

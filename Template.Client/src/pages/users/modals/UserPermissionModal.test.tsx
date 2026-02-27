@@ -21,7 +21,7 @@ let mockPermissionsError: string | null = null;
 let mockIsRoleLoading = false;
 
 jest.mock("@/components", () => ({
-  ModalPage: ({ isOpen, onClose, title, children }: any) =>
+  Dialog: ({ isOpen, onClose, title, children }: any) =>
     isOpen ? (
       <div data-testid="modal" data-size="lg">
         <div data-testid="export-modal-title">{title}</div>

@@ -28,6 +28,7 @@ const config: Config = {
       "<rootDir>/src/services/entities/permissionService.ts",
     "^@/pages/HomePage$": "<rootDir>/src/test/__mocks__/HomePage.tsx",
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "^solstice-ui$": "<rootDir>/src/test/__mocks__/solstice-ui.tsx",
   },
 
   globals: {

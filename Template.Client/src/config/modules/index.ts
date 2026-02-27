@@ -5,7 +5,6 @@ export * from "./usersModule";
 export * from "./rolesModule";
 export * from "./permissionsModule";
 export * from "./auditModule";
-export * from "./componentsModule";
 
 export type { UserManagementPermissions } from "./usersModule";
 export type { RoleManagementPermissions } from "./rolesModule";
@@ -17,7 +16,6 @@ import { USERS_MODULE } from "./usersModule";
 import { ROLES_MODULE } from "./rolesModule";
 import { PERMISSIONS_MODULE } from "./permissionsModule";
 import { AUDIT_MODULE } from "./auditModule";
-import { COMPONENTS_MODULE } from "./componentsModule";
 import { ModuleConfig, ModuleConfigMap, PageTabConfig, DetailTabConfig, SubmenuConfig } from "./types";
 
 export const MODULES: ModuleConfigMap = {
@@ -28,7 +26,6 @@ export const MODULES: ModuleConfigMap = {
   roles: ROLES_MODULE,
   permissions: PERMISSIONS_MODULE,
   audit: AUDIT_MODULE,
-  components: COMPONENTS_MODULE,
 };
 
 export const getModule = (moduleId: string): ModuleConfig | undefined => MODULES[moduleId];

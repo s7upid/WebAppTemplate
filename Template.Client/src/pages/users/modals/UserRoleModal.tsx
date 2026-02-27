@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUsersQuery, useRolesQuery, useToast } from "@/hooks";
-import { ModalPage, Button, LoadingSpinner, Dropdown } from "@/components";
+import { Dialog, Button, LoadingSpinner, Dropdown } from "@/components";
 import { Shield, XCircle } from "lucide-react";
 import { RolePermissionsSection } from "@/pages";
 import { UserResponse, UpdateUserRequest, RoleResponse } from "@/models";
@@ -104,7 +104,7 @@ const UserRoleModal: React.FC<UserRoleModalProps> = ({
   if (!user) return null;
 
   return (
-    <ModalPage
+    <Dialog
       isOpen={isOpen}
       onClose={onClose}
       title="Manage User Role"
@@ -212,7 +212,7 @@ const UserRoleModal: React.FC<UserRoleModalProps> = ({
           </div>
         </div>
       </form>
-    </ModalPage>
+    </Dialog>
   );
 };
 

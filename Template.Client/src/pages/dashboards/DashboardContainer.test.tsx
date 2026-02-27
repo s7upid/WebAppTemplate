@@ -8,26 +8,25 @@ jest.mock("@/components/Guards/RoleGuard", () => ({
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-jest.mock("@/components/DangerZone/DangerZone", () => ({
-  __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
-
-jest.mock("@/components/Dropdown/Dropdown", () => ({
-  __esModule: true,
-  default: ({ label, options, value, onValueChange, ...props }: any) => (
-    <div>
-      {label && <label>{label}</label>}
-      <select value={value} onChange={(e) => onValueChange?.(e.target.value)} {...props}>
-        {options?.map((opt: any) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  ),
-}));
+jest.mock("@/components", () => {
+  const stubs = require("@/test/__mocks__/component-stubs").default;
+  return {
+    ...stubs,
+    DangerZone: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    Dropdown: ({ label, options, value, onValueChange, ...props }: any) => (
+      <div>
+        {label && <label>{label}</label>}
+        <select value={value} onChange={(e) => onValueChange?.(e.target.value)} {...props}>
+          {options?.map((opt: any) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    ),
+  };
+});
 
 jest.mock("@/components/Guards/RoleGuard", () => ({
   __esModule: true,

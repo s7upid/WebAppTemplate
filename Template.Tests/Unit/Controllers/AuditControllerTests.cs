@@ -41,7 +41,7 @@ public class AuditControllerTests : BaseUnitTest
                 Success = true
             }
         };
-        var pagedResult = new PagedResult<AuditLog>
+        var pagedResult = new Template.Data.Common.PagedResult<AuditLog>
         {
             Items = logs,
             TotalCount = 2,
@@ -69,7 +69,7 @@ public class AuditControllerTests : BaseUnitTest
     {
         // Arrange
         var @params = new PagedResultParams();
-        var pagedResult = new PagedResult<AuditLog>
+        var pagedResult = new Template.Data.Common.PagedResult<AuditLog>
         {
             Items = [],
             TotalCount = 0,

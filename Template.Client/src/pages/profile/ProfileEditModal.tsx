@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Save, UserIcon, XCircle } from "lucide-react";
-import { AvatarUploader, Button, Input, ModalPage } from "@/components";
+import { AvatarUploader, Button, Input, Dialog } from "@/components";
 import { useToast, useUsersQuery, useAuth } from "@/hooks";
 import styles from "./ProfileEditModal.module.css";
 import { UpdateUserRequest } from "@/models";
@@ -111,7 +111,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <ModalPage isOpen={isOpen} onClose={onClose} title="Edit Profile" size="md">
+    <Dialog isOpen={isOpen} onClose={onClose} title="Edit Profile" size="md">
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <AvatarUploader
           avatarUrl={avatarPreview || undefined}
@@ -172,7 +172,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
           </Button>
         </div>
       </form>
-    </ModalPage>
+    </Dialog>
   );
 };
 

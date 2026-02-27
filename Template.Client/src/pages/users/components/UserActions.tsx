@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "@/hooks";
 import { UserResponse } from "@/models";
-import { DangerZone, ActionButtons, Card } from "@/components";
+import { DangerZone, Card, QuickActions } from "@/components";
 import { Edit, Shield, ShieldAlert, UserCheck, Zap } from "lucide-react";
 import { TEST_IDS, UserManagementPermissions } from "@/config";
 import styles from "./UserActions.module.css";
@@ -53,18 +53,18 @@ const UserActions: React.FC<UserActionsProps> = ({
       onClick: () => onManagePermissions?.(user),
       requiresPermission: permissions.canEditUsers,
     },
-  ].filter((action) => action.requiresPermission);
+  ].filter((a) => a.requiresPermission);
 
   return (
     <div className={styles.container}>
       {quickActions.length > 0 && (
-        <Card title="Quick Actions" icon={Zap} iconSize="sm">
-          <ActionButtons
-            actions={quickActions}
-            columns={3}
-            testId="user-quick-actions"
-          />
-        </Card>
+        <QuickActions
+          title="Quick Actions"
+          icon={Zap}
+          iconSize="sm"
+          actions={quickActions.map(({ requiresPermission: _, ...a }) => a)}
+          testId="user-quick-actions"
+        />
       )}
 
       {permissions.canDeleteUsers && !isSelf && (

@@ -85,12 +85,14 @@ Template/
 │   └── Constants/                   # Centralized permission/role constants
 ├── Template.Tests/      # Backend unit tests
 ├── Documentation/                   # Detailed documentation
-├── test-coverage/                   # Coverage scripts (.bat + .sh)
-├── generate-constants.js            # C# to TypeScript constant generator
-├── start.sh / start.bat             # Start all services (DB + Backend + Frontend)
-├── add-migration.sh / .bat          # Create EF Core migration
-├── regenerate-models-for-fe.sh / Regenerate-models-for-FE.bat  # Regenerate TS models
-├── clean-bin-obj-folders.sh / Clean-bin-obj-folders.bat         # Clean build artifacts
+├── scripts/                         # Main scripts (see scripts/README.md)
+│   ├── start.command                # Start all services (DB + Backend + Frontend)
+│   ├── add-migration.command        # Create EF Core migration
+│   ├── regenerate-models.command    # Regenerate TS models & constants
+│   ├── clean.command                # Clean build artifacts
+│   ├── generate-test-report.command # Full coverage pipeline
+│   └── coverage/                    # Coverage step scripts
+├── generate-constants.js            # C# to TypeScript constant generator (run via scripts)
 └── README.md                        # This file
 ```
 
@@ -123,6 +125,7 @@ Template/
    cd Template.Client
    npm install
    ```
+   The Client uses the **Solstice UI** component library from a sibling folder: `"solstice-ui": "file:../../solstice-ui"`. Ensure the Solstice UI repo/folder is cloned or linked at that path and named **solstice-ui**. For full UI library and component docs, see [UI Library and Components](Documentation/UI-Library-and-Components.md).
 
 4. **Environment Configuration**
 
@@ -215,72 +218,65 @@ npm run cypress:run      # Run Cypress tests headlessly
 
 ```bash
 # Regenerate TypeScript models AND constants from C# (run from project root)
-./regenerate-models-for-fe.sh        # macOS / Linux
-Regenerate-models-for-FE.bat         # Windows
+./scripts/regenerate-models.command   # macOS / Linux / Git Bash
 
-# This runs:
-# 1. dotnet build (builds backend)
-# 2. dotnet tool run nswag run nswag.json (generates models)
-# 3. node generate-constants.js (generates permission/role constants)
+# Or: npm run regenerate-models
 
-# Generated files:
-# - Template.Client/src/models/generated.ts
-# - Template.Client/src/config/generated/permissionKeys.generated.ts
+# This runs: dotnet build, NSwag, then node generate-constants.js
+# Generated: Template.Client/src/models/generated.ts, .../config/generated/permissionKeys.generated.ts
 ```
 
 ### Quick Start (All Services)
 
+See **[scripts/README.md](scripts/README.md)** for full details. From project root (macOS/Linux/Git Bash):
+
 ```bash
-# Start PostgreSQL + Backend + Frontend in one command
-./start.sh                           # macOS / Linux
-start.bat                            # Windows
+# Start PostgreSQL + Backend + Frontend
+./scripts/start.command
+# Or: npm run start:full
 
-# Create a new EF Core migration
-./add-migration.sh                   # macOS / Linux
-add-migration.bat                    # Windows
+# Create a new EF Core migration (prompts for name)
+./scripts/add-migration.command
 
-# Clean all build artifacts (bin, obj, node_modules, dist, coverage)
-./clean-bin-obj-folders.sh           # macOS / Linux
-Clean-bin-obj-folders.bat            # Windows
+# Clean build artifacts (bin, obj, node_modules, dist, coverage)
+./scripts/clean.command
+# Or: npm run clean:scripts
 ```
 
 ### Coverage Scripts
 
-All coverage scripts are in the [`test-coverage/`](test-coverage/README.md) folder (available as both `.bat` and `.sh`):
+Full coverage pipeline is in **scripts**. See [scripts/README.md](scripts/README.md#coverage-generate-test-report).
 
 ```bash
-# Run all coverage (Backend + Jest + Cypress)
-./test-coverage/0-run-all-coverage.sh        # macOS / Linux
-test-coverage\0-run-all-coverage.bat         # Windows
+# Run all coverage (Backend + Jest + Cypress → extract → badges)
+./scripts/generate-test-report.command
+# Or: npm run coverage
 
-# Run individual scripts
-./test-coverage/1-run-be-coverage.sh         # Backend (.NET) only
-./test-coverage/2-run-fe-jest-coverage.sh    # Frontend Jest only
-./test-coverage/3-run-fe-cypress-coverage.sh # Frontend Cypress only
+# Individual steps (in scripts/coverage/)
+./scripts/coverage/1-run-be-coverage.command   # Backend (.NET) only
+./scripts/coverage/2-run-fe-jest-coverage.command  # Frontend Jest only
+./scripts/coverage/3-run-fe-cypress-coverage.command  # Frontend Cypress only
 
-# Extract results and update badges (after running tests)
-cd test-coverage
-node 4-extract-results.js
-node 5-update-readme-badges.js
+# Extract results and update badges (run from repo root; install deps in scripts/coverage if needed)
+node scripts/coverage/4-extract-results.js
+node scripts/coverage/5-update-readme-badges.js
 
 # Clean up all coverage artifacts
-./test-coverage/cleanup.sh                   # macOS / Linux
-test-coverage\cleanup.bat                    # Windows
+./scripts/coverage/cleanup.command
 ```
 
 ### Cleanup Scripts
 
 ```bash
 # Clean all coverage artifacts (from project root)
-./test-coverage/cleanup.sh           # macOS / Linux
-test-coverage\cleanup.bat            # Windows
+./scripts/coverage/cleanup.command
 
 # Clean frontend only (from Template.Client)
 npm run clean           # Clean coverage artifacts
 npm run clean:all       # Clean everything including node_modules
 ```
 
-See [test-coverage/README.md](test-coverage/README.md) for detailed documentation.
+See [scripts/README.md](scripts/README.md#coverage-generate-test-report) for detailed documentation.
 
 ## Testing
 
@@ -314,11 +310,12 @@ For detailed testing information, see [Testing Guide](Documentation/Testing-Guid
 | [Testing Guide](Documentation/Testing-Guide.md) | Jest and backend testing strategies |
 | [Cypress Guide](Documentation/Cypress-Testing-Complete.md) | E2E testing with Cypress |
 | [Design Guide](Documentation/Design-Guide.md) | UI/UX design principles |
+| [UI Library and Components](Documentation/UI-Library-and-Components.md) | Solstice UI architecture, component list, and reference page |
 | [Authentication System](Documentation/Complete-Authentication-System.md) | JWT auth, token refresh, flows |
 | [Security Enhancements](Documentation/Security-Enhancements.md) | Rate limiting, lockout, audit logging |
 | [Security Database Schema](Documentation/Security-Database-Schema.md) | Database design for security |
 | [Changelog](Documentation/Changelog.md) | Version history and changes |
-| [Coverage Scripts](test-coverage/README.md) | Test coverage generation |
+| [Scripts (incl. coverage)](scripts/README.md) | Main scripts & test coverage |
 
 **API Documentation**: [Swagger UI](http://localhost:5249/swagger) (when running)
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ModalPortal, Button, ModalPage } from "@/components";
+import { Button, Dialog } from "@/components";
 import { RoleResponse, UserResponse } from "@/models";
 import { useRolesQuery } from "@/hooks";
 import { CheckCircle } from "lucide-react";
@@ -32,13 +32,12 @@ const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
   }, [isOpen, paginationHandlers]);
 
   return (
-    <ModalPortal>
-      <ModalPage
-        isOpen={isOpen}
-        onClose={onClose}
-        title="Approve User Registration"
-        size="md"
-      >
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Approve User Registration"
+      size="md"
+    >
         <div className="user-approval-space-y-4">
           <div className="modal-user-info">
             <h3 className="user-info-title">User Information</h3>
@@ -78,10 +77,10 @@ const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
               ))}
             </select>
             {isLoading && (
-              <p className="text-sm text-gray-500 mt-1">Loading roles...</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Loading roles...</p>
             )}
             {!isLoading && roles.length === 0 && (
-              <p className="text-sm text-gray-500 mt-1">No roles available</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">No roles available</p>
             )}
           </div>
 
@@ -99,8 +98,7 @@ const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
             </Button>
           </div>
         </div>
-      </ModalPage>
-    </ModalPortal>
+    </Dialog>
   );
 };
 

@@ -24,8 +24,14 @@
 .description {
   @apply text-sm text-gray-500;
 }
+:global(.dark) .description {
+  @apply text-gray-400;
+}
 .details {
   @apply mt-2 flex items-center justify-center gap-2 text-sm text-gray-500;
+}
+:global(.dark) .details {
+  @apply text-gray-400;
 }
 .detailsIcon {
   @apply w-4 h-4;

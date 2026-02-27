@@ -1,6 +1,8 @@
 # Test Coverage Scripts
 
-This folder contains all test coverage generation scripts for the project.
+> **Preferred:** Use the scripts in the repo root **`scripts/`** folder: run **`./scripts/generate-test-report.command`** (or `npm run coverage`) for the full pipeline. See [scripts/README.md](../scripts/README.md#coverage-generate-test-report).
+
+This folder contains the original coverage scripts (`.sh` / `.bat`); equivalent `.command` scripts and extract/badge JS files live in **`scripts/coverage/`**.
 
 ## 📋 Scripts Overview
 
@@ -18,7 +20,10 @@ This folder contains all test coverage generation scripts for the project.
 
 ### Run Everything
 ```bash
-# From project root
+# From project root (prefer scripts folder)
+./scripts/generate-test-report.command       # or: npm run coverage
+
+# Legacy (this folder):
 ./test-coverage/0-run-all-coverage.sh        # macOS / Linux
 test-coverage\0-run-all-coverage.bat         # Windows
 ```
