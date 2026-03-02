@@ -83,13 +83,7 @@ export const useAuditTableConfig = (
                             item.user!.lastName ?? ""
                           }`.trim() || "User avatar"
                         }
-                        className="audit-user-avatar"
-                        style={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                        }}
+                        className="audit-user-avatar-img"
                       />
                     );
                   })()

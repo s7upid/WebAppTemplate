@@ -1,6 +1,7 @@
 import React from "react";
 import { RoleResponse } from "@/models";
-import { DangerZone, Card, QuickActions } from "@/components";
+import { DangerZone, Card } from "solstice-ui";
+import { QuickActions } from "@/components";
 import { Edit, ShieldAlert, Zap } from "lucide-react";
 import { RoleManagementPermissions, TEST_IDS } from "@/config";
 import styles from "./RoleActions.module.css";

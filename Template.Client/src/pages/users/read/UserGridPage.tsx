@@ -1,12 +1,9 @@
 import { useGenericNavigationFunctions } from "@/utils";
-import {
-  PaginatedGrid,
-  EntityToolbar,
-  EmptyState,
-} from "@/components";
-import { PagedResult, UserResponse } from "@/models";
+import { GridPage, EmptyState } from "solstice-ui";
+import { EntityToolbar } from "@/components";
+import { PagedResult, UserResponse, createEmptyPagedResult } from "@/models";
 import { TEST_IDS } from "@/config";
-import { useGridFilters } from "@/hooks";
+import { useGridFilters, usePaginationWithScroll, type GridPaginationHandlers } from "@/hooks";
 import {
   FILTERS,
   USER_GRID_CONFIG,
@@ -14,17 +11,9 @@ import {
   SORT_FIELDS,
 } from "../shared";
 
-const emptyResult: PagedResult<UserResponse> = {
-  items: [],
-  totalCount: 0,
-  pageNumber: 1,
-  pageSize: 10,
-  totalPages: 0,
-};
-
 interface UserGridPageProps {
   paginationResult: PagedResult<UserResponse>;
-  paginationHandlers: any;
+  paginationHandlers: GridPaginationHandlers;
   isLoading: boolean;
   error?: string | null;
   onRetry?: () => void;
@@ -41,8 +30,11 @@ const UserGridPage: React.FC<UserGridPageProps> = ({
   const handleUserClick = (user: UserResponse) => nav.goToUserDetail(user.id!);
   const { actionLoading, applyFilters, clearAll } =
     useGridFilters(paginationHandlers);
-
-  const result = isLoading ? emptyResult : (paginationResult ?? emptyResult);
+  const { onPageChange, onPageSizeChange } =
+    usePaginationWithScroll(paginationHandlers);
+  const result = isLoading
+    ? createEmptyPagedResult<UserResponse>()
+    : (paginationResult ?? createEmptyPagedResult<UserResponse>());
   const { items, totalCount, pageNumber, totalPages, pageSize } = result;
 
   if (error && !isLoading) {
@@ -55,17 +47,21 @@ const UserGridPage: React.FC<UserGridPageProps> = ({
     );
   }
 
+  const toolbar = (
+    <EntityToolbar
+      searchPlaceholder="Search users..."
+      filters={FILTERS}
+      sortFields={SORT_FIELDS}
+      loading={actionLoading}
+      onApply={applyFilters}
+      onClear={clearAll}
+    />
+  );
+
   return (
-    <>
-      <EntityToolbar
-        searchPlaceholder="Search users..."
-        filters={FILTERS}
-        sortFields={SORT_FIELDS}
-        loading={actionLoading}
-        onApply={applyFilters}
-        onClear={clearAll}
-      />
-      <PaginatedGrid<UserResponse>
+    <div data-testid={`${TEST_IDS.USER_PAGE}-page`}>
+      <GridPage<UserResponse>
+        content={toolbar}
         items={items}
         loading={isLoading}
         renderCard={(user) => renderUserGridItem(user, handleUserClick)}
@@ -77,10 +73,11 @@ const UserGridPage: React.FC<UserGridPageProps> = ({
         totalPages={totalPages}
         totalCount={totalCount}
         pageSize={pageSize}
-        paginationHandlers={paginationHandlers}
+        onPageChange={onPageChange}
+        onPageSizeChange={onPageSizeChange}
         testId={TEST_IDS.USER_PAGE}
       />
-    </>
+    </div>
   );
 };
 

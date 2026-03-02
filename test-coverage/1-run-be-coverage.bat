@@ -17,18 +17,18 @@ SET SCRIPT_DIR=%~dp0
 SET ROOT_DIR=%SCRIPT_DIR%..
 cd /d "%ROOT_DIR%"
 
-REM Paths
+REM Paths (use BE_COVERAGE_DIR to avoid overwriting parent COVERAGE_DIR when called from generate-test-report)
 SET TEST_PROJECT=Template.Tests\Template.Tests.csproj
 SET BUILD_DIR=Template.Tests\bin\Debug\net10.0
 SET TEST_DLL=%BUILD_DIR%\Template.Tests.dll
-SET COVERAGE_DIR=.\coverage
-SET COVERAGE_FILE=%COVERAGE_DIR%\coverage.info
-SET REPORT_DIR=%COVERAGE_DIR%\report
+SET BE_COVERAGE_DIR=.\coverage
+SET COVERAGE_FILE=%BE_COVERAGE_DIR%\coverage.info
+SET REPORT_DIR=%BE_COVERAGE_DIR%\report
 SET INDEX_FILE=%REPORT_DIR%\index.html
 
 REM Create coverage folder if it doesn't exist
-IF NOT EXIST "%COVERAGE_DIR%" (
-    mkdir "%COVERAGE_DIR%"
+IF NOT EXIST "%BE_COVERAGE_DIR%" (
+    mkdir "%BE_COVERAGE_DIR%"
 )
 
 REM Install coverlet.console if missing

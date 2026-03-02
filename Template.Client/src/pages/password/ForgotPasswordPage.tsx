@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Form, Input, LoadingSpinner, PageHeader } from "@/components";
+import { Button, Form, Input, PageHeader } from "solstice-ui";
 import { useAuth } from "@/hooks";
 import { useToast } from "@/hooks";
 import { useGenericNavigationFunctions } from "@/utils";
@@ -43,7 +43,7 @@ const ForgotPasswordPage: React.FC = () => {
             : "Invalid email";
         showError("Forgot Password", message);
       }
-    } catch (e) {
+    } catch {
       showError("Forgot Password", "Unable to process request.");
     } finally {
       setIsSubmitting(false);
@@ -76,11 +76,6 @@ const ForgotPasswordPage: React.FC = () => {
           >
             Send reset link
           </Button>
-          {isSubmitting && (
-            <div className="flex-center-mt-4">
-              <LoadingSpinner text="Sending..." />
-            </div>
-          )}
           <p className="text-sm-secondary">
             <Button
               type="button"

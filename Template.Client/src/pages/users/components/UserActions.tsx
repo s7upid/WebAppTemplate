@@ -1,7 +1,8 @@
 import React from "react";
 import { useAuth } from "@/hooks";
 import { UserResponse } from "@/models";
-import { DangerZone, Card, QuickActions } from "@/components";
+import { DangerZone, Card } from "solstice-ui";
+import { QuickActions } from "@/components";
 import { Edit, Shield, ShieldAlert, UserCheck, Zap } from "lucide-react";
 import { TEST_IDS, UserManagementPermissions } from "@/config";
 import styles from "./UserActions.module.css";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Dialog } from "@/components";
+import { Button, Input, Dialog } from "solstice-ui";
 import { useAuth, useToast } from "@/hooks";
 import { Lock, Eye, EyeOff, XCircle, Save } from "lucide-react";
 import { ChangePasswordRequest } from "@/models";
@@ -63,10 +63,10 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
         }, 2000);
       } else {
         const errorMessage =
-          (result as any)?.payload || "Failed to change password";
+          (result as { payload?: string })?.payload || "Failed to change password";
         showError("Password Change Failed", errorMessage);
       }
-    } catch (err) {
+    } catch {
       showError(
         "Password Change Failed",
         "An error occurred while changing password"

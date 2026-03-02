@@ -54,6 +54,12 @@ jest.mock("@/components", () => {
   const LoadingSpinner = () => <div data-testid="loading-spinner">Loading...</div>;
   const Pagination = () => <div data-testid="pagination">Pagination</div>;
   const Dialog = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
+  const Alert = ({ children, "data-testid": testId }: { children?: React.ReactNode; "data-testid"?: string }) => (
+    <div data-testid={testId ?? "alert"} role="alert">{children}</div>
+  );
+  const EmptyState = ({ title, "data-testid": testId }: { title?: string; "data-testid"?: string }) => (
+    <div data-testid={testId ?? "empty-state"}><span>{title}</span></div>
+  );
   return {
     Card,
     PageHeader,
@@ -61,6 +67,8 @@ jest.mock("@/components", () => {
     LoadingSpinner,
     Pagination,
     Dialog,
+    Alert,
+    EmptyState,
   };
 });
 

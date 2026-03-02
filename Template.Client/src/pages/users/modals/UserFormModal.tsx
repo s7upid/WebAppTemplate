@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  Button,
-  Input,
-  Dropdown,
-  AvatarUploader,
-  LoadingSpinner,
-} from "@/components";
+import { Dialog, Button, Input, Dropdown, LoadingSpinner } from "solstice-ui";
+import { AvatarUploader } from "@/components";
 import { XCircle, Save, Mail, UserIcon } from "lucide-react";
 import { useRolesQuery, useToast } from "@/hooks";
 import { TEST_IDS, UserManagementPermissions } from "@/config";
@@ -44,10 +38,6 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
 }) => {
   const isEditMode = formMode === "edit";
   const isCreateMode = formMode === "create";
-
-  if (isEditMode && !isProfileEdit && !permissions.canEditUsers) return null;
-  if (isCreateMode && !permissions.canCreateUsers) return null;
-
   const { roles, isLoading } = useRolesQuery();
   const { showError } = useToast();
 
@@ -85,6 +75,9 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
       setAvatarPreview(null);
     }
   }, [isOpen, user, isEditMode]);
+
+  if (isEditMode && !isProfileEdit && !permissions.canEditUsers) return null;
+  if (isCreateMode && !permissions.canCreateUsers) return null;
 
   const handleAvatarChange = (file: File) => {
     const reader = new FileReader();

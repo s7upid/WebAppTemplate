@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks";
-import { LoadingSpinner } from "@/components";
+import { LoadingSpinner } from "solstice-ui";
 import { TEST_IDS, ROLE_KEYS } from "@/config";
 
 const RoleBasedDashboardRedirect: React.FC = () => {

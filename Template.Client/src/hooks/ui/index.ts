@@ -1,5 +1,8 @@
 export { useConfirmation } from "./useConfirmation";
-export { useGridFilters } from "./useGridFilters";
+export { useGridFilters, type GridPaginationHandlers } from "./useGridFilters";
+export { usePaginationWithScroll } from "./usePaginationWithScroll";
+export type { PaginationHandlers } from "./usePaginationWithScroll";
+export { useDetailPageHeader } from "./useDetailPageHeader";
 export { useModalBlur } from "./useModalBlur";
 export { useOnceWhen } from "./useOnceWhen";
 export { useTheme } from "./useTheme";

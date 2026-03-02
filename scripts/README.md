@@ -29,14 +29,24 @@ You can also use the root `package.json` npm scripts that delegate to the `.comm
 | **start.command** / **start.bat** | Starts the full stack: PostgreSQL (Docker), .NET server, Vite client. Run from repo root. |
 | **add-migration.command** / **add-migration.bat** | Prompts for a migration name and runs `dotnet ef migrations add` (Data + Server projects). |
 | **regenerate-models.command** / **regenerate-models.bat** | Rebuilds server, restores .NET tools, runs NSwag, then `node generate-constants.js` (API client + constants). |
-| **clean.command** / **clean.bat** | Removes build artifacts: `bin`, `obj`, `node_modules`, `coverage`, `dist`, `TestResults`, `coverage-report.json`. |
-| **generate-test-report.command** / **generate-test-report.bat** | Full coverage pipeline: backend (.NET) → Jest → Cypress → extract results → update README badges. |
+| **clean.command** / **clean.bat** | Removes build artifacts: `bin`, `obj`, `node_modules`, `coverage`, `.nyc_output`, `.c8_output`, `dist`, `build`, `TestResults`, `coverage-report.json`. |
+| **generate-test-report.command** / **generate-test-report.bat** | Full coverage pipeline: **lint** (fails first if errors) → backend (.NET) → Jest → Cypress → extract results → update README badges. |
 
 ---
 
+## Lint and typecheck
+
+From the repo root:
+
+- `npm run lint` – runs ESLint in Template.Client (must pass before generate-test-report continues).
+- `npm run lint:fix` – same with auto-fix.
+- `npm run typecheck` – runs `tsc --noEmit` in Template.Client.
+
+Frontend test scripts (`npm test`, `npm run test:coverage`, `npm run test:ci`) are cross-platform and run Jest directly; no platform-specific wrappers.
+
 ## Coverage (generate-test-report)
 
-The **generate-test-report** script uses the helpers in `scripts/coverage/`:
+The **generate-test-report** script runs **lint** first; if lint fails, the script exits. It then uses the helpers in `scripts/coverage/`:
 
 - `1-run-be-coverage.command` / `.bat` – .NET tests with Coverlet + ReportGenerator
 - `2-run-fe-jest-coverage.command` / `.bat` – Jest unit test coverage
@@ -63,6 +73,15 @@ These run the same logic via bash:
 - `npm run regenerate-models` → `scripts/regenerate-models.command`
 - `npm run clean:scripts` → `scripts/clean.command`
 - `npm run coverage` → `scripts/generate-test-report.command`
+
+## GitHub Actions (CI)
+
+On push/PR to `main` or `develop`, `.github/workflows/ci.yml` runs:
+
+- **Lint** – ESLint + TypeScript typecheck (Template.Client)
+- **Unit tests (Client)** – Jest with coverage
+- **Unit tests (Server)** – `dotnet test` (Template.Tests)
+- **Build** – Vite client build + .NET server build (after lint and tests pass)
 
 ---
 

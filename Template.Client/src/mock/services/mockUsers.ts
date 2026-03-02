@@ -224,7 +224,7 @@ export class MockUsers {
 
   async getPendingUsers(): Promise<ApiResponse<UserResponse[]>> {
 
-    let pendingUsers = mockUsers.filter(
+    const pendingUsers = mockUsers.filter(
       (user) => user.userStatus === UserStatus.Pending
     );
 

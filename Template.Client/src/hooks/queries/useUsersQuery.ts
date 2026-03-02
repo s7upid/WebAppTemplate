@@ -100,10 +100,11 @@ export const useUsersQuery = (initialQuery?: PageQuery) => {
 
     if (params.searchTerm) qb = qb.search(params.searchTerm);
 
-    params.filters &&
+    if (params.filters) {
       Object.entries(params.filters).forEach(([k, v]) => {
         if (v && v !== "all") qb = qb.filter(k, v);
       });
+    }
 
     if (params.sortColumn) {
       qb = qb.sort(params.sortColumn, params.ascending ? "asc" : "desc");

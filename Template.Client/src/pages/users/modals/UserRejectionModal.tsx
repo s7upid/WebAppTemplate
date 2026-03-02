@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, Button } from "@/components";
+import { Dialog, Button } from "solstice-ui";
 import { UserResponse } from "@/models";
 import { XCircle } from "lucide-react";
 

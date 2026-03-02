@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Card,
-  EntityToolbar,
+  EmptyState,
   PageHeader,
   Dialog,
   LoadingSpinner,
   Pagination,
-} from "@/components";
+} from "solstice-ui";
+import { EntityToolbar } from "@/components";
 import RoleGuard from "@/components/Guards/RoleGuard";
 import { useAuditQuery } from "@/hooks";
 import { ROLE_NAMES as ROLE_KEYS } from "@/config/generated/permissionKeys.generated";
@@ -15,8 +17,8 @@ import type { AuditLog } from "@/models/generated";
 import { Activity } from "lucide-react";
 import { useAuditTableConfig } from "./useAuditTableConfig";
 import { renderChangeValue } from "@/utils/auditLogUtils";
+import { scrollToTop, cn } from "@/utils";
 import { AUDIT_FILTERS, AUDIT_SORT_FIELDS } from "./auditConstants";
-import { cn } from "@/utils";
 
 const AuditLogsPage: React.FC = () => {
   const { paginationResult, paginationHandlers, isLoading, error } = useAuditQuery();
@@ -64,13 +66,13 @@ const AuditLogsPage: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     setIsPaging(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop();
     paginationHandlers?.changePage(page);
   };
 
   const handlePageSizeChange = (size: number) => {
     setIsPaging(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop();
     paginationHandlers?.changePageSize(size);
   };
 
@@ -88,7 +90,7 @@ const AuditLogsPage: React.FC = () => {
     if (paginationResult) {
       setIsPaging(false);
     }
-  }, [paginationResult?.pageNumber, paginationResult?.pageSize]);
+  }, [paginationResult]);
 
   return (
     <RoleGuard role={[ROLE_KEYS.ADMINISTRATOR]}>
@@ -107,9 +109,9 @@ const AuditLogsPage: React.FC = () => {
 
       <div className="space-y-4" data-testid="audit-logs-page">
         {error ? (
-          <div data-testid="audit-logs-error" className="text-red-500 py-4">
-            Error: {error}
-          </div>
+          <Alert variant="error" data-testid="audit-logs-error">
+            {error}
+          </Alert>
         ) : showLoading ? (
           <div className="flex items-center justify-center min-h-96" data-testid={TEST_IDS.TABLE_LOADING}>
             <LoadingSpinner size="lg" text="Loading..." />
@@ -119,9 +121,10 @@ const AuditLogsPage: React.FC = () => {
             <Card>
               <div className="overflow-x-auto">
                 {items.length === 0 ? (
-                  <div className="text-center py-12" data-testid={TEST_IDS.TABLE_EMPTY}>
-                    <p className="text-gray-500 dark:text-gray-400">{emptyMessage}</p>
-                  </div>
+                  <EmptyState
+                    title={emptyMessage}
+                    data-testid={TEST_IDS.TABLE_EMPTY}
+                  />
                 ) : (
                   <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
                     <thead className="bg-gray-50 dark:bg-gray-700">

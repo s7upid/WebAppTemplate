@@ -1,4 +1,4 @@
-import { Button, Card } from "@/components";
+import { Button, Card } from "solstice-ui";
 import { TEST_IDS } from "@/config";
 import {
   Calendar,

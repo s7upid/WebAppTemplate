@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+          cache-dependency-path: Template.Client/package-lock.json
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install client dependencies
+        run: cd Template.Client && npm ci
+
+      - name: Restore server
+        run: dotnet restore Template.Server/Template.Server.csproj
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+  test-client:
+    name: Unit tests (Client)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+          cache-dependency-path: Template.Client/package-lock.json
+
+      - name: Install dependencies
+        run: cd Template.Client && npm ci
+
+      - name: Run unit tests with coverage
+        run: cd Template.Client && npm run test:ci
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: coverage-client
+          path: Template.Client/coverage/
+          retention-days: 7
+
+  test-server:
+    name: Unit tests (Server)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore Template.slnx
+
+      - name: Test
+        run: dotnet test Template.Tests/Template.Tests.csproj --no-restore -v normal
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint, test-client, test-server]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+          cache-dependency-path: Template.Client/package-lock.json
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install client dependencies
+        run: cd Template.Client && npm ci
+
+      - name: Restore server
+        run: dotnet restore Template.Server/Template.Server.csproj
+
+      - name: Build client
+        run: cd Template.Client && npm run build
+
+      - name: Build server
+        run: dotnet build Template.Server/Template.Server.csproj -c Release --no-restore
+
+      - name: Upload client dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-client
+          path: Template.Client/dist/

@@ -1,4 +1,4 @@
-import { Card } from "@/components";
+import { Card } from "solstice-ui";
 import { TEST_IDS } from "@/config";
 import { Key, Settings } from "lucide-react";
 import type {

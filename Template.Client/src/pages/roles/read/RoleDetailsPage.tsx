@@ -1,20 +1,15 @@
-import React, {
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useRoleQuery, useRolesQuery, useConfirmation, useToast } from "@/hooks";
+import {
+  useRoleQuery,
+  useRolesQuery,
+  useConfirmation,
+  useToast,
+  useDetailPageHeader,
+} from "@/hooks";
 import { handleEntityDelete, useGenericNavigationFunctions } from "@/utils";
 import { PageHeaderProps, RoleResponse } from "@/models";
-import {
-  ModalPortal,
-  ConfirmationDialog,
-  LoadingSpinner,
-  EmptyState,
-} from "@/components";
+import { ModalPortal, ConfirmationDialog, LoadingSpinner, EmptyState } from "solstice-ui";
 import {
   RoleActions,
   RolePermissionsSection,
@@ -32,7 +27,7 @@ import {
 interface RoleDetailsPageProps {
   permissions: RoleManagementPermissions;
   onEditRole?: (role: RoleResponse) => void;
-  setHeaderProps: Dispatch<SetStateAction<PageHeaderProps>>;
+  setHeaderProps: React.Dispatch<React.SetStateAction<PageHeaderProps>>;
   handleCreateRole: () => void;
 }
 
@@ -56,27 +51,11 @@ const RoleDetailsPage: React.FC<RoleDetailsPageProps> = ({
     return null;
   }, [role, handleBackToRoles]);
 
-  const defaultHeaderRef = React.useRef(
-    createRoleManagementHeader(permissions, handleCreateRole)
+  const defaultHeader = useMemo(
+    () => createRoleManagementHeader(permissions, handleCreateRole),
+    [permissions, handleCreateRole]
   );
-
-  // Store setHeaderProps in a ref to avoid dependency issues
-  const setHeaderPropsRef = React.useRef(setHeaderProps);
-  setHeaderPropsRef.current = setHeaderProps;
-
-  // Set header when role details are loaded
-  useEffect(() => {
-    if (roleDetailsHeader) {
-      setHeaderPropsRef.current(roleDetailsHeader);
-    }
-  }, [roleDetailsHeader]);
-
-  // Reset header only on unmount
-  useEffect(() => {
-    return () => {
-      setHeaderPropsRef.current(defaultHeaderRef.current);
-    };
-  }, []);
+  useDetailPageHeader(roleDetailsHeader, defaultHeader, setHeaderProps);
 
   const handleDeleteRole = useCallback(
     (roleToDelete: RoleResponse) =>

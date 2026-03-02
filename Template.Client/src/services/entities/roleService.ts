@@ -3,6 +3,7 @@ import { BaseService } from "../base/baseService";
 import { mockRole, mockPermissions } from "@/mock";
 import {
   RoleResponse,
+  PermissionResponse,
   PageQuery,
   PagedResult,
   QueryBuilder,
@@ -55,7 +56,7 @@ class RoleService extends BaseService {
       const permissionObjects = permissions
         .map((key) => mockPermissions.find((p) => p.key === key))
         .filter(Boolean);
-      return mockRole.updateRolePermissions(id, permissionObjects as any[]);
+      return mockRole.updateRolePermissions(id, permissionObjects as PermissionResponse[]);
     }
 
     return this.request<RoleResponse>(`${API.byId!(id)}/permissions`, {

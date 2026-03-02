@@ -14,7 +14,7 @@ export function useErrorHandler() {
   const nav = useGenericNavigationFunctions();
 
   const handleError = useCallback(
-    (response: ApiResponse<any>, customTitle?: string) => {
+    (response: ApiResponse<unknown>, customTitle?: string) => {
       if (!response || response.success) {
         return;
       }

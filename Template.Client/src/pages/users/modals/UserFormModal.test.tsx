@@ -130,13 +130,15 @@ describe("UserFormModal", () => {
 
   it("returns null when cannot edit and not profile edit", () => {
     const { container } = render(
-      <UserFormModal
-        permissions={{ canEditUsers: false } as any}
-        isOpen={true}
-        onClose={onClose}
-        onSave={onSave}
-        user={user}
-      />
+      <ToastProvider>
+        <UserFormModal
+          permissions={{ canEditUsers: false } as any}
+          isOpen={true}
+          onClose={onClose}
+          onSave={onSave}
+          user={user}
+        />
+      </ToastProvider>
     );
     expect(container.firstChild).toBeNull();
   });

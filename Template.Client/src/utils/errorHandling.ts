@@ -1,11 +1,11 @@
 import { ApiResponse } from "@/models/shared/api";
 import { ERROR_MESSAGES } from "@/config/constants";
 
-export function isRateLimitError(response: ApiResponse<any>): boolean {
+export function isRateLimitError(response: ApiResponse<unknown>): boolean {
   return response.status === 429;
 }
 
-export function isTokenRevocationError(response: ApiResponse<any>): boolean {
+export function isTokenRevocationError(response: ApiResponse<unknown>): boolean {
   if (response.status !== 401) return false;
   const message = response.message?.toLowerCase() || "";
   return (
@@ -15,7 +15,7 @@ export function isTokenRevocationError(response: ApiResponse<any>): boolean {
   );
 }
 
-export function getErrorMessage(response: ApiResponse<any>): string {
+export function getErrorMessage(response: ApiResponse<unknown>): string {
   if (!response || response.success) {
     return ERROR_MESSAGES.NETWORK_ERROR;
   }
@@ -47,7 +47,7 @@ export function getErrorMessage(response: ApiResponse<any>): string {
 }
 
 export function getErrorToastType(
-  response: ApiResponse<any>
+  response: ApiResponse<unknown>
 ): "error" | "warning" {
   if (isRateLimitError(response)) {
     return "warning";
@@ -55,7 +55,7 @@ export function getErrorToastType(
   return "error";
 }
 
-export function getErrorTitle(response: ApiResponse<any>): string {
+export function getErrorTitle(response: ApiResponse<unknown>): string {
   if (isRateLimitError(response)) {
     return "Rate Limit Exceeded";
   }

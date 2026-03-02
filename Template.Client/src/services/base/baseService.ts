@@ -94,7 +94,7 @@ export abstract class BaseService {
     }
 
     let responseText: string = "";
-    let responseJson: any = null;
+    let responseJson: Record<string, unknown> | string | null = null;
     try {
       responseText = await response.text();
       if (responseText) {
@@ -106,7 +106,7 @@ export abstract class BaseService {
       } else {
         responseJson = response?.statusText || "No content";
       }
-    } catch (parseError) {
+    } catch {
       responseJson = response?.statusText || "Failed to parse response";
     }
 
@@ -130,7 +130,9 @@ export abstract class BaseService {
 
         try {
           SecureStorage.clear();
-        } catch {}
+        } catch {
+          // Ignore clear errors
+        }
         if (!hasNavigatedToLogin && navigateToLogin) {
           hasNavigatedToLogin = true;
           clearAuthState?.();
@@ -148,6 +150,7 @@ export abstract class BaseService {
           status: 401,
         });
       } catch {
+        // Ignore refresh errors
       }
     }
 
@@ -167,7 +170,9 @@ export abstract class BaseService {
     if (response.status === 401) {
       try {
         SecureStorage.clear();
-      } catch {}
+      } catch {
+        // Ignore clear errors
+      }
       if (!hasNavigatedToLogin && navigateToLogin) {
         hasNavigatedToLogin = true;
         clearAuthState?.();

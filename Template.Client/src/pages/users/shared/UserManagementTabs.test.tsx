@@ -71,8 +71,7 @@ const createTestQueryClient = () =>
     },
   });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createMockStore = (): any => {
+const createMockStore = (): ReturnType<typeof configureStore> => {
   return configureStore({
     reducer: {
       auth: authReducer,

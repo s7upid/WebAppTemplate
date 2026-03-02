@@ -4,7 +4,7 @@ import AdministratorDashboard from "./components/AdministratorDashboard";
 import SupportDashboard from "./components/SupportDashboard";
 import RegulatorDashboard from "./components/RegulatorDashboard";
 import OperatorDashboard from "./components/OperatorDashboard";
-import { LoadingSpinner } from "@/components";
+import { LoadingSpinner } from "solstice-ui";
 import { TEST_IDS, ROLE_KEYS } from "@/config";
 
 const DashboardFactory: React.FC = () => {

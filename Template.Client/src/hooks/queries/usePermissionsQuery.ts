@@ -50,10 +50,11 @@ export const usePermissionsQuery = (initialQuery?: PageQuery) => {
 
       if (params.searchTerm) qb = qb.search(params.searchTerm);
 
-      params.filters &&
+      if (params.filters) {
         Object.entries(params.filters).forEach(([k, v]) => {
           if (v && v !== "all") qb = qb.filter(k, v);
         });
+      }
 
       if (params.sortColumn) {
         qb = qb.sort(params.sortColumn, params.ascending ? "asc" : "desc");
@@ -69,13 +70,17 @@ export const usePermissionsQuery = (initialQuery?: PageQuery) => {
   }, [query.pageSize]);
 
   /* ---------- Derived State ---------- */
-  const paginationResult = listQuery.data?.data ?? {
-    items: [] as PermissionResponse[],
-    totalCount: 0,
-    pageNumber: 1,
-    pageSize: DEFAULT_PAGE_SIZE,
-    totalPages: 0,
-  };
+  const paginationResult = useMemo(
+    () =>
+      listQuery.data?.data ?? {
+        items: [] as PermissionResponse[],
+        totalCount: 0,
+        pageNumber: 1,
+        pageSize: DEFAULT_PAGE_SIZE,
+        totalPages: 0,
+      },
+    [listQuery.data?.data]
+  );
 
   const paginationHandlers = useMemo(
     () => ({

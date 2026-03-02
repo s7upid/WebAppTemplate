@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Form, Input, LoadingSpinner, PageHeader } from "@/components";
+import { Button, Form, Input, PageHeader } from "solstice-ui";
 import { useToast } from "@/hooks";
 import { useGenericNavigationFunctions } from "@/utils";
 import { ResetPasswordRequest } from "@/models";
@@ -64,8 +64,8 @@ const ResetPasswordPage: React.FC = () => {
         "Your password has been reset successfully. You can now log in with your new password."
       );
       nav.goToLogin();
-    } catch (e: any) {
-      showError("Reset Password", e || "Unable to process request.");
+    } catch (e: unknown) {
+      showError("Reset Password", e instanceof Error ? e.message : "Unable to process request.");
     } finally {
       setIsSubmitting(false);
     }
@@ -153,9 +153,9 @@ const ResetPasswordPage: React.FC = () => {
           <Button
             type="submit"
             className="form-button-full"
-            disabled={isSubmitting}
+            loading={isSubmitting}
           >
-            {isSubmitting ? <LoadingSpinner size="sm" /> : "Reset Password"}
+            Reset Password
           </Button>
         </Form>
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Shield } from "lucide-react";
 import { useAllPermissions } from "@/hooks";
-import { LoadingSpinner } from "@/components";
+import { LoadingSpinner } from "solstice-ui";
 import { cn } from "@/utils/cn";
 import styles from "./PermissionSelector.module.css";
 import { PermissionResponse } from "@/models";
@@ -123,7 +123,7 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
             <LoadingSpinner size="sm" text="Loading permissions..." />
           </div>
         ) : permissionsError && permissionsData.length === 0 ? (
-          <div className="text-center text-red-500 py-4">
+          <div className="text-center text-red-500 dark:text-red-400 py-4">
             <p className="font-semibold">Error loading permissions</p>
             <p className="text-sm mt-1">{permissionsError}</p>
           </div>

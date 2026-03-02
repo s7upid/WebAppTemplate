@@ -63,7 +63,7 @@ This is a production-ready full-stack web application template designed as a sta
 Template/
 ├── Template.Client/     # React Frontend
 │   ├── src/
-│   │   ├── components/              # Reusable UI components
+│   │   ├── components/              # App components (Layout, EntityToolbar, Guards, etc.); UI primitives from solstice-ui
 │   │   ├── pages/                   # Page components
 │   │   ├── hooks/                   # Custom React hooks
 │   │   ├── store/                   # Redux store (slices)

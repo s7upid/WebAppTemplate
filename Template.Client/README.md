@@ -58,65 +58,52 @@ VITE_NODE_ENV=development
 Template.Client/
 ├── 📁 public/                    # Static assets
 ├── 📁 src/
-│   ├── 📁 components/            # Reusable UI components
-│   │   ├── 📁 Button/           # Button component
-│   │   ├── 📁 Input/            # Input components
-│   │   ├── 📁 Modal/            # Modal components
-│   │   ├── 📁 Table/            # Table components
-│   │   ├── 📁 Toast/            # Toast notifications
-│   │   └── 📁 Layout/           # Layout components
-│   ├── 📁 pages/                # Page components
-│   │   ├── 📁 auth/             # Authentication pages
-│   │   ├── 📁 users/            # User management
+│   ├── 📁 components/            # App-specific UI components (exported from @/components)
+│   │   ├── 📁 AuditLogCard/      # Audit log card (compact/modern)
+│   │   ├── 📁 AuditLogTimeline/  # Audit timeline
+│   │   ├── 📁 AvatarUploader/   # Avatar upload with preview
+│   │   ├── 📁 BasePage/          # Page wrapper with tabs
+│   │   ├── 📁 EntityToolbar/     # Search, filters, sort for grids
+│   │   ├── 📁 Guards/            # PermissionGuard, RoleGuard
+│   │   ├── 📁 Layout/            # Layout, UserMenu
+│   │   └── 📁 QuickActions/      # Quick action buttons
+│   ├── 📁 pages/                 # Page components
+│   │   ├── 📁 auth/              # Authentication pages
+│   │   ├── 📁 users/             # User management (grid, detail, pending)
 │   │   ├── 📁 roles/             # Role management
-│   │   ├── 📁 permissions/      # Permission management
-│   │   └── 📁 dashboard/        # Dashboard pages
-│   ├── 📁 hooks/                # Custom React hooks
-│   │   ├── 📁 queries/          # TanStack Query hooks
-│   │   │   ├── useUsersQuery.ts # User data fetching
-│   │   │   ├── useRolesQuery.ts # Role data fetching
-│   │   │   └── usePermissionsQuery.ts # Permission fetching
-│   │   ├── 📁 auth/             # Authentication hooks
-│   │   └── 📁 ui/               # UI hooks (useToast, useTheme, etc.)
+│   │   ├── 📁 permissions/       # Permission management
+│   │   ├── 📁 dashboards/        # Role-based dashboards
+│   │   ├── 📁 audit/             # Audit logs
+│   │   └── 📁 password/          # Forgot password, reset
+│   ├── 📁 hooks/                 # Custom React hooks
+│   │   ├── 📁 queries/           # TanStack Query (useUsersQuery, useRolesQuery, etc.)
+│   │   ├── 📁 auth/              # Authentication hooks
+│   │   └── 📁 ui/                # useToast, useTheme, useGridFilters, usePaginationWithScroll, useDetailPageHeader
 │   ├── 📁 services/             # API services
-│   │   ├── 📁 base/             # Base service classes
-│   │   ├── 📁 auth/             # Authentication service
-│   │   └── 📁 entities/         # Entity services (users, roles, etc.)
-│   ├── 📁 store/                # Redux store (client state only)
-│   │   ├── 📁 slices/           # Redux slices
-│   │   │   ├── authSlice.ts     # Authentication state
-│   │   │   └── themeSlice.ts    # Theme state
-│   │   └── index.ts             # Store configuration
-│   ├── 📁 utils/                # Utility functions
-│   │   ├── entityOperations.ts  # CRUD operation helpers
-│   │   ├── storage.ts           # Secure storage utilities
-│   │   ├── permissionCache.ts   # Permission checking cache
-│   │   ├── errorHandling.ts     # API error utilities
-│   │   ├── routeUtils.ts        # Navigation utilities
-│   │   └── ...                  # Other utilities (cn, env, logger)
-│   ├── 📁 models/               # TypeScript models
-│   │   ├── 📁 auth/             # Authentication models
-│   │   ├── 📁 users/            # User models
-│   │   ├── 📁 roles/            # Role models
-│   │   └── 📁 shared/           # Shared models
-│   ├── 📁 config/               # Configuration files
-│   │   ├── navigation.ts        # Navigation configuration
-│   │   ├── constants.ts         # Application constants
-│   │   ├── modules/             # Module configurations
-│   │   └── generated/           # Auto-generated constants
-│   │       └── permissionKeys.generated.ts  # Permission & role constants
-│   ├── 📁 mock/                 # Mock data for development
-│   ├── App.tsx                  # Main application component
-│   ├── index.tsx                # Application entry point
-│   └── index.css                # Global styles
-├── 📁 cypress/                  # E2E tests
-├── 📁 documentation/            # Documentation
+│   │   ├── 📁 base/              # Base service classes
+│   │   ├── 📁 auth/              # Authentication service
+│   │   └── 📁 entities/          # Entity services (users, roles, etc.)
+│   ├── 📁 store/                 # Redux store (client state only)
+│   │   ├── 📁 slices/            # authSlice, themeSlice
+│   │   └── index.ts              # Store configuration
+│   ├── 📁 utils/                 # Utility functions (scrollToTop, cn, env, logger, etc.)
+│   ├── 📁 models/                # TypeScript models (generated + shared, e.g. createEmptyPagedResult)
+│   ├── 📁 config/                # navigation, constants, generated/ (permissionKeys.generated.ts)
+│   ├── 📁 validations/           # Zod schemas
+│   ├── 📁 mock/                  # Mock data for development
+│   ├── 📁 test/                  # Test utilities and __mocks__ (e.g. solstice-ui)
+│   ├── App.tsx                   # Main application component
+│   ├── index.tsx                 # Entry point
+│   └── index.css                 # Global styles (Tailwind + theme-aware classes)
+├── 📁 cypress/                   # E2E tests
 ├── package.json                 # Dependencies and scripts
-├── vite.config.ts              # Vite configuration
-├── tailwind.config.ts          # Tailwind CSS configuration
-├── tsconfig.json               # TypeScript configuration
-└── README.md                   # This file
+├── vite.config.ts               # Vite configuration
+├── tailwind.config.ts           # Tailwind CSS (darkMode: 'class')
+├── tsconfig.json                # TypeScript configuration
+└── README.md                    # This file
 ```
+
+**UI library:** Primitives (Button, Card, Input, GridPage, LoadingSpinner, EmptyState, Dialog, etc.) come from **solstice-ui**. Import them from `"solstice-ui"`; do not re-export from `@/components`.
 
 ## 🛠️ Technologies
 
@@ -196,8 +183,8 @@ npm run clean:all        # Clean everything including node_modules
 
 # Code Quality
 npm run lint             # Run ESLint
-npx eslint . --fix       # Fix ESLint issues (manual)
-npx tsc --noEmit         # Run TypeScript checks (manual)
+npm run lint:fix         # Run ESLint with auto-fix
+npm run typecheck       # TypeScript check (tsc --noEmit)
 ```
 
 ### Development Workflow
@@ -349,47 +336,54 @@ function ProtectedComponent() {
 
 ## 🧩 Components
 
-### Component Library
+### App components (`@/components`)
 
-The application includes a comprehensive component library:
+These are exported from `src/components/index.ts`:
 
-#### Core Components
+| Component | Description |
+|-----------|-------------|
+| **QuickActions** | Quick action button group |
+| **AuditLogCard** | Audit event card (compact or modern variant) |
+| **AuditLogTimeline** | Timeline of audit events |
+| **AvatarUploader** | Avatar upload with preview |
+| **BasePage** | Page wrapper with optional tabs |
+| **EntityToolbar** | Search, filters, sort for grid pages |
+| **PermissionGuard** | Renders children only if user has permission(s) |
+| **RoleGuard** | Renders children only if user has role(s) |
+| **Layout** | Main app layout (sidebar, header, theme toggle) |
+| **UserMenu** | User dropdown in header |
 
-- **Button** - Various button styles and states
-- **Input** - Form input components
-- **Modal** - Modal dialogs and overlays
-- **Table** - Data tables with sorting and pagination
-- **Toast** - Notification system
-- **LoadingSpinner** - Loading indicators
+### UI primitives (solstice-ui)
 
-#### Layout Components
+Import from `"solstice-ui"` (do not re-export from `@/components`):
 
-- **Layout** - Main application layout
-- **Sidebar** - Navigation sidebar
-- **Header** - Application header
-- **Footer** - Application footer
+- **Button**, **Input**, **Form**, **Dropdown**, **SearchInput**
+- **Card**, **GridPage**, **EmptyState**, **Alert**
+- **LoadingSpinner**, **PageHeader**, **Dialog**, **Pagination**
+- **ThemeToggle**, **TabNavigation** (and type **TabItem**)
 
-#### Form Components
-
-- **FormField** - Form field wrapper
-- **Select** - Dropdown select component
-- **Checkbox** - Checkbox input
-- **Radio** - Radio button input
-- **DatePicker** - Date selection component
-
-### Component Usage
+### Component usage
 
 ```typescript
-import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { Modal } from "@/components/Modal";
+import { Button, Card, GridPage } from "solstice-ui";
+import { EntityToolbar, Layout } from "@/components";
 
-function MyComponent() {
+function MyPage() {
   return (
-    <Modal isOpen={true} onClose={() => {}}>
-      <Input placeholder="Enter text..." />
+    <Layout>
+      <EntityToolbar
+        searchPlaceholder="Search..."
+        onApply={applyFilters}
+        onClear={clearAll}
+      />
+      <GridPage
+        items={items}
+        loading={isLoading}
+        renderCard={(item) => <Card>...</Card>}
+        content={<EntityToolbar ... />}
+      />
       <Button variant="primary">Submit</Button>
-    </Modal>
+    </Layout>
   );
 }
 ```
@@ -401,19 +395,14 @@ function MyComponent() {
 ```typescript
 interface RootState {
   auth: AuthState;
-  users: UsersState;
-  roles: RolesState;
-  permissions: PermissionsState;
-  ui: UIState;
+  theme: ThemeState;   // light/dark mode, persisted
 }
 ```
 
 ### Redux Slices
 
 - **authSlice** - Authentication state and actions
-- **userSlice** - User management state
-- **roleSlice** - Role management state
-- **permissionSlice** - Permission management state
+- **themeSlice** - Theme state (light/dark); applied as `dark` class on `<html>` for Tailwind
 
 ### Using Redux
 
@@ -438,32 +427,18 @@ function LoginComponent() {
 
 ### Tailwind CSS
 
-The application uses Tailwind CSS for styling:
+The app uses **Tailwind CSS v4** with `darkMode: 'class'`. The theme is applied by toggling the `dark` class on `<html>` (see `useTheme` and Redux `themeSlice`). Use `dark:` variants so components work in both themes.
 
 ```typescript
-function Card({ children }) {
-  return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-      {children}
-    </div>
-  );
-}
+// Prefer theme-aware classes
+<div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg p-4">
+  {children}
+</div>
 ```
 
-### Custom CSS Classes
+### Global styles
 
-```css
-/* Global styles in index.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer components {
-  .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded;
-  }
-}
-```
+Global styles live in `src/index.css` (`@import "tailwindcss"`). Theme-aware utility classes (e.g. `.input-label`, `.input-field`, `.dark .input-field`) are defined there. Component-specific styles use CSS modules (`.module.css`) with `:global(.dark)` for dark variants.
 
 ### Responsive Design
 

@@ -2,7 +2,7 @@ import { Menu, X, ChevronRight, PanelLeftClose, PanelLeft } from "lucide-react";
 import React, { useState, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { usePermissions, useAuth, useTheme } from "@/hooks";
-import { ThemeToggle } from "@/components";
+import { ThemeToggle } from "solstice-ui";
 import PasswordChangeModal from "@/pages/password/PasswordChangeModal";
 import ProfileEditModal from "@/pages/profile/ProfileEditModal";
 import UserMenu from "./UserMenu";
@@ -13,6 +13,7 @@ import {
   isNavigationActive,
 } from "@/utils";
 import { getNavigationByPermissions, TEST_IDS } from "@/config";
+import type { NavigationItem } from "@/models";
 import { ROLE_NAMES as ROLE_KEYS } from "@/config/generated/permissionKeys.generated";
 import styles from "./Layout.module.css";
 
@@ -76,17 +77,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const openPasswordModal = useCallback(() => setShowPasswordModal(true), []);
   const closePasswordModal = useCallback(() => setShowPasswordModal(false), []);
 
-  const renderNavigationItem = useCallback((item: any, isMobile = false) => {
+  const renderNavigationItem = useCallback((item: NavigationItem, isMobile = false) => {
     const Icon = item.icon;
     const hasChildren = item.children && item.children.length > 0;
     const isSubmenuOpen =
       openSubmenus.has(item.id) ||
       (hasChildren &&
-        item.children.some((child: any) => isCurrentPath(child.href)));
+        item.children.some((child: NavigationItem) => isCurrentPath(child.href)));
     const isActive =
       isCurrentPath(item.href) ||
       (hasChildren &&
-        item.children.some((child: any) => isCurrentPath(child.href)));
+        item.children.some((child: NavigationItem) => isCurrentPath(child.href)));
 
     if (hasChildren) {
       return (
@@ -126,14 +127,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             )}
           >
             {item.children
-              .filter((child: any) => {
+              .filter((child: NavigationItem) => {
                 if (child.permission && hasPermission(child.permission))
                   return true;
                 if (child.roles && hasRole(child.roles)) return true;
                 if (!child.permission && !child.roles) return true;
                 return false;
               })
-              .map((child: any) => {
+              .map((child: NavigationItem) => {
                 const ChildIcon = child.icon;
                 const isChildActive = isCurrentPath(child.href);
                 return (
@@ -254,7 +255,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 const isActive =
                   isCurrentPath(item.href) ||
                   (hasChildren &&
-                    item.children?.some((child: any) => isCurrentPath(child.href)));
+                    item.children?.some((child: NavigationItem) => isCurrentPath(child.href)));
 
                 const targetHref = item.href || (hasChildren ? item.children?.[0]?.href : undefined) || "/";
 

@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Routes, Route } from "react-router-dom";
-import {
-  ConfirmationDialog,
-  BasePage,
-  PermissionGuard,
-  ModalPortal,
-} from "@/components";
+import { ConfirmationDialog, ModalPortal } from "solstice-ui";
+import { BasePage, PermissionGuard } from "@/components";
 import {
   CreateUserRequest,
   UpdateUserRequest,

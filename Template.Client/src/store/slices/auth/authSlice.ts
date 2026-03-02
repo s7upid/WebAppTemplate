@@ -49,10 +49,11 @@ export const loginUser = createAsyncThunk<
   }
 });
 
-export const logoutUser = createAsyncThunk("auth/logout", async (_, {}) => {
+export const logoutUser = createAsyncThunk("auth/logout", async (_, _thunkApi) => {
   try {
     await authService.logout();
-  } catch (error: unknown) {
+  } catch {
+    // Ignore logout errors
   } finally {
     SecureStorage.clear();
   }
@@ -167,7 +168,7 @@ export const resetPassword = createAsyncThunk<null, ResetPasswordRequest>(
       }
 
       return response.data || null;
-    } catch (error) {
+    } catch {
       return rejectWithValue("Password reset failed");
     }
   }
@@ -185,7 +186,7 @@ export const confirmEmail = createAsyncThunk<null, ConfirmEmailRequest>(
       }
 
       return response.data || null;
-    } catch (error) {
+    } catch {
       return rejectWithValue("Email confirmation failed");
     }
   }

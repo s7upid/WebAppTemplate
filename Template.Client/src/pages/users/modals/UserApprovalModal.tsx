@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Dialog } from "@/components";
+import { Button, Dialog } from "solstice-ui";
 import { RoleResponse, UserResponse } from "@/models";
 import { useRolesQuery } from "@/hooks";
 import { CheckCircle } from "lucide-react";

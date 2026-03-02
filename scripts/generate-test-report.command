@@ -7,7 +7,7 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-COVERAGE_DIR="$SCRIPT_DIR/coverage"
+COVERAGE_DIR="$ROOT_DIR/test-coverage"
 
 echo
 echo "=========================================="
@@ -19,9 +19,21 @@ BACKEND_FAILED=0
 JEST_FAILED=0
 CYPRESS_FAILED=0
 
-echo "[1/5] Running Backend (.NET) Coverage..."
+echo "[0/6] Running Lint..."
 echo "----------------------------------------"
-if bash "$COVERAGE_DIR/1-run-be-coverage.command"; then
+cd "$ROOT_DIR/Template.Client"
+if [ ! -d "node_modules/@eslint/js" ]; then
+    echo "Installing Template.Client dependencies (required for ESLint)..."
+    npm install
+fi
+cd "$ROOT_DIR"
+npm run lint || { echo "[ERROR] Lint failed. Fix lint errors and run again."; exit 1; }
+echo "[SUCCESS] Lint passed."
+echo
+
+echo "[1/6] Running Backend (.NET) Coverage..."
+echo "----------------------------------------"
+if bash "$COVERAGE_DIR/1-run-be-coverage.sh"; then
     echo "[SUCCESS] Backend coverage generated"
 else
     echo "[WARNING] Backend coverage generation had issues"
@@ -29,9 +41,9 @@ else
 fi
 echo
 
-echo "[2/5] Running Frontend Jest Coverage..."
+echo "[2/6] Running Frontend Jest Coverage..."
 echo "----------------------------------------"
-if bash "$COVERAGE_DIR/2-run-fe-jest-coverage.command"; then
+if bash "$COVERAGE_DIR/2-run-fe-jest-coverage.sh"; then
     echo "[SUCCESS] Jest coverage generated"
 else
     echo "[WARNING] Jest coverage generation had issues"
@@ -39,9 +51,9 @@ else
 fi
 echo
 
-echo "[3/5] Running Frontend Cypress Coverage..."
+echo "[3/6] Running Frontend Cypress Coverage..."
 echo "----------------------------------------"
-if bash "$COVERAGE_DIR/3-run-fe-cypress-coverage.command"; then
+if bash "$COVERAGE_DIR/3-run-fe-cypress-coverage.sh"; then
     echo "[SUCCESS] Cypress coverage generated"
 else
     echo "[WARNING] Cypress coverage generation had issues"
@@ -49,7 +61,7 @@ else
 fi
 echo
 
-echo "[4/5] Extracting Coverage Results..."
+echo "[4/6] Extracting Coverage Results..."
 echo "----------------------------------------"
 cd "$COVERAGE_DIR"
 if [ ! -d "node_modules" ]; then
@@ -64,7 +76,7 @@ else
 fi
 echo
 
-echo "[5/5] Updating README Badges..."
+echo "[5/6] Updating README Badges..."
 echo "----------------------------------------"
 if node "$COVERAGE_DIR/5-update-readme-badges.js"; then
     echo "[SUCCESS] README badges updated"

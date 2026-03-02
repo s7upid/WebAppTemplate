@@ -76,7 +76,7 @@ function setupCoverageTasks(on: Cypress.PluginEvents) {
           for (const file of files) {
             try {
               fs.unlinkSync(path.join(dir, file));
-            } catch (e) {
+            } catch {
               // Ignore errors
             }
           }

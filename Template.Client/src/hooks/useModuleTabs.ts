@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { TabItem } from "@/components";
+import type { TabItem } from "solstice-ui";
 import { PageTabConfig, DetailTabConfig, ModuleConfig } from "@/config/modules/types";
 import { getModulePageTabs, getModuleDetailTabs, getModule, ModuleId } from "@/config/modules";
 import { usePermissions } from "./usePermissions";
@@ -35,7 +35,10 @@ export function useModulePageTabs(
 
   const hasPermission = options?.customHasPermission ?? hookHasPermission;
   const module = getModule(moduleId);
-  const tabConfigs = getModulePageTabs(moduleId) ?? [];
+  const tabConfigs = useMemo(
+    () => getModulePageTabs(moduleId) ?? [],
+    [moduleId]
+  );
 
   const tabs: TabItem[] = useMemo(() => {
     return tabConfigs.map((tab: PageTabConfig) => ({
@@ -82,7 +85,10 @@ export function useModuleDetailTabs(
   const { hasPermission: hookHasPermission } = usePermissions();
 
   const hasPermission = options?.customHasPermission ?? hookHasPermission;
-  const tabConfigs = getModuleDetailTabs(moduleId) ?? [];
+  const tabConfigs = useMemo(
+    () => getModuleDetailTabs(moduleId) ?? [],
+    [moduleId]
+  );
 
   const tabs: TabItem[] = useMemo(() => {
     return tabConfigs.map((tab: DetailTabConfig) => ({

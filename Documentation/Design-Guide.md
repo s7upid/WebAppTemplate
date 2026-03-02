@@ -37,10 +37,12 @@ function MyComponent() {
 
 ### Theme Toggle Component
 ```typescript
-import ThemeToggle from '@/components/ThemeToggle';
+import { ThemeToggle } from "solstice-ui";
+import { useTheme } from "@/hooks/ui/useTheme";
 
 function Layout() {
-  return <ThemeToggle />;
+  const { theme, toggleTheme } = useTheme();
+  return <ThemeToggle theme={theme} onToggle={toggleTheme} />;
 }
 ```
 
@@ -94,43 +96,24 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
 ### Core Components
 
-#### Button
+#### Button, Input, Card, Dialog
+These come from **solstice-ui**. Import from `"solstice-ui"`:
+
 ```typescript
-<Button variant="primary" size="md">
-  Click Me
-</Button>
+import { Button, Input, Card, Dialog } from "solstice-ui";
+
+<Button variant="primary" size="md">Click Me</Button>
+<Input type="text" placeholder="Enter text" error="Error message" />
+<Card title="Title">Content</Card>
+<Dialog isOpen={isOpen} onClose={onClose} title="Modal">...</Dialog>
 ```
 
-**Variants**: `primary`, `secondary`, `ghost`, `danger`
-**Sizes**: `sm`, `md`, `lg`
-
-#### Input
-```typescript
-<Input 
-  type="text" 
-  placeholder="Enter text"
-  error="Error message"
-/>
-```
-
-#### Card
-```typescript
-<Card>
-  <CardHeader>Title</CardHeader>
-  <CardContent>Content</CardContent>
-</Card>
-```
-
-#### Modal
-```typescript
-<Modal isOpen={isOpen} onClose={onClose}>
-  <ModalContent>Modal content</ModalContent>
-</Modal>
-```
+See the solstice-ui library for variants, sizes, and full API.
 
 #### TabNavigation
 ```typescript
-import { TabNavigation, TabItem } from "@/components";
+import { TabNavigation } from "solstice-ui";
+import type { TabItem } from "solstice-ui";
 
 const tabs: TabItem[] = [
   { id: "all", label: "All Items", icon: List },
@@ -148,45 +131,28 @@ const tabs: TabItem[] = [
 />
 ```
 
-**Props:**
-- `tabs`: Array of `TabItem` objects
-- `activeTab`: Currently selected tab ID
-- `onTabChange`: Callback when tab changes
-- `hasPermission`: Function to check permissions (optional)
-- `variant`: Visual style (`default`, `pills`, `underline`)
-- `size`: Tab size (`sm`, `md`, `lg`)
-- `testId`: Data-testid for testing
-
-**TabItem Interface:**
-```typescript
-interface TabItem {
-  id: string;           // Unique identifier
-  label: string;        // Display text
-  icon?: LucideIcon;    // Optional icon
-  permission?: string;  // Permission required to show tab
-  isVisible?: boolean;  // Manual visibility control
-  disabled?: boolean;   // Disable tab
-  badge?: string | number; // Badge content
-  testId?: string;      // Test ID
-}
-```
+**Props:** `tabs` (TabItem[]), `activeTab`, `onTabChange`, `hasPermission` (optional), `variant`, `size`, `testId`. **TabItem**: `id`, `label`, `icon?`, `permission?`, `isVisible?`, `disabled?`, `badge?`, `testId?`. See solstice-ui for full definitions.
 
 ### Layout Components
 
-#### Layout
+#### Layout (app component)
 ```typescript
+import { Layout } from "@/components";
+
 <Layout>
-  <Sidebar />
-  <MainContent />
+  <Outlet />  {/* or page content */}
 </Layout>
 ```
+Layout includes sidebar, header, theme toggle, and user menu.
 
-#### PageHeader
+#### PageHeader (solstice-ui)
 ```typescript
+import { PageHeader, Button } from "solstice-ui";
+
 <PageHeader 
   title="Page Title"
   description="Page description"
-  actions={<Button>Action</Button>}
+  icon={SomeIcon}
 />
 ```
 

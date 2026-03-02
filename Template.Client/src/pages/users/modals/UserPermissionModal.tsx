@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useUsersQuery, useToast, useRoleQuery, useAllPermissions } from "@/hooks";
 import { TEST_IDS } from "@/config/constants";
 import { PERMISSIONS_MODULE, UserManagementPermissions } from "@/config/modules";
-import { Dialog, Button, LoadingSpinner } from "@/components";
+import { Dialog, Button, LoadingSpinner } from "solstice-ui";
 import { Key, XCircle } from "lucide-react";
 import {
   UserResponse,
@@ -41,8 +41,6 @@ const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
   onClose,
   user,
 }) => {
-  if (!permissions.canEditUsers) return null;
-
   const { edit: editUser } = useUsersQuery();
   const { showSuccess } = useToast();
   const { error: permissionsError } = useAllPermissions();
@@ -66,7 +64,9 @@ const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
       selectedRole && user?.role?.id && selectedRole.id === user.role.id
         ? selectedRole.permissions || []
         : user?.role?.permissions || [];
-    return (loaded || []).map((p: any) => p.key as PermissionKey);
+    return (loaded || []).map((p: { key: PermissionKey } | PermissionKey) =>
+      typeof p === "string" ? p : p.key
+    );
   }, [user, selectedRole]);
 
   // Role is now fetched automatically by useRoleQuery when user?.role?.id changes
@@ -183,6 +183,7 @@ const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
     [user, selectedPermissions, rolePermissions, editUser, onClose, setError, showSuccess]
   );
 
+  if (!permissions.canEditUsers) return null;
   if (!user) return null;
 
   return (

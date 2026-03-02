@@ -1,6 +1,15 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 
-export const useGridFilters = (paginationHandlers?: any) => {
+export interface GridPaginationHandlers {
+  refreshWithParams?: (args: {
+    searchTerm: string;
+    filters: Record<string, string>;
+    sortColumn?: string;
+    ascending?: boolean;
+  }) => Promise<void>;
+}
+
+export const useGridFilters = (paginationHandlers?: GridPaginationHandlers) => {
   const [actionLoading, setActionLoading] = useState(false);
 
   const applyFilters = useCallback(
@@ -11,7 +20,6 @@ export const useGridFilters = (paginationHandlers?: any) => {
       ascending?: boolean;
     }) => {
       if (!paginationHandlers?.refreshWithParams) return;
-
       setActionLoading(true);
       try {
         await paginationHandlers.refreshWithParams({
@@ -31,8 +39,5 @@ export const useGridFilters = (paginationHandlers?: any) => {
     paginationHandlers?.clearAll?.();
   }, [paginationHandlers]);
 
-  return useMemo(
-    () => ({ actionLoading, applyFilters, clearAll }),
-    [actionLoading, applyFilters, clearAll]
-  );
+  return { actionLoading, applyFilters, clearAll };
 };

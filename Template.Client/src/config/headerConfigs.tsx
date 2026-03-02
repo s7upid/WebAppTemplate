@@ -7,7 +7,7 @@ import {
   UserManagementPermissions,
   RoleManagementPermissions,
 } from "@/config/modules";
-import { Button } from "@/components";
+import { Button } from "solstice-ui";
 
 export const createUserManagementHeader = (
   permissions: UserManagementPermissions,

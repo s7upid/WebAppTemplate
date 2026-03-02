@@ -29,7 +29,9 @@ export const SecureStorage = {
     try {
       const encryptedValue = encrypt(value);
       localStorage.setItem(keyName(key), encryptedValue);
-    } catch {}
+    } catch {
+      // Ignore storage errors
+    }
   },
 
   getItem: (key: string): string | null => {
@@ -45,7 +47,9 @@ export const SecureStorage = {
   removeItem: (key: string): void => {
     try {
       localStorage.removeItem(keyName(key));
-    } catch {}
+    } catch {
+      // Ignore storage errors
+    }
   },
 
   clear: (): void => {
@@ -53,7 +57,9 @@ export const SecureStorage = {
       Object.keys(localStorage)
         .filter((k) => k.startsWith(STORAGE_PREFIX))
         .forEach((k) => localStorage.removeItem(k));
-    } catch {}
+    } catch {
+      // Ignore storage errors
+    }
   },
 
   setAuth: (auth: AuthResponse): void => {

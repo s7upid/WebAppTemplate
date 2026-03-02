@@ -65,13 +65,17 @@ export const useAuditQuery = (initialQuery?: PageQuery) => {
   );
 
   /* ---------- Derived ---------- */
-  const paginationResult = listQuery.data?.data ?? {
-    items: [] as AuditLog[],
-    totalCount: 0,
-    pageNumber: 1,
-    pageSize: DEFAULT_PAGE_SIZE,
-    totalPages: 0,
-  };
+  const paginationResult = useMemo(
+    () =>
+      listQuery.data?.data ?? {
+        items: [] as AuditLog[],
+        totalCount: 0,
+        pageNumber: 1,
+        pageSize: DEFAULT_PAGE_SIZE,
+        totalPages: 0,
+      },
+    [listQuery.data?.data]
+  );
 
   const paginationHandlers = useMemo(
     () => ({

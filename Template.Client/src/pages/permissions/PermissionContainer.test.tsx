@@ -66,7 +66,6 @@ describe("PermissionContainer", () => {
 
   const renderContainer = () => {
     // Use require to avoid module caching issues with dynamic imports
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const PermissionContainerLocal = require("@/pages/permissions/PermissionContainer").default;
     return render(
       <MemoryRouter initialEntries={["/"]}>

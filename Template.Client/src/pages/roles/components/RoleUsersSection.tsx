@@ -2,7 +2,7 @@ import React from "react";
 import { Mail, UserIcon, Users } from "lucide-react";
 import { cn } from "@/utils";
 import { UserResponse, UserStatus } from "@/models";
-import { LoadingSpinner, Card } from "@/components";
+import { LoadingSpinner, Card } from "solstice-ui";
 import styles from "./RoleUsersSection.module.css";
 
 interface RoleUsersSectionProps {
@@ -58,8 +58,10 @@ const RoleUsersSection: React.FC<RoleUsersSectionProps> = ({
                     />
                   ) : null}
                   <UserIcon
-                    className={styles.avatarIcon}
-                    style={{ display: user.avatar ? "none" : "block" }}
+                    className={cn(
+                      styles.avatarIcon,
+                      user.avatar ? styles.avatarIconHidden : styles.avatarIconVisible
+                    )}
                   />
                 </div>
                 <div className={styles.info}>

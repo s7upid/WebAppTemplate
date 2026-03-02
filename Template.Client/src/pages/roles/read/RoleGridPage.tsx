@@ -1,8 +1,9 @@
 import { useGenericNavigationFunctions } from "@/utils";
-import { PaginatedGrid, EntityToolbar } from "@/components";
+import { GridPage } from "solstice-ui";
+import { EntityToolbar } from "@/components";
 import { PagedResult, RoleResponse } from "@/models";
 import { TEST_IDS } from "@/config";
-import { useGridFilters } from "@/hooks";
+import { useGridFilters, usePaginationWithScroll, type GridPaginationHandlers } from "@/hooks";
 import {
   FILTERS,
   renderRoleGridItem,
@@ -12,7 +13,7 @@ import {
 
 interface RoleGridPageProps {
   paginationResult: PagedResult<RoleResponse>;
-  paginationHandlers: any;
+  paginationHandlers: GridPaginationHandlers;
   isLoading: boolean;
 }
 
@@ -25,20 +26,26 @@ const RoleGridPage: React.FC<RoleGridPageProps> = ({
   const handleRoleClick = (role: RoleResponse) => nav.goToRoleDetail(role.id);
   const { actionLoading, applyFilters, clearAll } =
     useGridFilters(paginationHandlers);
+  const { onPageChange, onPageSizeChange } =
+    usePaginationWithScroll(paginationHandlers);
+  const { items, totalCount, pageNumber, totalPages, pageSize } =
+    paginationResult;
 
-  const { items, totalCount, pageNumber, totalPages, pageSize } = paginationResult;
+  const toolbar = (
+    <EntityToolbar
+      searchPlaceholder="Search roles..."
+      filters={FILTERS}
+      sortFields={SORT_FIELDS}
+      loading={actionLoading}
+      onApply={applyFilters}
+      onClear={clearAll}
+    />
+  );
 
   return (
-    <>
-      <EntityToolbar
-        searchPlaceholder="Search roles..."
-        filters={FILTERS}
-        sortFields={SORT_FIELDS}
-        loading={actionLoading}
-        onApply={applyFilters}
-        onClear={clearAll}
-      />
-      <PaginatedGrid<RoleResponse>
+    <div data-testid={`${TEST_IDS.ROLE_PAGE}-page`}>
+      <GridPage<RoleResponse>
+        content={toolbar}
         items={items}
         loading={isLoading}
         renderCard={(role) => renderRoleGridItem(role, handleRoleClick)}
@@ -50,10 +57,11 @@ const RoleGridPage: React.FC<RoleGridPageProps> = ({
         totalPages={totalPages}
         totalCount={totalCount}
         pageSize={pageSize}
-        paginationHandlers={paginationHandlers}
+        onPageChange={onPageChange}
+        onPageSizeChange={onPageSizeChange}
         testId={TEST_IDS.ROLE_PAGE}
       />
-    </>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { SearchInput, Dropdown, Button } from "@/components";
+import { SearchInput, Dropdown, Button } from "solstice-ui";
 import styles from "./EntityToolbar.module.css";
 import { ToolbarFilterConfig, ToolbarSortField } from "@/models";
 

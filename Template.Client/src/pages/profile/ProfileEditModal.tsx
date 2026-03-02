@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Save, UserIcon, XCircle } from "lucide-react";
-import { AvatarUploader, Button, Input, Dialog } from "@/components";
+import { Button, Input, Dialog } from "solstice-ui";
+import { AvatarUploader } from "@/components";
 import { useToast, useUsersQuery, useAuth } from "@/hooks";
 import styles from "./ProfileEditModal.module.css";
 import { UpdateUserRequest } from "@/models";

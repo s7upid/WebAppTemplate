@@ -1,4 +1,4 @@
-import { PageHeader, ErrorBoundary } from "@/components";
+import { PageHeader, ErrorBoundary, Alert } from "solstice-ui";
 import { TEST_IDS } from "@/config";
 import styles from "./BasePage.module.css";
 import React from "react";
@@ -30,11 +30,7 @@ const BasePage: React.FC<BasePageProps> = ({
   testId,
 }) => {
   if (error) {
-    return (
-      <div className={styles.errorBox}>
-        <div className={styles.errorBoxText}>{error}</div>
-      </div>
-    );
+    return <Alert variant="error">{error}</Alert>;
   }
 
   return (

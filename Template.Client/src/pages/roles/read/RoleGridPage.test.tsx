@@ -6,8 +6,9 @@ import { TEST_IDS } from "@/config";
 
 jest.mock("lucide-react", () => new Proxy({}, { get: () => () => null }));
 jest.mock("@/components", () => ({
-  PaginatedGrid: ({ items, renderCard, testId }: any) => (
-    <div data-testid={testId ? `${testId}-page` : "paginated-grid"}>
+  GridPage: ({ items, renderCard, testId, content }: any) => (
+    <div data-testid={testId ?? "grid-page"}>
+      {content}
       {items.map((item: Role, i: number) => (
         <div key={(item as any).id ?? i}>{renderCard(item)}</div>
       ))}

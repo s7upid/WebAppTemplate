@@ -77,7 +77,7 @@ export const renderChangeValue = (
       <img
         src={raw}
         alt="Changed image"
-        style={{ maxWidth: "100%", borderRadius: 6 }}
+        className="max-w-full rounded-md"
       />
     );
   }
@@ -87,7 +87,7 @@ export const renderChangeValue = (
       <img
         src={src}
         alt="Changed image"
-        style={{ maxWidth: "100%", borderRadius: 6 }}
+        className="max-w-full rounded-md"
       />
     );
   }

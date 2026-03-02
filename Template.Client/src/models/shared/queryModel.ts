@@ -17,6 +17,17 @@ export interface PagedResult<T> {
   totalPages: number;
 }
 
+/** Empty paged result for loading/fallback state. */
+export function createEmptyPagedResult<T>(pageSize = 10): PagedResult<T> {
+  return {
+    items: [],
+    totalCount: 0,
+    pageNumber: 1,
+    pageSize,
+    totalPages: 0,
+  };
+}
+
 export interface FilterExpression {
   property: string;
   operator:

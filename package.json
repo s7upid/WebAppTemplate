@@ -19,11 +19,14 @@
 
     "test": "npm run test:client && npm run test:server",
     "test:client": "cd Template.Client && npm test",
-    "test:server": "dotnet test Template.Tests/Template.Tests.csproj",
+    "test:server": "dotnet test Template.Tests/Template.Tests.csproj --filter \"Category=Unit\"",
+    "test:server:all": "dotnet test Template.Tests/Template.Tests.csproj",
     "test:client:watch": "cd Template.Client && npm run test:watch",
     "test:client:coverage": "cd Template.Client && npm run test:coverage",
 
     "lint": "cd Template.Client && npm run lint",
+    "lint:fix": "cd Template.Client && npm run lint:fix",
+    "typecheck": "cd Template.Client && npm run typecheck",
 
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",

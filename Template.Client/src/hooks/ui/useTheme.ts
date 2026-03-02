@@ -41,18 +41,14 @@ export const useTheme = () => {
     }
   }, [theme, dispatch]);
 
+  // Apply theme to <html> for Tailwind dark: and global .dark selectors (light/dark mode).
   useEffect(() => {
     const root = document.documentElement;
-
-    const applyTheme = () => {
-      if (isDark) {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-    };
-
-    requestAnimationFrame(applyTheme);
+    if (isDark) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
   }, [isDark]);
 
   return useMemo(

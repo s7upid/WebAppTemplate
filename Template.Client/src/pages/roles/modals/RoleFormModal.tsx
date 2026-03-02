@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog, Button, Input } from "@/components";
+import { Dialog, Button, Input } from "solstice-ui";
 import { PermissionSelector } from "@/pages";
 import { Save, XCircle } from "lucide-react";
 import { TEST_IDS, RoleManagementPermissions } from "@/config";
@@ -20,8 +20,14 @@ interface RoleFormModalProps {
   onClose: () => void;
   role?: RoleResponse;
   formMode: "create" | "edit";
-  onSave: (data: CreateRoleRequest | UpdateRoleRequest) => Promise<any>;
+  onSave: (data: CreateRoleRequest | UpdateRoleRequest) => Promise<unknown>;
 }
+
+const defaultValues: RoleFormData = {
+  name: "",
+  description: "",
+  permissions: [],
+};
 
 const RoleFormModal: React.FC<RoleFormModalProps> = ({
   permissions,
@@ -33,27 +39,16 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
 }) => {
   const isEditMode = formMode === "edit";
   const isCreateMode = formMode === "create";
-
-  if (isEditMode && !permissions.canEditRoles) return null;
-  if (isCreateMode && !permissions.canCreateRoles) return null;
-
-  const isSystemRole = role?.isSystem;
   const { permissions: availablePermissions } = useAllPermissions();
   const { showError } = useToast();
-
-  const defaultValues: RoleFormData = {
-    name: "",
-    description: "",
-    permissions: [],
-  };
 
   const entityData: RoleFormData | undefined = React.useMemo(() => {
     if (!role) return undefined;
     return {
       name: role.name,
       description: role.description,
-      permissions: (role.permissions || []).map((p: any) =>
-        typeof p === "string" ? p : p.key
+      permissions: (role.permissions || []).map((p: PermissionResponse | string) =>
+        typeof p === "string" ? p : (p as PermissionResponse).key
       ),
     };
   }, [role]);
@@ -64,6 +59,11 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
     if (!isOpen) return;
     setFormData(entityData || defaultValues);
   }, [isOpen, entityData]);
+
+  if (isEditMode && !permissions.canEditRoles) return null;
+  if (isCreateMode && !permissions.canCreateRoles) return null;
+
+  const isSystemRole = role?.isSystem;
 
   const handlePermissionToggle = (permission: string) => {
     const currentPermissions = formData.permissions || [];

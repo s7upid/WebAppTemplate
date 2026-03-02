@@ -44,31 +44,34 @@ delete_files() {
     fi
 }
 
-echo "[1/9] Deleting bin folders..."
+echo "[1/10] Deleting bin folders..."
 delete_dirs "bin"
 
-echo "[2/9] Deleting obj folders..."
+echo "[2/10] Deleting obj folders..."
 delete_dirs "obj"
 
-echo "[3/9] Deleting node_modules folders..."
+echo "[3/10] Deleting node_modules folders..."
 delete_dirs "node_modules"
 
-echo "[4/9] Deleting coverage folders..."
+echo "[4/10] Deleting coverage folders..."
 delete_dirs "coverage"
 
-echo "[5/9] Deleting .nyc_output folders..."
+echo "[5/10] Deleting .nyc_output folders..."
 delete_dirs ".nyc_output"
 
-echo "[6/9] Deleting dist folders..."
+echo "[6/10] Deleting .c8_output folders..."
+delete_dirs ".c8_output"
+
+echo "[7/10] Deleting dist folders..."
 delete_dirs "dist"
 
-echo "[7/9] Deleting build folders (excluding node_modules)..."
+echo "[8/10] Deleting build folders (excluding node_modules)..."
 delete_dirs "build" "node_modules"
 
-echo "[8/9] Deleting coverage-report.json files..."
+echo "[9/10] Deleting coverage-report.json files..."
 delete_files "coverage-report.json"
 
-echo "[9/9] Deleting TestResults folders..."
+echo "[10/10] Deleting TestResults folders..."
 delete_dirs "TestResults"
 
 echo
@@ -82,7 +85,8 @@ echo "  - obj folders (C# intermediate)"
 echo "  - node_modules folders"
 echo "  - coverage folders (Jest/Cypress)"
 echo "  - .nyc_output folders (NYC coverage)"
-echo "  - dist folders (Vite build output)"
+echo "  - .c8_output folders (c8/Cypress coverage)"
+echo "  - dist folders (legacy Vite build output)"
 echo "  - build folders"
 echo "  - coverage-report.json files"
 echo "  - TestResults folders (.NET tests)"

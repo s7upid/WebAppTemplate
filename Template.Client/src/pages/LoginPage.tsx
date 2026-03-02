@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth, useToast, useErrorHandler } from "@/hooks";
 import { useGenericNavigationFunctions } from "@/utils";
-import { Input, Button, Form, LoadingSpinner, PageHeader } from "@/components";
+import { Input, Button, Form, PageHeader } from "solstice-ui";
 import { loginSchema, LoginFormData } from "@/validations/schemas";
 import { Lock, Mail, LogIn, Eye, EyeOff } from "lucide-react";
 import {
@@ -70,7 +70,7 @@ const LoginPage: React.FC = () => {
         
         if (payload && typeof payload === "object" && "message" in payload) {
           const errorInfo = payload as { message: string; status?: number };
-          const errorResponse: ApiResponse<any> = {
+          const errorResponse: ApiResponse<unknown> = {
             success: false,
             status: errorInfo.status,
             message: errorInfo.message || ERROR_MESSAGES.WRONG_USERNAME_PASSWORD,
@@ -86,7 +86,7 @@ const LoginPage: React.FC = () => {
           showError(ERROR_MESSAGES.LOGIN_FAILED, message);
         }
       }
-    } catch (error) {
+    } catch {
       showError(ERROR_MESSAGES.LOGIN_FAILED, ERROR_MESSAGES.LOADING_FAILED);
     }
   };
@@ -177,14 +177,6 @@ const LoginPage: React.FC = () => {
           >
             Forgot your password?
           </Button>
-          {isLoading && (
-            <div
-              data-testid={TEST_IDS.LOADING_SPINNER}
-              className="flex-center-mt-4"
-            >
-              <LoadingSpinner text="Loading..." />
-            </div>
-          )}
         </Form>
       </div>
     </div>

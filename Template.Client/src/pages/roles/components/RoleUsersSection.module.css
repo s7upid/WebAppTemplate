@@ -74,6 +74,12 @@
 :global(.dark) .avatarIcon {
   @apply text-gray-300;
 }
+.avatarIconVisible {
+  @apply block;
+}
+.avatarIconHidden {
+  @apply hidden;
+}
 .info {
   @apply flex-1 min-w-0;
 }

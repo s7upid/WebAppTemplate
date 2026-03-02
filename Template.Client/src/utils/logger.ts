@@ -1,5 +1,5 @@
 const isDevelopment =
-  ((globalThis as any).process?.env?.NODE_ENV ?? "") === "development";
+  ((globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env?.NODE_ENV ?? "") === "development";
 
 export const logger = {
   log: (...args: unknown[]) => {

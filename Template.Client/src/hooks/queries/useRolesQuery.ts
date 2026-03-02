@@ -81,10 +81,11 @@ export const useRolesQuery = (initialQuery?: PageQuery) => {
         .page(1)
         .pageSize(query.pageSize ?? 10);
       if (params.searchTerm) qb = qb.search(params.searchTerm);
-      params.filters &&
+      if (params.filters) {
         Object.entries(params.filters).forEach(([k, v]) => {
           if (v && v !== "all" && v !== "") qb = qb.filter(k, v);
         });
+      }
       if (params.sortColumn)
         qb = qb.sort(params.sortColumn, params.ascending ? "asc" : "desc");
       setQuery(qb.build());
@@ -98,13 +99,17 @@ export const useRolesQuery = (initialQuery?: PageQuery) => {
   const refreshWithCurrentFilters = listQuery.refetch;
 
   /* ---------- Derived Data ---------- */
-  const paginationResult = listQuery.data?.data ?? {
-    items: [],
-    totalCount: 0,
-    pageNumber: 1,
-    pageSize: 10,
-    totalPages: 0,
-  };
+  const paginationResult = useMemo(
+    () =>
+      listQuery.data?.data ?? {
+        items: [],
+        totalCount: 0,
+        pageNumber: 1,
+        pageSize: 10,
+        totalPages: 0,
+      },
+    [listQuery.data?.data]
+  );
   const isLoading =
     listQuery.isLoading ||
     createMutation.isPending ||

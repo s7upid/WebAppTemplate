@@ -1,5 +1,6 @@
 import React from "react";
-import { PaginatedGrid, EntityToolbar } from "@/components";
+import { GridPage } from "solstice-ui";
+import { EntityToolbar } from "@/components";
 import { PagedResult, PermissionResponse } from "@/models";
 import { TEST_IDS } from "@/config";
 import {
@@ -8,11 +9,11 @@ import {
   renderPermissionGridItem,
   SORT_FIELDS,
 } from "../shared";
-import { useGridFilters } from "@/hooks";
+import { useGridFilters, usePaginationWithScroll, type GridPaginationHandlers } from "@/hooks";
 
 interface PermissionGridPageProps {
   paginationResult: PagedResult<PermissionResponse>;
-  paginationHandlers: any;
+  paginationHandlers: GridPaginationHandlers;
   isLoading: boolean;
 }
 
@@ -23,20 +24,26 @@ const PermissionGridPage: React.FC<PermissionGridPageProps> = ({
 }) => {
   const { actionLoading, applyFilters, clearAll } =
     useGridFilters(paginationHandlers);
+  const { onPageChange, onPageSizeChange } =
+    usePaginationWithScroll(paginationHandlers);
+  const { items, totalCount, pageNumber, totalPages, pageSize } =
+    paginationResult;
 
-  const { items, totalCount, pageNumber, totalPages, pageSize } = paginationResult;
+  const toolbar = (
+    <EntityToolbar
+      searchPlaceholder="Search permissions..."
+      filters={FILTERS}
+      sortFields={SORT_FIELDS}
+      loading={actionLoading}
+      onApply={applyFilters}
+      onClear={clearAll}
+    />
+  );
 
   return (
-    <>
-      <EntityToolbar
-        searchPlaceholder="Search permissions..."
-        filters={FILTERS}
-        sortFields={SORT_FIELDS}
-        loading={actionLoading}
-        onApply={applyFilters}
-        onClear={clearAll}
-      />
-      <PaginatedGrid<PermissionResponse>
+    <div data-testid={`${TEST_IDS.PERMISSION_PAGE}-page`}>
+      <GridPage<PermissionResponse>
+        content={toolbar}
         items={items}
         loading={isLoading}
         renderCard={(permission) => renderPermissionGridItem(permission)}
@@ -48,10 +55,11 @@ const PermissionGridPage: React.FC<PermissionGridPageProps> = ({
         totalPages={totalPages}
         totalCount={totalCount}
         pageSize={pageSize}
-        paginationHandlers={paginationHandlers}
+        onPageChange={onPageChange}
+        onPageSizeChange={onPageSizeChange}
         testId={TEST_IDS.PERMISSION_PAGE}
       />
-    </>
+    </div>
   );
 };
 

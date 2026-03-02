@@ -1,9 +1,3 @@
-declare const process: {
-  env: {
-    NODE_ENV?: string;
-  };
-};
-
 declare const global: typeof globalThis;
 
 import { setupBaseTest } from "@/test/base-test-utils";

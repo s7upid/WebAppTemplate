@@ -1,7 +1,7 @@
 import React from "react";
 import { Shield, Users, Calendar } from "lucide-react";
 import { RoleResponse } from "@/models";
-import { Card } from "@/components";
+import { Card } from "solstice-ui";
 
 interface RoleStatsSectionProps {
   role: RoleResponse;

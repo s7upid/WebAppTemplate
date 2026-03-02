@@ -3,7 +3,7 @@ import { CheckCircle, Shield } from "lucide-react";
 import { cn } from "@/utils";
 import styles from "./RolePermissionsSection.module.css";
 import { Permission, RoleResponse } from "@/models";
-import { Card } from "@/components";
+import { Card } from "solstice-ui";
 
 interface RolePermissionsSectionProps {
   role?: RoleResponse;

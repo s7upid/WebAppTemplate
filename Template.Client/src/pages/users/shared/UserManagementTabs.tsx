@@ -1,5 +1,6 @@
 import React from "react";
-import { TabNavigation, TabItem } from "@/components";
+import { TabNavigation } from "solstice-ui";
+import type { TabItem } from "solstice-ui";
 import { USERS_MODULE, UserManagementPermissions } from "@/config/modules";
 
 interface UserManagementTabsProps {

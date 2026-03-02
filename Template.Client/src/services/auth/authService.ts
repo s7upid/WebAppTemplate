@@ -23,10 +23,11 @@ class AuthService extends BaseService {
     setGlobalRefreshToken(() => this.refreshTokenDirect());
   }
 
-  private adaptUser(user: any): UserResponse {
+  private adaptUser(user: unknown): UserResponse {
+    const u = user as Record<string, unknown>;
     return {
-      ...user,
-      role: user.role || undefined,
+      ...u,
+      role: u.role || undefined,
     } as UserResponse;
   }
 

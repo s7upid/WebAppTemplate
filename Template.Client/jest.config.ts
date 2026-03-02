@@ -101,8 +101,8 @@ const config: Config = {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
   testPathIgnorePatterns: ["/node_modules/", "/dist/", "/build/"],
 
-  maxWorkers: 1,
-  cache: false,
+  maxWorkers: "50%",
+  cache: true,
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,

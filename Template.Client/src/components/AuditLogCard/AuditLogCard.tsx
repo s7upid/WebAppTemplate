@@ -123,17 +123,20 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({
     return "System";
   };
 
+  const eventColorVar = { "--event-color": getEventColor(log.eventType) } as React.CSSProperties;
+
   if (variant === "compact") {
     return (
       <div
         className={cn(styles.compact, !log.success && styles.error)}
+        style={eventColorVar}
         onClick={onClick}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === "Enter" && onClick?.()}
       >
         <div className={styles.compactMain}>
-          <div style={{ color: getEventColor(log.eventType) }}>
+          <div className={styles.compactEventIcon}>
             {getEventIcon(log.eventType)}
           </div>
           <span className={styles.title}>{log.eventType}</span>
@@ -158,19 +161,14 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({
   return (
     <div
       className={styles.modern}
+      style={eventColorVar}
       onClick={onClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onClick?.()}
     >
       <div className={styles.header}>
-        <div
-          className={styles.iconWrapper}
-          style={{
-            backgroundColor: `${getEventColor(log.eventType)}1A`, // Add alpha
-            color: getEventColor(log.eventType),
-          }}
-        >
+        <div className={styles.iconWrapper}>
           {getEventIcon(log.eventType)}
         </div>
         <div className={styles.headerContent}>

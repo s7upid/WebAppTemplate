@@ -407,7 +407,7 @@ export const getComponentMocks = () => {
       value,
       onChange,
       icon,
-      className,
+      className: _className,
       required,
       ...props
     }: any) =>

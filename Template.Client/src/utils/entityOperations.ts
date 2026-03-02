@@ -2,8 +2,8 @@ import { logger } from "./logger";
 
 export interface EntitySaveOptions<TCreate, TUpdate> {
   formMode: "create" | "edit";
-  addEntity: (data: TCreate) => Promise<any>;
-  editEntity: (args: { id: string; data: TUpdate }) => Promise<any>;
+  addEntity: (data: TCreate) => Promise<unknown>;
+  editEntity: (args: { id: string; data: TUpdate }) => Promise<unknown>;
   selectedEntity?: { id: string };
   entityName: string;
   successMessages: { created: string; updated: string };
@@ -13,7 +13,7 @@ export interface EntitySaveOptions<TCreate, TUpdate> {
 export interface EntityDeleteOptions<T> {
   entity?: T;
   id?: string;
-  remove?: (id: string) => Promise<any>;
+  remove?: (id: string) => Promise<unknown>;
   entityName?: string;
   successMessage?: string;
   errorMessages?: { notFound?: string; deleteFailed?: string };
@@ -32,8 +32,8 @@ export interface EntityDeleteOptions<T> {
 
 export interface FormSubmitOptions<T> {
   data: T;
-  schema: any;
-  onSave: (data: T) => Promise<{ success: boolean; error?: any }>;
+  schema: unknown;
+  onSave: (data: T) => Promise<{ success: boolean; error?: string }>;
   entityName?: string;
   showError?: (title: string, message?: string) => void;
   showSuccess?: (title: string, message?: string) => void;
@@ -44,11 +44,12 @@ export interface SaveResult {
   error?: { field?: string; message: string };
 }
 
-export function extractErrorMessage(payload: any): string {
+export function extractErrorMessage(payload: unknown): string {
   if (!payload) return "Operation failed";
   if (typeof payload === "string") return payload;
 
-  const errorsObj = payload?.errors || payload?.FieldErrors || payload?.fieldErrors;
+  const p = payload as Record<string, unknown>;
+  const errorsObj = p?.errors || p?.FieldErrors || p?.fieldErrors;
 
   if (errorsObj && typeof errorsObj === "object" && !Array.isArray(errorsObj)) {
     const entries = Object.entries(errorsObj as Record<string, string[]>);
@@ -58,23 +59,24 @@ export function extractErrorMessage(payload: any): string {
         return messages[0];
       }
     }
-    if (typeof payload.title === "string") return payload.title;
+    if (typeof p.title === "string") return p.title;
   }
 
-  if (typeof payload.message === "string") return payload.message;
-  if (typeof payload.errorMessage === "string") return payload.errorMessage;
-  if (typeof payload.error === "string") return payload.error;
-  if (typeof payload.title === "string") return payload.title;
+  if (typeof p.message === "string") return p.message;
+  if (typeof p.errorMessage === "string") return p.errorMessage;
+  if (typeof p.error === "string") return p.error;
+  if (typeof p.title === "string") return p.title;
 
   if (Array.isArray(payload)) {
-    return payload.map((p) => (typeof p === "string" ? p : JSON.stringify(p))).join(", ");
+    return payload.map((item) => (typeof item === "string" ? item : JSON.stringify(item))).join(", ");
   }
 
   return JSON.stringify(payload);
 }
 
-export function inferFieldFromError(payload: any): string | undefined {
-  const errorsObj = payload?.errors || payload?.FieldErrors || payload?.fieldErrors;
+export function inferFieldFromError(payload: unknown): string | undefined {
+  const p = payload as Record<string, unknown>;
+  const errorsObj = p?.errors || p?.FieldErrors || p?.fieldErrors;
 
   if (errorsObj && typeof errorsObj === "object" && !Array.isArray(errorsObj)) {
     const errorKeys = Object.keys(errorsObj as Record<string, string[]>);
@@ -116,8 +118,9 @@ export async function handleEntitySave<TCreate, TUpdate>(
       success: false,
       error: { message: extractErrorMessage(rawError), field: inferFieldFromError(rawError) },
     };
-  } catch (err: any) {
-    return { success: false, error: { message: err?.message || "An unexpected error occurred" } };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "An unexpected error occurred";
+    return { success: false, error: { message } };
   }
 }
 
@@ -170,12 +173,12 @@ export async function handleEntityDelete<T extends { id: string; name?: string }
 
 export async function handleSubmitForm<T>(
   options: FormSubmitOptions<T>
-): Promise<{ success: boolean; error?: any; result?: any }> {
+): Promise<{ success: boolean; error?: unknown; result?: unknown }> {
   const { data, schema, onSave, entityName = "Entity", showError: showErrorProp, showSuccess } = options;
   const showError = showErrorProp || (() => {});
 
   try {
-    schema.parse(data);
+    (schema as { parse: (d: T) => void }).parse(data);
     const result = await onSave(data);
 
     if (result.success) {
@@ -185,9 +188,10 @@ export async function handleSubmitForm<T>(
       showError("Error", result.error?.message || "Unknown error");
       return { success: false, error: result.error };
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     logger.error(`Failed to save ${entityName.toLowerCase()}:`, err);
-    showError("Error saving entity", err?.message || "Unknown error");
+    const message = err instanceof Error ? err.message : "Unknown error";
+    showError("Error saving entity", message);
     return { success: false, error: err };
   }
 }

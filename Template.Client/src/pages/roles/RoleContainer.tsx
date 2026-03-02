@@ -3,12 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import { CreateRoleRequest, UpdateRoleRequest, RoleResponse } from "@/models";
 import { RoleGridPage, RoleDetailsPage, RoleFormModal } from "@/pages";
 import { handleEntitySave } from "@/utils";
-import {
-  ModalPortal,
-  BasePage,
-  PermissionGuard,
-  ConfirmationDialog,
-} from "@/components";
+import { ModalPortal, ConfirmationDialog } from "solstice-ui";
+import { BasePage, PermissionGuard } from "@/components";
 import {
   useRoleManagementPermissions,
   useRolesQuery,

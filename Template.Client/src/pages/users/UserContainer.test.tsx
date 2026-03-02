@@ -29,14 +29,14 @@ jest.mock("@/components/BasePage/BasePage", () => ({
   ),
 }));
 jest.mock("@/components", () => {
-  const React = require("react");
+  const _React = require("react") as typeof import("react");
   const stubs = require("@/test/__mocks__/component-stubs").default;
   return {
     ...stubs,
-    ModalPortal: ({ children }: { children: React.ReactNode }) => (
+    ModalPortal: ({ children }: { children: _React.ReactNode }) => (
       <div data-testid={TEST_IDS.MOCK_MODAL_PORTAL}>{children}</div>
     ),
-    PermissionGuard: ({ children }: { children: React.ReactNode }) => (
+    PermissionGuard: ({ children }: { children: _React.ReactNode }) => (
       <div data-testid={TEST_IDS.MOCK_PERMISSION_GUARD}>{children}</div>
     ),
   };
@@ -130,8 +130,7 @@ const createTestQueryClient = () =>
     },
   });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createStore = (): any =>
+const createStore = (): ReturnType<typeof configureStore> =>
   configureStore({
     reducer: {
       auth: authReducer,

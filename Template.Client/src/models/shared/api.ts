@@ -4,7 +4,7 @@ export interface ApiResponse<T> {
   success: boolean;
   status?: number;
   fieldErrors?: Record<string, string>;
-  raw?: any;
+  raw?: unknown;
 }
 
 export interface ApiError {

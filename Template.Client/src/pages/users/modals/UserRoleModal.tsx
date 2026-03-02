@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useUsersQuery, useRolesQuery, useToast } from "@/hooks";
-import { Dialog, Button, LoadingSpinner, Dropdown } from "@/components";
+import { Dialog, Button, LoadingSpinner, Dropdown } from "solstice-ui";
 import { Shield, XCircle } from "lucide-react";
 import { RolePermissionsSection } from "@/pages";
 import { UserResponse, UpdateUserRequest, RoleResponse } from "@/models";
@@ -33,10 +33,6 @@ const UserRoleModal: React.FC<UserRoleModalProps> = ({
   const [selectedRole, setSelectedRole] = useState("");
   const [originalRole, setOriginalRole] = useState("");
 
-  if (!permissions.canEditUsers) {
-    return null;
-  }
-
   useEffect(() => {
     if (isOpen && user) {
       paginationHandlers?.refreshWithCurrentFilters?.();
@@ -48,6 +44,10 @@ const UserRoleModal: React.FC<UserRoleModalProps> = ({
       setOriginalRole("");
     }
   }, [isOpen, user, paginationHandlers]);
+
+  if (!permissions.canEditUsers) {
+    return null;
+  }
 
   const hasChanges = () => {
     return selectedRole !== originalRole;

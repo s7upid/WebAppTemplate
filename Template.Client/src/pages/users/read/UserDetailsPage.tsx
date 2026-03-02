@@ -1,16 +1,11 @@
-import React, {
-  useEffect,
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import {
   useUserQuery,
   useUsersQuery,
   useConfirmation,
   useToast,
+  useDetailPageHeader,
 } from "@/hooks";
 import { handleEntityDelete, useGenericNavigationFunctions } from "@/utils";
 import { UserActions } from "@/pages";
@@ -21,13 +16,7 @@ import {
   RoleResponse,
 } from "@/models";
 import { Calendar, Key, Shield, UserIcon } from "lucide-react";
-import {
-  Card,
-  ConfirmationDialog,
-  ModalPortal,
-  LoadingSpinner,
-  EmptyState,
-} from "@/components";
+import { Card, ConfirmationDialog, ModalPortal, LoadingSpinner, EmptyState } from "solstice-ui";
 import {
   BUTTON_LABELS,
   ERROR_MESSAGES,
@@ -41,7 +30,7 @@ interface UserDetailsPageProps {
   onEditUser?: (user: UserResponse) => void;
   onManageRoles?: (user: UserResponse) => void;
   onManagePermissions?: (user: UserResponse) => void;
-  setHeaderProps: Dispatch<SetStateAction<PageHeaderProps>>;
+  setHeaderProps: React.Dispatch<React.SetStateAction<PageHeaderProps>>;
   handleCreateUser: () => void;
 }
 
@@ -73,27 +62,11 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
     return null;
   }, [user, handleBackToUsers]);
 
-  const defaultHeaderRef = React.useRef(
-    createUserManagementHeader(permissions, handleCreateUser),
+  const defaultHeader = useMemo(
+    () => createUserManagementHeader(permissions, handleCreateUser),
+    [permissions, handleCreateUser]
   );
-
-  // Store setHeaderProps in a ref to avoid dependency issues
-  const setHeaderPropsRef = React.useRef(setHeaderProps);
-  setHeaderPropsRef.current = setHeaderProps;
-
-  // Set header when user details are loaded
-  useEffect(() => {
-    if (userDetailsHeader) {
-      setHeaderPropsRef.current(userDetailsHeader);
-    }
-  }, [userDetailsHeader]);
-
-  // Reset header only on unmount
-  useEffect(() => {
-    return () => {
-      setHeaderPropsRef.current(defaultHeaderRef.current);
-    };
-  }, []);
+  useDetailPageHeader(userDetailsHeader, defaultHeader, setHeaderProps);
 
   const handleDeleteUser = useCallback(
     (userToDelete: UserResponse) =>

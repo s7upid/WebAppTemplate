@@ -56,8 +56,16 @@ body {
   @apply bg-gray-100 border-gray-200 cursor-not-allowed text-gray-500;
 }
 
+.dark .input-field:disabled {
+  @apply bg-gray-700 border-gray-600 text-gray-400;
+}
+
 .input-error {
   @apply text-red-600 text-xs;
+}
+
+.dark .input-error {
+  @apply text-red-400;
 }
 
 .password-input {
@@ -88,8 +96,16 @@ body {
   @apply bg-blue-100 flex h-10 items-center justify-center rounded-full w-10;
 }
 
+.dark .modal-user-avatar {
+  @apply bg-blue-900/50;
+}
+
 .modal-user-avatar-text {
   @apply font-medium text-blue-600 text-sm;
+}
+
+.dark .modal-user-avatar-text {
+  @apply text-blue-300;
 }
 
 /* Centered auth form container */
@@ -157,6 +173,10 @@ body {
   @apply border-2 border-dashed border-gray-300 cursor-pointer flex hover:border-gray-400 items-center justify-center px-4 py-3 rounded-lg transition-colors w-full;
 }
 
+.dark .form-modal-avatar-upload {
+  @apply border-gray-600 hover:border-gray-500;
+}
+
 .form-modal-avatar-content {
   @apply flex flex-col items-center;
 }
@@ -165,12 +185,24 @@ body {
   @apply h-6 mb-2 text-gray-400 w-6;
 }
 
+.dark .form-modal-upload-icon {
+  @apply text-gray-500;
+}
+
 .form-modal-text-sm-gray {
   @apply text-gray-600 text-sm;
 }
 
+.dark .form-modal-text-sm-gray {
+  @apply text-gray-400;
+}
+
 .form-modal-text-xs-gray {
   @apply mt-1 text-gray-500 text-xs;
+}
+
+.dark .form-modal-text-xs-gray {
+  @apply text-gray-400;
 }
 
 .form-modal-avatar-container {
@@ -181,8 +213,16 @@ body {
   @apply border-2 border-gray-200 h-24 object-cover rounded-full w-24;
 }
 
+.dark .form-modal-avatar-preview {
+  @apply border-gray-600;
+}
+
 .form-modal-avatar-remove-btn {
   @apply -right-2 -top-2 absolute bg-red-500 flex h-6 hover:bg-red-600 items-center justify-center rounded-full text-white text-xs transition-colors w-6;
+}
+
+.dark .form-modal-avatar-remove-btn:hover {
+  @apply bg-red-400;
 }
 
 .icon-size {
@@ -242,6 +282,14 @@ body {
   @apply flex items-center justify-center h-8 w-8 shrink-0 rounded-full bg-blue-600 text-xs font-semibold text-white;
 }
 
+.dark .audit-user-avatar {
+  @apply bg-blue-700;
+}
+
+.audit-user-avatar-img {
+  @apply h-8 w-8 shrink-0 rounded-full object-cover;
+}
+
 .audit-user-info {
   @apply flex flex-col;
 }
@@ -274,6 +322,10 @@ body {
   @apply flex flex-col gap-2 pb-4 border-b border-gray-200;
 }
 
+.dark .audit-change-event-info {
+  @apply border-gray-700;
+}
+
 .audit-change-event-type {
   @apply text-base font-semibold text-gray-900;
 }
@@ -296,6 +348,10 @@ body {
 
 .audit-change-label-before {
   @apply text-xs font-semibold uppercase tracking-wider text-red-500;
+}
+
+.dark .audit-change-label-before {
+  @apply text-red-400;
 }
 
 .audit-change-label-after {

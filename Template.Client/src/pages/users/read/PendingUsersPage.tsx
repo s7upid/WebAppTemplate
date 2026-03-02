@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { PaginatedGrid } from "@/components";
-import { UserResponse, ApproveUserRequest, RoleResponse, PagedResult } from "@/models";
+import { GridPage } from "solstice-ui";
+import {
+  UserResponse,
+  ApproveUserRequest,
+  RoleResponse,
+  PagedResult,
+  createEmptyPagedResult,
+} from "@/models";
 import { UserApprovalModal, UserRejectionModal } from "../modals";
 import { TEST_IDS } from "@/config";
-import { useUsersQuery } from "@/hooks";
+import { useUsersQuery, usePaginationWithScroll } from "@/hooks";
 import { PENDING_USER_GRID_CONFIG, renderPendingUserGridItem } from "../shared";
 
 interface PendingUsersPageProps {
@@ -11,18 +17,13 @@ interface PendingUsersPageProps {
   paginationHandlers?: {
     changePage?: (page: number) => void;
     changePageSize?: (size: number) => void;
-    refreshWithParams?: (params: { searchTerm: string; filters: Record<string, string> }) => void;
+    refreshWithParams?: (params: {
+      searchTerm: string;
+      filters: Record<string, string>;
+    }) => void;
   };
   isLoading?: boolean;
 }
-
-const emptyResult: PagedResult<UserResponse> = {
-  items: [],
-  totalCount: 0,
-  pageNumber: 1,
-  pageSize: 10,
-  totalPages: 0,
-};
 
 const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
   paginationResult: propsPaginationResult,
@@ -90,12 +91,16 @@ const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
     }
   };
 
-  const result = isLoading ? emptyResult : (paginationResult ?? emptyResult);
+  const { onPageChange, onPageSizeChange } =
+    usePaginationWithScroll(paginationHandlers);
+  const result = isLoading
+    ? createEmptyPagedResult<UserResponse>()
+    : (paginationResult ?? createEmptyPagedResult<UserResponse>());
   const { items, totalCount, pageNumber, totalPages, pageSize } = result;
 
   return (
     <div className="p-6" data-testid={TEST_IDS.PENDING_USERS_PAGE}>
-      <PaginatedGrid<UserResponse>
+      <GridPage<UserResponse>
         items={items}
         loading={isLoading}
         renderCard={(user) =>
@@ -109,7 +114,8 @@ const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
         totalPages={totalPages}
         totalCount={totalCount}
         pageSize={pageSize}
-        paginationHandlers={paginationHandlers}
+        onPageChange={onPageChange}
+        onPageSizeChange={onPageSizeChange}
         testId={TEST_IDS.PENDING_USERS_PAGE}
       />
 

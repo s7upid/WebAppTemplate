@@ -6,7 +6,9 @@ describe("cn utility", () => {
   });
 
   it("includes conditional classes when truthy", () => {
-    expect(cn("class1", true && "class2", false && "class3")).toBe(
+    const truthy = true;
+    const falsy = false;
+    expect(cn("class1", truthy && "class2", falsy && "class3")).toBe(
       "class1 class2"
     );
   });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Form, Input, LoadingSpinner, PageHeader } from "@/components";
+import { Button, Form, Input, PageHeader } from "solstice-ui";
 import { useToast } from "@/hooks";
 import { useGenericNavigationFunctions, SecureStorage } from "@/utils";
 import { useAppDispatch } from "@/store";
@@ -69,8 +69,8 @@ const ConfirmEmailPage: React.FC = () => {
       SecureStorage.clear();
       dispatch(clearAuth());
       navigate(APP_PATHS.LOGIN, { replace: true });
-    } catch (e: any) {
-      showError("Setup Failed", e || "Unable to complete setup.");
+    } catch (e: unknown) {
+      showError("Setup Failed", e instanceof Error ? e.message : "Unable to complete setup.");
       SecureStorage.clear();
       dispatch(clearAuth());
       navigate(APP_PATHS.LOGIN, { replace: true });
@@ -161,9 +161,9 @@ const ConfirmEmailPage: React.FC = () => {
           <Button
             type="submit"
             className="form-button-full"
-            disabled={isSubmitting}
+            loading={isSubmitting}
           >
-            {isSubmitting ? <LoadingSpinner size="sm" /> : "Complete Setup"}
+            Complete Setup
           </Button>
         </Form>
 

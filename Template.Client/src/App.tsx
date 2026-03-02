@@ -5,7 +5,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { store } from "@/store";
 import { queryClient } from "@/config/queryClient";
 import { useAuth, useTheme, useToast, ToastProvider } from "@/hooks";
-import { ErrorBoundary, Layout, Toast, LoadingSpinner } from "@/components";
+import { ErrorBoundary, Toast, LoadingSpinner } from "solstice-ui";
+import { Layout } from "@/components";
 import { APP_PATHS, NAVIGATION_CONFIG } from "@/config";
 import {
   DASHBOARD_MODULE,

@@ -1,31 +1,78 @@
 import React from "react";
 
+export type TabItem = {
+  id: string;
+  label: string;
+  testId?: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  isVisible?: boolean;
+};
+
 export const GridPage = ({
   items,
   renderCard,
+  keyExtractor,
   emptyTitle,
   emptyDescription,
   loading,
+  content,
+  pageNumber,
+  totalPages,
+  totalCount,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+  testId,
 }: {
   items: unknown[];
   renderCard: (item: unknown) => React.ReactNode;
+  keyExtractor?: (item: unknown) => React.Key;
   emptyTitle?: string;
   emptyDescription?: string;
   loading?: boolean;
-}) => (
-  <div data-testid="grid-page">
-    {loading && <span>Grid loading</span>}
-    {items.length === 0 && (
-      <div data-testid="empty">
-        <span>{emptyTitle}</span>
-        {emptyDescription && <span>{emptyDescription}</span>}
-      </div>
-    )}
-    {items.map((item, i) => (
-      <div key={i}>{renderCard(item)}</div>
-    ))}
-  </div>
-);
+  content?: React.ReactNode;
+  pageNumber?: number;
+  totalPages?: number;
+  totalCount?: number;
+  pageSize?: number;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (size: number) => void;
+  columns?: number;
+  testId?: string;
+}) => {
+  const showPagination =
+    totalPages != null &&
+    totalPages > 1 &&
+    onPageChange &&
+    onPageSizeChange;
+  return (
+    <div data-testid={testId ?? "grid-page"}>
+      {content}
+      {loading && <span>Grid loading</span>}
+      {!loading && items.length === 0 && (
+        <div data-testid="empty">
+          <span>{emptyTitle}</span>
+          {emptyDescription && <span>{emptyDescription}</span>}
+        </div>
+      )}
+      {!loading && items.map((item, i) => (
+        <div key={keyExtractor ? keyExtractor(item) : i}>{renderCard(item)}</div>
+      ))}
+      {showPagination && (
+        <div className="mt-4" data-testid="pagination">
+          <Pagination
+            currentPage={pageNumber ?? 1}
+            totalPages={totalPages ?? 1}
+            totalItems={totalCount}
+            pageSize={pageSize}
+            onPageChange={onPageChange!}
+            onPageSizeChange={onPageSizeChange!}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const LoadingSpinner = ({ text }: { text?: string; size?: string }) => (
   <div role="status" data-testid="loading-spinner">{text ?? "Loading..."}</div>
@@ -69,6 +116,7 @@ export const Card = ({
   children,
   icon: Icon,
   details,
+  "data-testid": cardTestId,
 }: {
   title?: string;
   children?: React.ReactNode;
@@ -77,9 +125,15 @@ export const Card = ({
   layout?: string;
   detailsPerRow?: number;
   details?: Array<{ label: string; value: string; icon?: React.ComponentType }>;
+  "data-testid"?: string;
 }) => (
-  <div data-testid="quick-actions-card">
-    {title && <h3 data-testid="card-title">{title}</h3>}
+  <div data-testid={cardTestId ?? "quick-actions-card"}>
+    {title != null && title !== "" && (
+      <>
+        <h3 data-testid="card-title">{title}</h3>
+        <span data-testid="role-name">{title}</span>
+      </>
+    )}
     {Icon && <Icon className="icon" />}
     {details?.map((d, i) => (
       <div key={i} data-testid={`card-detail-${d.label}`}>
@@ -112,43 +166,132 @@ export const Button = ({
   loading?: boolean;
   className?: string;
   icon?: React.ComponentType<{ className?: string }>;
-}) => (
-  <button
-    type={type ?? "button"}
-    form={form}
-    onClick={onClick}
-    disabled={disabled ?? loading}
-    data-testid={testId ?? "action-btn"}
-    className={className}
-  >
-    {children}
-  </button>
-);
+}) => {
+  const resolvedTestId =
+    testId ??
+    (variant === "primary"
+      ? "button-primary"
+      : variant === "secondary"
+        ? "button-secondary"
+        : variant === "success"
+          ? "button-success"
+          : variant === "danger"
+            ? "button-danger"
+            : "action-btn");
+  return (
+    <button
+      type={type ?? "button"}
+      form={form}
+      onClick={onClick}
+      disabled={Boolean(disabled) || Boolean(loading)}
+      data-testid={resolvedTestId}
+      data-loading={loading ? "true" : undefined}
+      className={className}
+    >
+      {loading && type === "submit" ? "Sending..." : children}
+    </button>
+  );
+};
 
-export const Alert = () => null;
+export const Alert = ({
+  variant,
+  children,
+  "data-testid": testId,
+  ...rest
+}: {
+  variant?: string;
+  children?: React.ReactNode;
+  "data-testid"?: string;
+  [k: string]: unknown;
+}) => (
+  <div data-testid={testId} data-variant={variant} role="alert" {...rest}>
+    {children}
+  </div>
+);
 export const Badge = () => null;
 
 export const Input = ({
   label,
   error,
   id,
+  placeholder,
+  icon,
+  "data-testid": testId,
   ...rest
 }: {
   label?: string;
   error?: string;
   id?: string;
+  placeholder?: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  "data-testid"?: string;
   [k: string]: unknown;
-}) => (
-  <label htmlFor={id}>
-    {label}
-    <input id={id} aria-label={label} {...rest} />
-    {error && <span>{error}</span>}
-  </label>
-);
+}) => {
+  const inputTestId =
+    testId ??
+    (placeholder
+      ? `input-${String(placeholder).toLowerCase().replace(/\s+/g, "-")}`
+      : undefined);
+  return (
+    <div className="input-wrapper">
+      <label htmlFor={id}>
+        {label}
+        <input
+          id={id}
+          aria-label={label}
+          placeholder={placeholder}
+          data-testid={inputTestId}
+          {...rest}
+        />
+      </label>
+      {icon != null && <span data-testid="icon-size" aria-hidden="true" />}
+      {error && <span>{error}</span>}
+    </div>
+  );
+};
 
 export const ConfirmationDialog = () => null;
-export const DangerZone = () => null;
-export const Dialog = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+export const DangerZone = ({
+  title,
+  description,
+  buttonLabel,
+  onConfirm,
+  testId,
+}: {
+  title?: string;
+  description?: string;
+  buttonLabel?: string;
+  onConfirm?: () => void;
+  testId?: string;
+}) => (
+  <div>
+    {title && <span>{title}</span>}
+    {description && <span>{description}</span>}
+    <button type="button" data-testid={testId ?? "confirm-delete-button"} onClick={onConfirm}>
+      {buttonLabel ?? "Confirm"}
+    </button>
+  </div>
+);
+export const Dialog = ({
+  children,
+  isOpen = true,
+  title,
+  onClose,
+}: {
+  children?: React.ReactNode;
+  isOpen?: boolean;
+  title?: string;
+  onClose?: () => void;
+  size?: string;
+}) =>
+  isOpen ? (
+    <div data-testid="modal" role="dialog">
+      {title != null && (
+        <h2 data-testid="export-modal-title">{title}</h2>
+      )}
+      {children}
+    </div>
+  ) : null;
 export const ErrorBoundary = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
 export const Form = ({
@@ -166,7 +309,9 @@ export const Form = ({
 );
 
 export const List = () => null;
-export const ModalPortal = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
+export const ModalPortal = ({ children }: { children?: React.ReactNode }) => (
+  <div data-testid="mock-modal-portal">{children}</div>
+);
 export const PageHeader = ({
   title,
   description,
@@ -178,7 +323,7 @@ export const PageHeader = ({
   icon?: React.ComponentType;
   actions?: React.ReactNode;
 }) => (
-  <div>
+  <div data-testid="page-header">
     {title && <h1>{title}</h1>}
     {description && <p>{description}</p>}
     {subtitle && <p>{subtitle}</p>}
@@ -206,7 +351,29 @@ export const SearchInput = ({
   />
 );
 
-export const EmptyState = () => null;
+export const EmptyState = ({
+  title,
+  description,
+  primaryAction,
+  "data-testid": testId,
+  ...rest
+}: {
+  title?: string;
+  description?: string;
+  primaryAction?: { label: string; onClick: () => void };
+  "data-testid"?: string;
+  [k: string]: unknown;
+}) => (
+  <div data-testid={testId} className="empty-state" {...rest}>
+    {title && <span className="empty-state-title">{title}</span>}
+    {description && <span className="empty-state-description">{description}</span>}
+    {primaryAction && (
+      <button type="button" onClick={primaryAction.onClick}>
+        {primaryAction.label}
+      </button>
+    )}
+  </div>
+);
 
 export const Dropdown = ({
   label,
@@ -226,6 +393,7 @@ export const Dropdown = ({
   <div className={className}>
     {label && <span className="sr-only">{label}</span>}
     <select
+      role="combobox"
       value={value ?? ""}
       onChange={(e) => onValueChange?.(e.target.value)}
       aria-label={label}

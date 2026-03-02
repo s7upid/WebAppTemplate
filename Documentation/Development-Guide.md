@@ -50,7 +50,7 @@ npm run cypress:run      # Run E2E tests headless
 
 ```
 src/
-├── components/          # Reusable UI components
+├── components/          # App components (Layout, EntityToolbar, Guards, etc.); export from index.ts. UI primitives (Button, Card, GridPage) from solstice-ui
 ├── pages/              # Page components and routing
 ├── hooks/              # Custom React hooks
 │   ├── queries/        # TanStack Query hooks (useUsersQuery, useRolesQuery, etc.)
@@ -133,11 +133,11 @@ graph TD
 
 ```
 1. src/components/ComponentName/ComponentName.tsx
-2. src/components/ComponentName/ComponentName.module.css
+2. src/components/ComponentName/ComponentName.module.css (if needed)
 3. src/components/ComponentName/ComponentName.test.tsx
-4. src/components/ComponentName/index.ts
-5. Update src/components/index.ts
+4. Export from src/components/index.ts (add: export { default as ComponentName } from "./ComponentName/ComponentName";)
 ```
+Use solstice-ui for primitives (Button, Card, Input, GridPage, etc.); add app-specific components here.
 
 #### 2. **New Module (Full Feature)**
 
