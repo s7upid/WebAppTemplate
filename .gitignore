@@ -343,6 +343,9 @@ healthchecksdb
 
 coverage/
 
+# Temp directory for solstice-ui build
+_solstice-ui-tmp/
+
 # Test Coverage Output Files
 .nyc_output/
 .c8_output/

@@ -16,13 +16,25 @@ set BACKEND_FAILED=0
 set JEST_FAILED=0
 set CYPRESS_FAILED=0
 
-echo [0/6] Running Lint...
+echo [0/6] Building solstice-ui from GitHub and running Lint...
 echo ----------------------------------------
+cd /d "%ROOT_DIR%"
+echo Cloning and building solstice-ui...
+if exist "_solstice-ui-tmp" rmdir /s /q "_solstice-ui-tmp"
+git clone --depth 1 https://github.com/s7upid/solstice-ui.git _solstice-ui-tmp
+cd _solstice-ui-tmp
+call npm install
+call npm run build
+call npm pack
+copy /Y solstice-ui-1.0.0.tgz "%ROOT_DIR%\Template.Client\solstice-ui-1.0.0.tgz"
+cd /d "%ROOT_DIR%"
+rmdir /s /q _solstice-ui-tmp
+echo [SUCCESS] solstice-ui package updated.
+echo.
+
 cd /d "%ROOT_DIR%\Template.Client"
-if not exist "node_modules" (
-    echo Installing Template.Client dependencies...
-    call npm install
-)
+echo Installing Template.Client dependencies...
+call npm install
 cd /d "%ROOT_DIR%"
 call npm run lint
 if errorlevel 1 (

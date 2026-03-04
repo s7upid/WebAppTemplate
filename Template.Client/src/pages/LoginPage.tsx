@@ -68,7 +68,7 @@ function LoginPage() {
         nav.goToHome();
       } else {
         const payload = result?.payload;
-        
+
         if (payload && typeof payload === "object" && "message" in payload) {
           const errorInfo = payload as { message: string; status?: number };
           const errorResponse: ApiResponse<unknown> = {

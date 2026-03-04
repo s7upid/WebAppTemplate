@@ -7,7 +7,7 @@ echo Starting Application
 echo ========================================
 echo.
 
-echo [1/3] Starting PostgreSQL Docker container...
+echo [1/4] Starting PostgreSQL Docker container...
 docker compose up -d db
 if errorlevel 1 (
     echo ERROR: Failed to start PostgreSQL container!
@@ -25,10 +25,37 @@ if errorlevel 1 (
 echo PostgreSQL is ready on port 5444.
 echo.
 
-echo [2/3] Starting .NET Backend Server in new window...
-start "Backend" cmd /k "cd /d "%~dp0\.." && dotnet run --project Template.Server/Template.Server.csproj"
+echo [2/4] Applying database migrations...
+set ASPNETCORE_ENVIRONMENT=Development
+dotnet ef database update --project Template.Data --startup-project Template.Server
+if errorlevel 1 (
+    echo WARNING: Migrations failed. Backend may still start and apply them on first run.
+) else (
+    echo Migrations applied successfully.
+)
+echo.
 
-echo [3/3] Starting Vite Frontend Dev Server in new window...
+echo [3/4] Starting .NET Backend Server in new window...
+start "Backend" cmd /k "cd /d "%~dp0\.." && set ASPNETCORE_ENVIRONMENT=Development && dotnet run --project Template.Server/Template.Server.csproj"
+
+echo [4/4] Starting Vite Frontend Dev Server in new window...
+if not exist "Template.Client\solstice-ui-1.0.0.tgz" (
+    echo Building solstice-ui from GitHub...
+    git clone --depth 1 https://github.com/s7upid/solstice-ui.git _solstice-ui-tmp
+    cd _solstice-ui-tmp
+    call npm install
+    call npm run build
+    call npm pack
+    copy /Y solstice-ui-1.0.0.tgz "..\Template.Client\solstice-ui-1.0.0.tgz"
+    cd ..
+    rmdir /s /q _solstice-ui-tmp
+)
+if not exist "Template.Client\node_modules" (
+    echo Installing frontend dependencies...
+    cd Template.Client
+    call npm install
+    cd ..
+)
 start "Frontend" cmd /k "cd /d "%~dp0\..\Template.Client" && npm run dev"
 
 echo.
