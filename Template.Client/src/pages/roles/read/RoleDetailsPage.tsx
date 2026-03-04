@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import {
   useRoleQuery,
@@ -9,7 +9,8 @@ import {
 } from "@/hooks";
 import { handleEntityDelete, useGenericNavigationFunctions } from "@/utils";
 import { PageHeaderProps, RoleResponse } from "@/models";
-import { ModalPortal, ConfirmationDialog, LoadingSpinner, EmptyState } from "solstice-ui";
+import { ConfirmationDialog } from "@/components";
+import { LoadingSpinner, EmptyState } from "solstice-ui";
 import {
   RoleActions,
   RolePermissionsSection,
@@ -31,12 +32,12 @@ interface RoleDetailsPageProps {
   handleCreateRole: () => void;
 }
 
-const RoleDetailsPage: React.FC<RoleDetailsPageProps> = ({
+function RoleDetailsPage({
   permissions,
   onEditRole,
   setHeaderProps,
   handleCreateRole,
-}) => {
+}: RoleDetailsPageProps) {
   const { id } = useParams<{ id: string }>();
   const nav = useGenericNavigationFunctions();
   const { role, isLoading, error } = useRoleQuery(id);
@@ -110,11 +111,9 @@ const RoleDetailsPage: React.FC<RoleDetailsPageProps> = ({
           onDeleteRole={handleDeleteRole}
         />
       </div>
-      <ModalPortal>
-        <ConfirmationDialog {...confirmation.dialogProps} />
-      </ModalPortal>
+      <ConfirmationDialog {...confirmation.dialogProps} />
     </>
   );
-};
+}
 
 export default RoleDetailsPage;

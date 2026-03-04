@@ -21,7 +21,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -83,11 +83,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     const isSubmenuOpen =
       openSubmenus.has(item.id) ||
       (hasChildren &&
-        item.children.some((child: NavigationItem) => isCurrentPath(child.href)));
+        item.children?.some((child: NavigationItem) => isCurrentPath(child.href)));
     const isActive =
       isCurrentPath(item.href) ||
       (hasChildren &&
-        item.children.some((child: NavigationItem) => isCurrentPath(child.href)));
+        item.children?.some((child: NavigationItem) => isCurrentPath(child.href)));
 
     if (hasChildren) {
       return (
@@ -126,7 +126,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               isSubmenuOpen ? styles.submenuOpen : styles.submenuClosed
             )}
           >
-            {item.children
+            {item.children!
               .filter((child: NavigationItem) => {
                 if (child.permission && hasPermission(child.permission))
                   return true;

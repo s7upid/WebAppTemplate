@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { CreateRoleRequest, UpdateRoleRequest, RoleResponse } from "@/models";
 import { RoleGridPage, RoleDetailsPage, RoleFormModal } from "@/pages";
 import { handleEntitySave } from "@/utils";
-import { ModalPortal, ConfirmationDialog } from "solstice-ui";
-import { BasePage, PermissionGuard } from "@/components";
+import { ConfirmationDialog, BasePage, PermissionGuard } from "@/components";
 import {
   useRoleManagementPermissions,
   useRolesQuery,
@@ -19,11 +18,13 @@ import {
 } from "@/config";
 import { PageHeaderProps } from "@/models";
 import { useRouteInfo } from "@/utils";
+import { ModalPortal } from "solstice-ui";
 
-const RoleContainer: React.FC = () => {
+function RoleContainer() {
   const permissions = useRoleManagementPermissions();
   const routeInfo = useRouteInfo("roles");
   const { showSuccess } = useToast();
+  const confirmation = useConfirmation();
   const {
     add: addRole,
     edit: editRole,
@@ -105,11 +106,11 @@ const RoleContainer: React.FC = () => {
               onSave={handleSaveRole}
             />
           )}
-          <ConfirmationDialog {...useConfirmation().dialogProps} />
         </ModalPortal>
+        <ConfirmationDialog {...confirmation.dialogProps} />
       </BasePage>
     </PermissionGuard>
   );
-};
+}
 
 export default RoleContainer;

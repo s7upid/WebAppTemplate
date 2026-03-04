@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "@/hooks";
 import AdministratorDashboard from "./components/AdministratorDashboard";
 import SupportDashboard from "./components/SupportDashboard";
@@ -7,7 +6,7 @@ import OperatorDashboard from "./components/OperatorDashboard";
 import { LoadingSpinner } from "solstice-ui";
 import { TEST_IDS, ROLE_KEYS } from "@/config";
 
-const DashboardFactory: React.FC = () => {
+function DashboardFactory() {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -47,6 +46,6 @@ const DashboardFactory: React.FC = () => {
       })()}
     </div>
   );
-};
+}
 
 export default DashboardFactory;

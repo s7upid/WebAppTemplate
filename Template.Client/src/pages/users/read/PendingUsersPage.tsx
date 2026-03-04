@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { GridPage } from "solstice-ui";
+import { useState } from "react";
+import { DataPage } from "solstice-ui";
 import {
   UserResponse,
   ApproveUserRequest,
@@ -25,11 +25,11 @@ interface PendingUsersPageProps {
   isLoading?: boolean;
 }
 
-const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
+function PendingUsersPage({
   paginationResult: propsPaginationResult,
   paginationHandlers: propsPaginationHandlers,
   isLoading: propsIsLoading,
-}) => {
+}: PendingUsersPageProps) {
   const {
     approveUser,
     rejectUser,
@@ -96,27 +96,26 @@ const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
   const result = isLoading
     ? createEmptyPagedResult<UserResponse>()
     : (paginationResult ?? createEmptyPagedResult<UserResponse>());
-  const { items, totalCount, pageNumber, totalPages, pageSize } = result;
+  const { items, pageNumber, totalPages, pageSize } = result;
 
   return (
     <div className="p-6" data-testid={TEST_IDS.PENDING_USERS_PAGE}>
-      <GridPage<UserResponse>
+      <DataPage<UserResponse>
+        layout="grid"
         items={items}
         loading={isLoading}
-        renderCard={(user) =>
+        renderCard={(user: UserResponse) =>
           renderPendingUserGridItem(user, openApprovalModal, openRejectionModal)
         }
         columns={3}
         emptyTitle={PENDING_USER_GRID_CONFIG.emptyStateTitle ?? "No items"}
         emptyDescription={PENDING_USER_GRID_CONFIG.emptyStateDescription}
-        keyExtractor={(user) => user.id ?? ""}
-        pageNumber={pageNumber}
+        keyExtractor={(user: UserResponse) => user.id ?? ""}
+        currentPage={pageNumber}
         totalPages={totalPages}
-        totalCount={totalCount}
         pageSize={pageSize}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
-        testId={TEST_IDS.PENDING_USERS_PAGE}
       />
 
       {modalType === "approve" && selectedUser && (
@@ -142,6 +141,6 @@ const PendingUsersPage: React.FC<PendingUsersPageProps> = ({
       )}
     </div>
   );
-};
+}
 
 export default PendingUsersPage;

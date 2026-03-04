@@ -3,7 +3,7 @@ import { PageHeader } from "solstice-ui";
 import { TEST_IDS } from "@/config";
 import { HelpCircle } from "lucide-react";
 
-const SupportDashboard: React.FC = () => {
+function SupportDashboard() {
   const { user } = useAuth();
 
   return (
@@ -15,6 +15,6 @@ const SupportDashboard: React.FC = () => {
       />
     </div>
   );
-};
+}
 
 export default SupportDashboard;

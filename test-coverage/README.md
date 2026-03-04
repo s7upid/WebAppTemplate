@@ -94,27 +94,19 @@ The master script that orchestrates the entire coverage workflow:
 ### 3. Cypress Coverage (`3-run-fe-cypress-coverage.bat` / `.sh`)
 - Builds app with Istanbul instrumentation (`vite-plugin-istanbul`)
 - Starts dev server with coverage enabled (`--mode coverage`)
-- Runs Cypress E2E tests with `ENABLE_COVERAGE=true`
-- Collects coverage from browser (`window.__coverage__`)
+- Runs Cypress E2E tests in **parallel** (4 processes via `cypress-split` + `concurrently`)
+- Each process writes its own `coverage-split-N.json` to `.c8_output/`
+- Merges all split files into `coverage/cypress/out.json` and `.nyc_output/out.json`
 - Uses native V8 coverage approach (c8-compatible, works with Node.js 24+)
-- Generates `coverage/cypress/out.json` and `.nyc_output/out.json`
 
 **Prerequisites:**
 - Node.js 24+ installed
 - Chrome browser installed
 
-**Environment Variables:**
-- `CYPRESS_SPEC` - Specify which spec to run (default: `cypress/e2e/auth/login.cy.ts`)
-
-Example:
-```bash
-# macOS / Linux
-CYPRESS_SPEC="cypress/e2e/**/*.cy.ts" ./test-coverage/3-run-fe-cypress-coverage.sh
-
-# Windows
-set CYPRESS_SPEC=cypress/e2e/**/*.cy.ts
-test-coverage\3-run-fe-cypress-coverage.bat
-```
+**How parallel coverage works:**
+1. `npm run cypress:run:parallel:coverage` — runs 4 Cypress processes, each collecting its own coverage
+2. `npm run cypress:merge-coverage` — deep-merges Istanbul coverage objects (sums statement/branch/function counters)
+3. Final merged file written to `coverage/cypress/out.json`
 
 ### 4. Extract Results (`4-extract-results.js`)
 - Reads coverage from all three sources

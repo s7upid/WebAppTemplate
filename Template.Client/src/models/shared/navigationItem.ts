@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import { LucideIcon } from "lucide-react";
 
 export interface NavigationItem {
@@ -8,7 +9,7 @@ export interface NavigationItem {
   icon: LucideIcon;
   permission?: string;
   roles?: string[];
-  component: React.ComponentType;
+  component: ComponentType;
   testId: string;
   showInNav?: boolean;
   position?: "main" | "footer";

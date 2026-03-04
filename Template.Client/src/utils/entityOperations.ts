@@ -44,6 +44,13 @@ export interface SaveResult {
   error?: { field?: string; message: string };
 }
 
+/** Result shape from add/edit/remove mutations (typed for use after Promise<unknown>). */
+export interface EntityMutationResult {
+  success?: boolean;
+  error?: string;
+  payload?: unknown;
+}
+
 export function extractErrorMessage(payload: unknown): string {
   if (!payload) return "Operation failed";
   if (typeof payload === "string") return payload;
@@ -102,9 +109,9 @@ export async function handleEntitySave<TCreate, TUpdate>(
       return { success: false, error: { message: "Invalid form mode" } };
     }
 
-    const result = isCreate
+    const result = (isCreate
       ? await addEntity(entityData as TCreate)
-      : await editEntity({ id: selectedEntity!.id, data: entityData as TUpdate });
+      : await editEntity({ id: selectedEntity!.id, data: entityData as TUpdate })) as EntityMutationResult;
 
     if (result?.success === true) {
       const title = isCreate ? successMessages.created : successMessages.updated;
@@ -154,7 +161,7 @@ export async function handleEntityDelete<T extends { id: string; name?: string }
   if (!confirmed) return;
 
   try {
-    const result = await remove(id);
+    const result = (await remove(id)) as EntityMutationResult;
 
     if (result?.success === true) {
       showSuccess(successMessage || `${entityName} deleted successfully.`);
@@ -185,7 +192,7 @@ export async function handleSubmitForm<T>(
       showSuccess?.(`${entityName} saved`, `${entityName} saved successfully`);
       return { success: true, result };
     } else {
-      showError("Error", result.error?.message || "Unknown error");
+      showError("Error", result.error || "Unknown error");
       return { success: false, error: result.error };
     }
   } catch (err: unknown) {

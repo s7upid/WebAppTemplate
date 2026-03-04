@@ -74,19 +74,18 @@ rm -f "$NYC_OUTPUT_DIR/out.json"
 rm -f "$CLIENT_DIR/.nyc_output/out.json"
 rm -rf "$CLIENT_DIR/.c8_output"
 
-SPEC="${CYPRESS_SPEC:-cypress/e2e/**/*.cy.ts}"
-echo "Running Cypress specs: $SPEC"
 echo "NYC output directory: $NYC_OUTPUT_DIR"
 
-./node_modules/.bin/cypress run \
-    --config "video=false,screenshotOnRunFailure=false,baseUrl=http://localhost:$SERVER_PORT" \
-    --env ENABLE_COVERAGE=true \
-    --spec "$SPEC" \
-    --browser chrome \
-    --headless
+# Run Cypress tests in parallel (4 processes) with coverage enabled
+echo "Running Cypress tests in parallel with coverage..."
+npm run cypress:run:parallel:coverage
 
 CYPRESS_EXIT_CODE=$?
 echo "Cypress tests completed with exit code: $CYPRESS_EXIT_CODE"
+
+# Merge per-split coverage files into final output
+echo "Merging coverage from parallel processes..."
+npm run cypress:merge-coverage
 
 # Look for coverage data in multiple possible locations
 echo "Looking for coverage data..."

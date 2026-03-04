@@ -1,7 +1,7 @@
 import { PageHeader, ErrorBoundary, Alert } from "solstice-ui";
 import { TEST_IDS } from "@/config";
 import styles from "./BasePage.module.css";
-import React from "react";
+import type { ReactNode } from "react";
 import { LucideIcon } from "lucide-react";
 
 interface BasePageProps {
@@ -9,15 +9,15 @@ interface BasePageProps {
   description?: string;
   subtitle?: string;
   icon?: LucideIcon;
-  actions?: React.ReactNode;
-  tabs?: React.ReactNode;
-  children: React.ReactNode;
+  actions?: ReactNode;
+  tabs?: ReactNode;
+  children: ReactNode;
   error?: string | null;
   className?: string;
   testId?: string;
 }
 
-const BasePage: React.FC<BasePageProps> = ({
+function BasePage({
   title,
   description,
   subtitle,
@@ -28,7 +28,7 @@ const BasePage: React.FC<BasePageProps> = ({
   error = null,
   className = "",
   testId,
-}) => {
+}: BasePageProps) {
   if (error) {
     return <Alert variant="error">{error}</Alert>;
   }
@@ -50,6 +50,6 @@ const BasePage: React.FC<BasePageProps> = ({
       </div>
     </ErrorBoundary>
   );
-};
+}
 
 export default BasePage;

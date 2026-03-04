@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.0] - 2026-03-04 - Parallel Cypress, Dependency Updates & Architecture Modernization
+
+### New Features
+
+#### Parallel Cypress Test Execution
+
+- Added `cypress-split` and `concurrently` for local parallel E2E test execution
+- Specs are distributed across 4 parallel processes for ~3-4x speedup
+- Coverage collection is parallel-safe: each process writes its own `coverage-split-N.json`
+- New merge script (`scripts/merge-cypress-coverage.mjs`) deep-merges Istanbul coverage objects
+- Coverage scripts (`3-run-fe-cypress-coverage.bat/.sh`) updated to use parallel run + merge
+
+#### New npm Scripts
+
+- `cypress:run:parallel` — run all Cypress specs across 4 parallel processes
+- `cypress:run:parallel:coverage` — parallel run with coverage instrumentation
+- `cypress:merge-coverage` — merge per-split coverage into final `out.json`
+
+### Dependency Updates
+
+| Package | Previous | Current |
+|---------|----------|---------|
+| TypeScript | 5.3 | 5.9 |
+| Vite | 7.1 | 7.3 |
+| React Router | 7.9 | 7.13 |
+| TanStack Query | 5.9 | 5.90 |
+| Redux Toolkit | 2.0 | 2.11 |
+| Tailwind CSS | 4.1 | 4.2 |
+| Zod | 4.1 | 4.3 |
+| React Hook Form | 7.48 | 7.71 |
+| Lucide React | 0.562 | 0.577 |
+| Cypress | 15.3 | 15.11 |
+| c8 | 10.1 | 11.0 |
+| ESLint | 9.28 | 9.39 |
+| typescript-eslint | 8.33 | 8.56 |
+| React Redux | 9.0 | 9.2 |
+
+### Technical Improvements
+
+- Modern component patterns: plain function declarations instead of `React.FC`
+- Removed unused `import React` statements (automatic JSX transform)
+- Wrapped synchronous `setState` calls in `useEffect` with `queueMicrotask` to satisfy `react-hooks/set-state-in-effect` lint rule
+- Added `solstice-ui.d.ts` ambient module declarations for type safety
+- Conditional Vite aliases for `solstice-ui` (resolves to mock when package is not built)
+- Explicit parameter typing to eliminate implicit `any` warnings
+
+### Documentation Updates
+
+- Updated all version numbers across documentation
+- Added parallel Cypress execution docs to Testing Guide and Cypress Guide
+- Fixed stale `scripts/coverage/` references to `test-coverage/`
+- Updated Dockerfile example to Node 24
+- Modernized component structure examples
+
+---
+
 ## [3.1.0] - 2026-01-09 - Centralized Constants & Architecture Improvements
 
 ### 🎉 New Features

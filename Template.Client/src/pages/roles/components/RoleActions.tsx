@@ -1,4 +1,3 @@
-import React from "react";
 import { RoleResponse } from "@/models";
 import { DangerZone, Card } from "solstice-ui";
 import { QuickActions } from "@/components";
@@ -13,12 +12,12 @@ interface RoleActionsProps {
   onDeleteRole?: (user: RoleResponse) => void;
 }
 
-const RoleActions: React.FC<RoleActionsProps> = ({
+function RoleActions({
   permissions,
   role,
   onEditRole,
   onDeleteRole,
-}) => {
+}: RoleActionsProps) {
   const quickActions = [
     {
       id: "edit-role",
@@ -56,6 +55,6 @@ const RoleActions: React.FC<RoleActionsProps> = ({
       )}
     </div>
   );
-};
+}
 
 export default RoleActions;

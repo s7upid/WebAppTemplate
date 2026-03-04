@@ -8,37 +8,34 @@ export type TabItem = {
   isVisible?: boolean;
 };
 
-export const GridPage = ({
+export const DataPage = ({
   items,
   renderCard,
   keyExtractor,
   emptyTitle,
   emptyDescription,
   loading,
-  content,
-  pageNumber,
+  contentBetweenHeaderAndContent,
+  currentPage,
   totalPages,
-  totalCount,
   pageSize,
   onPageChange,
   onPageSizeChange,
-  testId,
 }: {
   items: unknown[];
-  renderCard: (item: unknown) => React.ReactNode;
+  renderCard?: (item: unknown) => React.ReactNode;
   keyExtractor?: (item: unknown) => React.Key;
   emptyTitle?: string;
   emptyDescription?: string;
   loading?: boolean;
-  content?: React.ReactNode;
-  pageNumber?: number;
+  contentBetweenHeaderAndContent?: React.ReactNode;
+  currentPage?: number;
   totalPages?: number;
-  totalCount?: number;
   pageSize?: number;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
+  layout?: "grid" | "list";
   columns?: number;
-  testId?: string;
 }) => {
   const showPagination =
     totalPages != null &&
@@ -46,8 +43,8 @@ export const GridPage = ({
     onPageChange &&
     onPageSizeChange;
   return (
-    <div data-testid={testId ?? "grid-page"}>
-      {content}
+    <div data-testid="data-page">
+      {contentBetweenHeaderAndContent}
       {loading && <span>Grid loading</span>}
       {!loading && items.length === 0 && (
         <div data-testid="empty">
@@ -55,15 +52,14 @@ export const GridPage = ({
           {emptyDescription && <span>{emptyDescription}</span>}
         </div>
       )}
-      {!loading && items.map((item, i) => (
+      {!loading && renderCard && items.map((item, i) => (
         <div key={keyExtractor ? keyExtractor(item) : i}>{renderCard(item)}</div>
       ))}
       {showPagination && (
         <div className="mt-4" data-testid="pagination">
           <Pagination
-            currentPage={pageNumber ?? 1}
+            currentPage={currentPage ?? 1}
             totalPages={totalPages ?? 1}
-            totalItems={totalCount}
             pageSize={pageSize}
             onPageChange={onPageChange!}
             onPageSizeChange={onPageSizeChange!}
@@ -250,7 +246,6 @@ export const Input = ({
   );
 };
 
-export const ConfirmationDialog = () => null;
 export const DangerZone = ({
   title,
   description,
@@ -276,13 +271,14 @@ export const Dialog = ({
   children,
   isOpen = true,
   title,
-  onClose,
+  footerActions,
 }: {
   children?: React.ReactNode;
   isOpen?: boolean;
   title?: string;
   onClose?: () => void;
   size?: string;
+  footerActions?: Array<{ label: string; onClick: () => void; variant?: string; loading?: boolean }>;
 }) =>
   isOpen ? (
     <div data-testid="modal" role="dialog">
@@ -290,6 +286,11 @@ export const Dialog = ({
         <h2 data-testid="export-modal-title">{title}</h2>
       )}
       {children}
+      {footerActions?.map((action, i) => (
+        <button key={i} type="button" onClick={action.onClick} disabled={action.loading}>
+          {action.label}
+        </button>
+      ))}
     </div>
   ) : null;
 export const ErrorBoundary = ({ children }: { children: React.ReactNode }) => <>{children}</>;

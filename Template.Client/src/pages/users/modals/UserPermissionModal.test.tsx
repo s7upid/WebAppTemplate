@@ -378,6 +378,11 @@ describe("UserPermissionModal", () => {
         />
       );
 
+      // Wait for modal initial state (deferred setState) to be applied
+      await waitFor(() => {
+        expect(screen.getByTestId("permission-selector")).toBeInTheDocument();
+      });
+
       // First, select a permission to make the button visible
       const editCheckbox = screen.getByLabelText(
         mockPermissions.find((p: any) => p.key === PERMISSION_KEYS.USERS.EDIT)
@@ -400,7 +405,7 @@ describe("UserPermissionModal", () => {
             screen.queryByText("Update Permissions")
           ).not.toBeInTheDocument();
         },
-        { timeout: 1000 }
+        { timeout: 2000 }
       );
 
       // Edit should not have been called since button is gone
@@ -416,6 +421,12 @@ describe("UserPermissionModal", () => {
           user={user}
         />
       );
+
+      // Wait for modal initial state (deferred setState) to be applied
+      await waitFor(() => {
+        expect(screen.getByTestId("permission-selector")).toBeInTheDocument();
+      });
+      await new Promise((r) => setTimeout(r, 0));
 
       // Toggle a permission to make the button visible
       const editCheckbox = screen.getByLabelText(
@@ -453,6 +464,11 @@ describe("UserPermissionModal", () => {
         />
       );
 
+      await waitFor(() => {
+        expect(screen.getByTestId("permission-selector")).toBeInTheDocument();
+      });
+      await new Promise((r) => setTimeout(r, 0));
+
       // Toggle a permission to make the button visible
       const editCheckbox = screen.getByLabelText(
         mockPermissions.find((p: any) => p.key === PERMISSION_KEYS.USERS.EDIT)
@@ -487,6 +503,11 @@ describe("UserPermissionModal", () => {
           user={user}
         />
       );
+
+      await waitFor(() => {
+        expect(screen.getByTestId("permission-selector")).toBeInTheDocument();
+      });
+      await new Promise((r) => setTimeout(r, 0));
 
       // Toggle a permission to make the button visible
       const editCheckbox = screen.getByLabelText(

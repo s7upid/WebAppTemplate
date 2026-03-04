@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { User, ChevronDown, Edit, Key, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks";
 import { TEST_IDS } from "@/config/constants";
@@ -10,11 +10,11 @@ interface UserMenuProps {
   onLogout: () => void;
 }
 
-const UserMenu: React.FC<UserMenuProps> = ({
+function UserMenu({
   onEditProfile,
   onChangePassword,
   onLogout,
-}) => {
+}: UserMenuProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -104,6 +104,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
       </button>
     </>
   );
-};
+}
 
 export default UserMenu;

@@ -3,6 +3,26 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import AuditLogsPage from "./AuditLogsPage";
 import { TEST_IDS } from "@/config";
+import { useAuditQuery } from "@/hooks";
+import { createEmptyPagedResult } from "@/models";
+import type { AuditLog } from "@/models/generated";
+
+const mockPaginationHandlers = {
+  refreshWithParams: jest.fn(),
+  clearAll: jest.fn(),
+  changePage: jest.fn(),
+  changePageSize: jest.fn(),
+  refreshWithCurrentFilters: jest.fn(),
+};
+
+const mockUseAuditQueryReturn = () => ({
+  auditLogs: [] as AuditLog[],
+  paginationResult: createEmptyPagedResult<AuditLog>(),
+  paginationHandlers: mockPaginationHandlers,
+  isLoading: false,
+  error: null,
+  refetch: jest.fn(),
+});
 
 jest.mock("lucide-react", () => new Proxy({}, { get: () => () => null }));
 
@@ -14,15 +34,12 @@ jest.mock("@/config/navigation", () => ({
 
 jest.mock("@/hooks", () => ({
   useAuditQuery: jest.fn(() => ({
-    paginationResult: null,
-    paginationHandlers: {
-      refreshWithParams: jest.fn(),
-      clearAll: jest.fn(),
-      changePage: jest.fn(),
-      changePageSize: jest.fn(),
-    },
+    auditLogs: [],
+    paginationResult: createEmptyPagedResult<AuditLog>(),
+    paginationHandlers: mockPaginationHandlers,
     isLoading: false,
     error: null,
+    refetch: jest.fn(),
   })),
 }));
 
@@ -38,11 +55,11 @@ jest.mock("./useAuditTableConfig", () => ({
 
 jest.mock("@/components/Guards/RoleGuard", () => ({
   __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  default: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 jest.mock("@/components", () => {
-  const Card = ({ children }: { children: React.ReactNode }) => (
+  const Card = ({ children }: { children?: React.ReactNode }) => (
     <div data-testid="audit-card">{children}</div>
   );
   const PageHeader = ({ title }: { title?: string }) => (
@@ -53,7 +70,7 @@ jest.mock("@/components", () => {
   );
   const LoadingSpinner = () => <div data-testid="loading-spinner">Loading...</div>;
   const Pagination = () => <div data-testid="pagination">Pagination</div>;
-  const Dialog = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
+  const Dialog = ({ children }: { children?: React.ReactNode }) => <div>{children}</div>;
   const Alert = ({ children, "data-testid": testId }: { children?: React.ReactNode; "data-testid"?: string }) => (
     <div data-testid={testId ?? "alert"} role="alert">{children}</div>
   );
@@ -72,21 +89,11 @@ jest.mock("@/components", () => {
   };
 });
 
-const mockUseAuditQuery = jest.requireMock("@/hooks").useAuditQuery as jest.Mock;
+const mockUseAuditQuery = jest.mocked(useAuditQuery);
 
 describe("AuditLogsPage", () => {
   beforeEach(() => {
-    mockUseAuditQuery.mockReturnValue({
-      paginationResult: null,
-      paginationHandlers: {
-        refreshWithParams: jest.fn(),
-        clearAll: jest.fn(),
-        changePage: jest.fn(),
-        changePageSize: jest.fn(),
-      },
-      isLoading: false,
-      error: null,
-    });
+    mockUseAuditQuery.mockReturnValue(mockUseAuditQueryReturn());
   });
 
   it("renders page header and toolbar", () => {
@@ -102,10 +109,8 @@ describe("AuditLogsPage", () => {
 
   it("shows loading state when isLoading is true", () => {
     mockUseAuditQuery.mockReturnValue({
-      paginationResult: null,
-      paginationHandlers: {},
+      ...mockUseAuditQueryReturn(),
       isLoading: true,
-      error: null,
     });
     render(
       <MemoryRouter>
@@ -117,9 +122,7 @@ describe("AuditLogsPage", () => {
 
   it("shows error when error is set", () => {
     mockUseAuditQuery.mockReturnValue({
-      paginationResult: null,
-      paginationHandlers: {},
-      isLoading: false,
+      ...mockUseAuditQueryReturn(),
       error: "Network error",
     });
     render(
@@ -133,16 +136,8 @@ describe("AuditLogsPage", () => {
 
   it("shows empty message when no items", () => {
     mockUseAuditQuery.mockReturnValue({
-      paginationResult: {
-        items: [],
-        totalCount: 0,
-        pageNumber: 1,
-        pageSize: 10,
-        totalPages: 1,
-      },
-      paginationHandlers: {},
-      isLoading: false,
-      error: null,
+      ...mockUseAuditQueryReturn(),
+      paginationResult: createEmptyPagedResult<AuditLog>(10),
     });
     render(
       <MemoryRouter>

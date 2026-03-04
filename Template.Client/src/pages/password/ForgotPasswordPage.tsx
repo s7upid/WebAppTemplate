@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, Input, PageHeader } from "solstice-ui";
@@ -11,7 +11,7 @@ import {
   ForgotPasswordFormData,
 } from "@/validations/schemas";
 
-const ForgotPasswordPage: React.FC = () => {
+function ForgotPasswordPage() {
   const { showError, showSuccess } = useToast();
   const nav = useGenericNavigationFunctions();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -89,6 +89,6 @@ const ForgotPasswordPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ForgotPasswordPage;

@@ -3,7 +3,7 @@ import { PageHeader } from "solstice-ui";
 import { TEST_IDS } from "@/config";
 import { Shield } from "lucide-react";
 
-const RegulatorDashboard: React.FC = () => {
+function RegulatorDashboard() {
   const { user } = useAuth();
 
   return (
@@ -15,6 +15,6 @@ const RegulatorDashboard: React.FC = () => {
       />
     </div>
   );
-};
+}
 
 export default RegulatorDashboard;

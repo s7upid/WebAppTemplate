@@ -20,7 +20,7 @@ import { renderChangeValue } from "@/utils/auditLogUtils";
 import { scrollToTop, cn } from "@/utils";
 import { AUDIT_FILTERS, AUDIT_SORT_FIELDS } from "./auditConstants";
 
-const AuditLogsPage: React.FC = () => {
+function AuditLogsPage() {
   const { paginationResult, paginationHandlers, isLoading, error } = useAuditQuery();
 
   const [selectedChangeLog, setSelectedChangeLog] = useState<AuditLog | null>(null);
@@ -240,6 +240,6 @@ const AuditLogsPage: React.FC = () => {
       </Dialog>
     </RoleGuard>
   );
-};
+}
 
 export default AuditLogsPage;

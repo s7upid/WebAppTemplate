@@ -1,4 +1,3 @@
-import React from "react";
 import { Dialog, Button } from "solstice-ui";
 import { UserResponse } from "@/models";
 import { XCircle } from "lucide-react";
@@ -11,13 +10,13 @@ interface UserRejectionModalProps {
   loading: boolean;
 }
 
-const UserRejectionModal: React.FC<UserRejectionModalProps> = ({
+function UserRejectionModal({
   isOpen,
   onClose,
   user,
   onReject,
   loading,
-}) => {
+}: UserRejectionModalProps) {
   return (
     <Dialog
       isOpen={isOpen}
@@ -68,6 +67,6 @@ const UserRejectionModal: React.FC<UserRejectionModalProps> = ({
         </div>
     </Dialog>
   );
-};
+}
 
 export default UserRejectionModal;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PermissionGridPage } from "@/pages";
 import { BasePage, PermissionGuard } from "@/components";
@@ -9,16 +9,16 @@ import {
   PERMISSION_KEYS,
 } from "@/config";
 
-const PermissionContainer: React.FC = () => {
+function PermissionContainer() {
   const { paginationResult, paginationHandlers, isLoading } = usePermissionsQuery();
-  const [initialized, setInitialized] = useState(false);
+  const initializedRef = useRef(false);
 
   useEffect(() => {
-    if (paginationHandlers && !initialized) {
+    if (paginationHandlers && !initializedRef.current) {
+      initializedRef.current = true;
       paginationHandlers.refreshWithCurrentFilters();
-      setInitialized(true);
     }
-  }, [paginationHandlers, initialized]);
+  }, [paginationHandlers]);
 
   const [headerProps] = useState<PageHeaderProps>(
     createPermissionManagementHeader()
@@ -42,6 +42,6 @@ const PermissionContainer: React.FC = () => {
       </BasePage>
     </PermissionGuard>
   );
-};
+}
 
 export default PermissionContainer;

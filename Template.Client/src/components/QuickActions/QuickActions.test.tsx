@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import QuickActions from "./QuickActions";
 import { Plus, Edit } from "lucide-react";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Dialog } from "solstice-ui";
@@ -15,10 +15,10 @@ interface PasswordChangeModalProps {
   onClose: () => void;
 }
 
-const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
+function PasswordChangeModal({
   isOpen,
   onClose,
-}) => {
+}: PasswordChangeModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -185,6 +185,6 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
       </div>
     </Dialog>
   );
-};
+}
 
 export default PasswordChangeModal;

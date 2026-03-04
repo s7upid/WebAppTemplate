@@ -24,21 +24,24 @@ jest.mock("@/pages", () => ({
 // Use base component mocks with factory function to avoid hoisting issues
 jest.mock("@/components", () => getComponentMocks());
 
-jest.mock("@/hooks", () => ({
-  useRolesQuery: () => ({
-    roles: [
-      { id: "1", name: "admin" },
-      { id: "2", name: "user" },
-    ],
-    isLoading: false,
-    paginationHandlers: { refreshWithCurrentFilters: jest.fn() },
-  }),
-  useUsersQuery: () => ({ 
-    edit: jest.fn().mockResolvedValue({ success: true }),
-    refetch: jest.fn(),
-  }),
-  useToast: () => ({ showSuccess: jest.fn() }),
-}));
+jest.mock("@/hooks", () => {
+  const mockPaginationHandlers = { refreshWithCurrentFilters: jest.fn() };
+  return {
+    useRolesQuery: () => ({
+      roles: [
+        { id: "1", name: "admin" },
+        { id: "2", name: "user" },
+      ],
+      isLoading: false,
+      paginationHandlers: mockPaginationHandlers,
+    }),
+    useUsersQuery: () => ({
+      edit: jest.fn().mockResolvedValue({ success: true }),
+      refetch: jest.fn(),
+    }),
+    useToast: () => ({ showSuccess: jest.fn() }),
+  };
+});
 
 const permissions = { canEditUsers: true, canEditUserRoles: true } as Record<string, boolean>;
 const user = mockUsers[1];

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import {
   useUserQuery,
@@ -16,7 +16,8 @@ import {
   RoleResponse,
 } from "@/models";
 import { Calendar, Key, Shield, UserIcon } from "lucide-react";
-import { Card, ConfirmationDialog, ModalPortal, LoadingSpinner, EmptyState } from "solstice-ui";
+import { ConfirmationDialog } from "@/components";
+import { Card, LoadingSpinner, EmptyState } from "solstice-ui";
 import {
   BUTTON_LABELS,
   ERROR_MESSAGES,
@@ -34,14 +35,14 @@ interface UserDetailsPageProps {
   handleCreateUser: () => void;
 }
 
-const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
+function UserDetailsPage({
   permissions,
   onEditUser,
   onManageRoles,
   onManagePermissions,
   setHeaderProps,
   handleCreateUser,
-}) => {
+}: UserDetailsPageProps) {
   const { id } = useParams<{ id: string }>();
   const nav = useGenericNavigationFunctions();
   const { user, isLoading, error } = useUserQuery(id);
@@ -156,11 +157,9 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
           onDeleteUser={handleDeleteUser}
         />
       </div>
-      <ModalPortal>
-        <ConfirmationDialog {...confirmation.dialogProps} />
-      </ModalPortal>
+      <ConfirmationDialog {...confirmation.dialogProps} />
     </>
   );
-};
+}
 
 export default UserDetailsPage;

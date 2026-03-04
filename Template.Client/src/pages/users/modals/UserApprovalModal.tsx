@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Button, Dialog } from "solstice-ui";
 import { RoleResponse, UserResponse } from "@/models";
 import { useRolesQuery } from "@/hooks";
@@ -14,7 +14,7 @@ interface UserApprovalModalProps {
   loading: boolean;
 }
 
-const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
+function UserApprovalModal({
   isOpen,
   onClose,
   user,
@@ -22,7 +22,7 @@ const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
   onRoleChange,
   onApprove,
   loading,
-}) => {
+}: UserApprovalModalProps) {
   const { roles, paginationHandlers, isLoading } = useRolesQuery();
 
   useEffect(() => {
@@ -100,6 +100,6 @@ const UserApprovalModal: React.FC<UserApprovalModalProps> = ({
         </div>
     </Dialog>
   );
-};
+}
 
 export default UserApprovalModal;

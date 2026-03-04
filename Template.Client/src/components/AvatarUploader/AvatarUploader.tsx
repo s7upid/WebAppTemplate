@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
 import { User, Upload } from "lucide-react";
 import styles from "./AvatarUploader.module.css";
 
@@ -10,13 +10,13 @@ interface AvatarUploaderProps {
   className?: string;
 }
 
-export const AvatarUploader: React.FC<AvatarUploaderProps> = ({
+export function AvatarUploader({
   avatarUrl,
   editable = false,
   onChange,
   onRemove,
   className = "",
-}) => {
+}: AvatarUploaderProps) {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       onChange?.(e.target.files[0]);
@@ -60,6 +60,6 @@ export const AvatarUploader: React.FC<AvatarUploaderProps> = ({
       )}
     </div>
   );
-};
+}
 
 export default AvatarUploader;

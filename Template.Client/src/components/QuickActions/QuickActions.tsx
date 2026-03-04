@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, Button } from "solstice-ui";
 import { LucideIcon } from "lucide-react";
 
@@ -23,13 +22,13 @@ interface QuickActionsProps {
  * Renders a Card with a responsive grid of secondary Buttons (solstice-ui).
  * Use for detail-page "Quick Actions" (e.g. Edit, Manage Roles).
  */
-const QuickActions: React.FC<QuickActionsProps> = ({
+function QuickActions({
   title = "Quick Actions",
   icon,
   iconSize = "sm",
   actions,
   testId,
-}) => {
+}: QuickActionsProps) {
   if (actions.length === 0) return null;
 
   return (
@@ -55,6 +54,6 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       </div>
     </Card>
   );
-};
+}
 
 export default QuickActions;

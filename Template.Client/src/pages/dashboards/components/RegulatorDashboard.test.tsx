@@ -10,12 +10,6 @@ jest.mock("@/hooks", () => {
   });
 });
 
-jest.mock("@/services", () => ({
-  dashboardApiService: {
-    getRegulatorStatsSafe: jest.fn().mockResolvedValue({}),
-  },
-}));
-
 describe("RegulatorDashboard", () => {
   it("renders loading then content", async () => {
     const { findByTestId } = render(<RegulatorDashboard />);
@@ -24,17 +18,5 @@ describe("RegulatorDashboard", () => {
       screen.getByTestId(TEST_IDS.REGULATOR_DASHBOARD)
     ).toBeInTheDocument();
     expect(screen.getByText(/Regulator Dashboard/)).toBeInTheDocument();
-  });
-
-  it("renders with empty recent activity", async () => {
-    const { dashboardApiService } = jest.requireMock("@/services");
-    dashboardApiService.getRegulatorStatsSafe.mockResolvedValue({
-      recentActivity: [],
-    });
-    const { findByTestId } = render(<RegulatorDashboard />);
-    await findByTestId(TEST_IDS.REGULATOR_DASHBOARD);
-    expect(
-      screen.getByTestId(TEST_IDS.REGULATOR_DASHBOARD)
-    ).toBeInTheDocument();
   });
 });

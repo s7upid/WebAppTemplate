@@ -1,4 +1,3 @@
-import React from "react";
 import { Shield } from "lucide-react";
 import { useAllPermissions } from "@/hooks";
 import { LoadingSpinner } from "solstice-ui";
@@ -16,14 +15,14 @@ interface PermissionSelectorProps {
   disabledKeys?: string[];
 }
 
-const PermissionSelector: React.FC<PermissionSelectorProps> = ({
+function PermissionSelector({
   selectedPermissions,
   onPermissionToggle,
   onBulkPermissionChange,
   disabled = false,
   error,
   disabledKeys = [],
-}) => {
+}: PermissionSelectorProps) {
   const {
     permissions: permissionsData,
     isLoading,
@@ -184,6 +183,6 @@ const PermissionSelector: React.FC<PermissionSelectorProps> = ({
       )}
     </div>
   );
-};
+}
 
 export default PermissionSelector;

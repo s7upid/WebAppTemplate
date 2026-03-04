@@ -1,24 +1,24 @@
-import React from "react";
+import type { ReactNode } from "react";
 import { usePermissions } from "@/hooks";
 import { PermissionKey } from "@/models";
 import { Shield, AlertCircle } from "lucide-react";
 import styles from "./PermissionGuard.module.css";
 
 interface PermissionGuardProps {
-  children: React.ReactNode;
+  children: ReactNode;
   permissions?: PermissionKey[];
   permission?: PermissionKey;
-  fallback?: React.ReactNode;
+  fallback?: ReactNode;
   requireAll?: boolean;
 }
 
-const PermissionGuard: React.FC<PermissionGuardProps> = ({
+function PermissionGuard({
   children,
   permissions,
   permission,
   fallback,
   requireAll = false,
-}) => {
+}: PermissionGuardProps) {
   const { hasAnyPermission, hasAllPermissions } = usePermissions();
 
   const permissionList = permission ? [permission] : permissions || [];
@@ -52,6 +52,6 @@ const PermissionGuard: React.FC<PermissionGuardProps> = ({
   }
 
   return <>{children}</>;
-};
+}
 
 export default PermissionGuard;

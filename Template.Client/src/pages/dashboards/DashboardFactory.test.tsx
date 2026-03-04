@@ -19,7 +19,6 @@ jest.mock("@/hooks", () => ({
 }));
 
 jest.mock("@/components", () => {
-  const React = require("react");
   const stubs = require("@/test/__mocks__/component-stubs").default;
   return {
     ...stubs,

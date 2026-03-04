@@ -6,7 +6,6 @@ import { mockUsers } from "@/mock/data";
 import { ToastProvider } from "@/hooks/ui/useToast";
 
 jest.mock("@/components", () => {
-  const React = require("react");
   const stubs = require("@/test/__mocks__/component-stubs").default;
   return {
     ...stubs,
@@ -97,7 +96,6 @@ jest.mock("@/utils", () => ({
   }),
   logger: { error: jest.fn(), warn: jest.fn(), info: jest.fn() },
   cn: jest.fn((...args) => args.filter(Boolean).join(" ")),
-  Portal: ({ children }: any) => children,
   handleEntityDelete: jest.fn(),
   handleSubmitForm: (...args: any[]) => mockHandleSubmitForm(...args),
   handleEntitySave: jest.fn(),

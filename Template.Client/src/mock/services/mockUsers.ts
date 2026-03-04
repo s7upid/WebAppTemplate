@@ -109,9 +109,10 @@ export class MockUsers {
               .reduce((acc: any, key: string) => acc?.[key], b)
           : (b as any)[effectiveSortColumn];
 
-        if (av == null && bv == null) return 0;
-        if (av == null) return 1;
-        if (bv == null) return -1;
+        if (av === null || av === undefined) {
+          return (bv === null || bv === undefined) ? 0 : 1;
+        }
+        if (bv === null || bv === undefined) return -1;
 
         if (typeof av === "string" && typeof bv === "string") {
           const as = av.toLowerCase();

@@ -1,9 +1,9 @@
 import { useGenericNavigationFunctions } from "@/utils";
-import { GridPage, EmptyState } from "solstice-ui";
+import { DataPage, EmptyState } from "solstice-ui";
 import { EntityToolbar } from "@/components";
 import { PagedResult, UserResponse, createEmptyPagedResult } from "@/models";
 import { TEST_IDS } from "@/config";
-import { useGridFilters, usePaginationWithScroll, type GridPaginationHandlers } from "@/hooks";
+import { useGridFilters, usePaginationWithScroll, type GridListPaginationHandlers } from "@/hooks";
 import {
   FILTERS,
   USER_GRID_CONFIG,
@@ -13,19 +13,19 @@ import {
 
 interface UserGridPageProps {
   paginationResult: PagedResult<UserResponse>;
-  paginationHandlers: GridPaginationHandlers;
+  paginationHandlers: GridListPaginationHandlers;
   isLoading: boolean;
   error?: string | null;
   onRetry?: () => void;
 }
 
-const UserGridPage: React.FC<UserGridPageProps> = ({
+function UserGridPage({
   paginationResult,
   paginationHandlers,
   isLoading,
   error,
   onRetry,
-}) => {
+}: UserGridPageProps) {
   const nav = useGenericNavigationFunctions();
   const handleUserClick = (user: UserResponse) => nav.goToUserDetail(user.id!);
   const { actionLoading, applyFilters, clearAll } =
@@ -35,7 +35,7 @@ const UserGridPage: React.FC<UserGridPageProps> = ({
   const result = isLoading
     ? createEmptyPagedResult<UserResponse>()
     : (paginationResult ?? createEmptyPagedResult<UserResponse>());
-  const { items, totalCount, pageNumber, totalPages, pageSize } = result;
+  const { items, pageNumber, totalPages, pageSize } = result;
 
   if (error && !isLoading) {
     return (
@@ -60,25 +60,24 @@ const UserGridPage: React.FC<UserGridPageProps> = ({
 
   return (
     <div data-testid={`${TEST_IDS.USER_PAGE}-page`}>
-      <GridPage<UserResponse>
-        content={toolbar}
+      <DataPage<UserResponse>
+        layout="grid"
+        contentBetweenHeaderAndContent={toolbar}
         items={items}
         loading={isLoading}
-        renderCard={(user) => renderUserGridItem(user, handleUserClick)}
+        renderCard={(user: UserResponse) => renderUserGridItem(user, handleUserClick)}
         columns={3}
         emptyTitle={USER_GRID_CONFIG.emptyStateTitle ?? "No items found"}
         emptyDescription={USER_GRID_CONFIG.emptyStateDescription}
-        keyExtractor={(user) => user.id ?? ""}
-        pageNumber={pageNumber}
+        keyExtractor={(user: UserResponse) => user.id ?? ""}
+        currentPage={pageNumber}
         totalPages={totalPages}
-        totalCount={totalCount}
         pageSize={pageSize}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
-        testId={TEST_IDS.USER_PAGE}
       />
     </div>
   );
-};
+}
 
 export default UserGridPage;

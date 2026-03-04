@@ -1,4 +1,4 @@
-import React from "react";
+import { useMemo, useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import { Dialog, Button, Input } from "solstice-ui";
 import { PermissionSelector } from "@/pages";
 import { Save, XCircle } from "lucide-react";
@@ -29,20 +29,20 @@ const defaultValues: RoleFormData = {
   permissions: [],
 };
 
-const RoleFormModal: React.FC<RoleFormModalProps> = ({
+function RoleFormModal({
   permissions,
   isOpen,
   onClose,
   role,
   formMode,
   onSave,
-}) => {
+}: RoleFormModalProps) {
   const isEditMode = formMode === "edit";
   const isCreateMode = formMode === "create";
   const { permissions: availablePermissions } = useAllPermissions();
   const { showError } = useToast();
 
-  const entityData: RoleFormData | undefined = React.useMemo(() => {
+  const entityData: RoleFormData | undefined = useMemo(() => {
     if (!role) return undefined;
     return {
       name: role.name,
@@ -53,11 +53,11 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
     };
   }, [role]);
 
-  const [formData, setFormData] = React.useState<RoleFormData>(defaultValues);
+  const [formData, setFormData] = useState<RoleFormData>(defaultValues);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isOpen) return;
-    setFormData(entityData || defaultValues);
+    queueMicrotask(() => setFormData(entityData || defaultValues));
   }, [isOpen, entityData]);
 
   if (isEditMode && !permissions.canEditRoles) return null;
@@ -86,20 +86,19 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
     await handleSubmitForm<RoleFormData>({
       data: { ...formData, permissions: selectedPermissionKeys },
       schema: roleCreateSchema,
-      onSave: async (data) => {
-        if (isCreateMode) {
-          return onSave({
-            name: data.name,
-            description: data.description,
-            permissionKeys: data.permissions,
-          });
-        } else {
-          return onSave({
-            name: data.name,
-            description: data.description,
-            permissionKeys: data.permissions,
-          });
-        }
+      onSave: async (data): Promise<{ success: boolean; error?: string }> => {
+        const result = isCreateMode
+          ? await onSave({
+              name: data.name,
+              description: data.description,
+              permissionKeys: data.permissions,
+            })
+          : await onSave({
+              name: data.name,
+              description: data.description,
+              permissionKeys: data.permissions,
+            });
+        return result as { success: boolean; error?: string };
       },
       entityName: formData.name,
       showError,
@@ -118,7 +117,7 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
       <form
         id="role-form"
         data-testid={TEST_IDS.ROLE_FORM}
-        onSubmit={(e) => {
+        onSubmit={(e: FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           onSubmit();
         }}
@@ -126,7 +125,7 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
       >
         <Input
           value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
           placeholder="Role name"
           required
           data-testid={TEST_IDS.ROLE_NAME_INPUT}
@@ -135,7 +134,7 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
         <label className="input-label">Description</label>
         <textarea
           value={formData.description}
-          onChange={(e) =>
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
             setFormData({ ...formData, description: e.target.value })
           }
           rows={3}
@@ -173,6 +172,6 @@ const RoleFormModal: React.FC<RoleFormModalProps> = ({
       </form>
     </Dialog>
   );
-};
+}
 
 export default RoleFormModal;

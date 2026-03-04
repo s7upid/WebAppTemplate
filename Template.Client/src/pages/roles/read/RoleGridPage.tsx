@@ -1,9 +1,9 @@
 import { useGenericNavigationFunctions } from "@/utils";
-import { GridPage } from "solstice-ui";
+import { DataPage } from "solstice-ui";
 import { EntityToolbar } from "@/components";
 import { PagedResult, RoleResponse } from "@/models";
 import { TEST_IDS } from "@/config";
-import { useGridFilters, usePaginationWithScroll, type GridPaginationHandlers } from "@/hooks";
+import { useGridFilters, usePaginationWithScroll, type GridListPaginationHandlers } from "@/hooks";
 import {
   FILTERS,
   renderRoleGridItem,
@@ -13,23 +13,22 @@ import {
 
 interface RoleGridPageProps {
   paginationResult: PagedResult<RoleResponse>;
-  paginationHandlers: GridPaginationHandlers;
+  paginationHandlers: GridListPaginationHandlers;
   isLoading: boolean;
 }
 
-const RoleGridPage: React.FC<RoleGridPageProps> = ({
+function RoleGridPage({
   paginationResult,
   paginationHandlers,
   isLoading,
-}) => {
+}: RoleGridPageProps) {
   const nav = useGenericNavigationFunctions();
   const handleRoleClick = (role: RoleResponse) => nav.goToRoleDetail(role.id);
   const { actionLoading, applyFilters, clearAll } =
     useGridFilters(paginationHandlers);
   const { onPageChange, onPageSizeChange } =
     usePaginationWithScroll(paginationHandlers);
-  const { items, totalCount, pageNumber, totalPages, pageSize } =
-    paginationResult;
+  const { items, pageNumber, totalPages, pageSize } = paginationResult;
 
   const toolbar = (
     <EntityToolbar
@@ -44,25 +43,24 @@ const RoleGridPage: React.FC<RoleGridPageProps> = ({
 
   return (
     <div data-testid={`${TEST_IDS.ROLE_PAGE}-page`}>
-      <GridPage<RoleResponse>
-        content={toolbar}
+      <DataPage<RoleResponse>
+        layout="grid"
+        contentBetweenHeaderAndContent={toolbar}
         items={items}
         loading={isLoading}
-        renderCard={(role) => renderRoleGridItem(role, handleRoleClick)}
+        renderCard={(role: RoleResponse) => renderRoleGridItem(role, handleRoleClick)}
         columns={3}
         emptyTitle={ROLE_GRID_CONFIG.emptyStateTitle ?? "No items found"}
         emptyDescription={ROLE_GRID_CONFIG.emptyStateDescription}
-        keyExtractor={(role) => role.id ?? ""}
-        pageNumber={pageNumber}
+        keyExtractor={(role: RoleResponse) => role.id ?? ""}
+        currentPage={pageNumber}
         totalPages={totalPages}
-        totalCount={totalCount}
         pageSize={pageSize}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
-        testId={TEST_IDS.ROLE_PAGE}
       />
     </div>
   );
-};
+}
 
 export default RoleGridPage;

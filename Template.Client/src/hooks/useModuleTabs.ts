@@ -1,5 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
+const noop = () => {};
 import type { TabItem } from "solstice-ui";
 import { PageTabConfig, DetailTabConfig, ModuleConfig } from "@/config/modules/types";
 import { getModulePageTabs, getModuleDetailTabs, getModule, ModuleId } from "@/config/modules";
@@ -63,17 +65,19 @@ export function useModulePageTabs(
     return tab?.filter;
   }, [activeTab, tabConfigs]);
 
-  const onTabChange = useCallback(
-    (tabId: string) => {
-      const tab = tabConfigs.find((t: PageTabConfig) => t.id === tabId);
-      if (tab) navigate(tab.path);
-    },
-    [tabConfigs, navigate]
-  );
-
   return useMemo(
-    () => ({ tabs, activeTab, onTabChange, hasPermission, module, activeFilter }),
-    [tabs, activeTab, onTabChange, hasPermission, module, activeFilter]
+    () => ({
+      tabs,
+      activeTab,
+      onTabChange: (tabId: string) => {
+        const tab = tabConfigs.find((t: PageTabConfig) => t.id === tabId);
+        if (tab) navigate(tab.path);
+      },
+      hasPermission,
+      module,
+      activeFilter,
+    }),
+    [tabs, activeTab, tabConfigs, navigate, hasPermission, module, activeFilter]
   );
 }
 
@@ -101,11 +105,10 @@ export function useModuleDetailTabs(
   }, [tabConfigs]);
 
   const defaultTab = initialTab ?? tabConfigs[0]?.id ?? "";
-  const noopTabChange = useCallback(() => {}, []);
 
   return useMemo(
-    () => ({ tabs, activeTab: defaultTab, onTabChange: noopTabChange, hasPermission }),
-    [tabs, defaultTab, noopTabChange, hasPermission]
+    () => ({ tabs, activeTab: defaultTab, onTabChange: noop, hasPermission }),
+    [tabs, defaultTab, hasPermission]
   );
 }
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdministratorDashboard from "./components/AdministratorDashboard";
 import SupportDashboard from "./components/SupportDashboard";
@@ -8,7 +7,7 @@ import DashboardFactory from "./DashboardFactory";
 import { RoleGuard } from "@/components";
 import { ROLE_NAMES as ROLE_KEYS } from "@/config/generated/permissionKeys.generated";
 
-const DashboardContainer: React.FC = () => {
+function DashboardContainer() {
   return (
     <Routes>
       <Route index element={<DashboardFactory />} />
@@ -47,6 +46,6 @@ const DashboardContainer: React.FC = () => {
       <Route path="*" element={<Navigate to="." replace />} />
     </Routes>
   );
-};
+}
 
 export default DashboardContainer;

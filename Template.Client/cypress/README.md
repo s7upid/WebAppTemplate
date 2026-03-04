@@ -25,8 +25,11 @@ cypress/
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests (sequential)
 npm run cypress:run
+
+# Run all tests (parallel — 4 processes, ~3-4x faster)
+npm run cypress:run:parallel
 
 # Run tests in interactive mode
 npm run cypress:open

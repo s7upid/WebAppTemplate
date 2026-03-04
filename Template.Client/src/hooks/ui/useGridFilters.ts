@@ -6,7 +6,8 @@ export interface GridPaginationHandlers {
     filters: Record<string, string>;
     sortColumn?: string;
     ascending?: boolean;
-  }) => Promise<void>;
+  }) => Promise<void> | void;
+  clearAll?: () => void;
 }
 
 export const useGridFilters = (paginationHandlers?: GridPaginationHandlers) => {

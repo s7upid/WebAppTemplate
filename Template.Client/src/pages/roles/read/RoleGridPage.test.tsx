@@ -6,17 +6,6 @@ import { TEST_IDS } from "@/config";
 
 jest.mock("lucide-react", () => new Proxy({}, { get: () => () => null }));
 jest.mock("@/components", () => ({
-  GridPage: ({ items, renderCard, testId, content }: any) => (
-    <div data-testid={testId ?? "grid-page"}>
-      {content}
-      {items.map((item: Role, i: number) => (
-        <div key={(item as any).id ?? i}>{renderCard(item)}</div>
-      ))}
-    </div>
-  ),
-  Card: ({ children, title }: any) => (
-    <div><span data-testid="role-name">{title}</span>{children}</div>
-  ),
   EntityToolbar: ({ onApply, onClear }: any) => (
     <div>
       <button
@@ -63,7 +52,6 @@ jest.mock("@/utils", () => {
     },
     cn: mocks.cn,
     logger: mocks.logger,
-    Portal: mocks.Portal,
     handleEntityDelete: mocks.handleEntityDelete,
     handleSubmitForm: mocks.handleSubmitForm,
     handleEntitySave: mocks.handleEntitySave,

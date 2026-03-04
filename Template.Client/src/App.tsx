@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Provider } from "react-redux";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -36,12 +36,12 @@ import { clearAuth } from "@/store/slices/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 
-const AppRoutes: React.FC = () => {
+function AppRoutes() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     setNavigateToLogin(
       () => {
         navigate(APP_PATHS.LOGIN, { replace: true });
@@ -52,7 +52,7 @@ const AppRoutes: React.FC = () => {
     );
   }, [navigate, dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       resetLoginNavigationFlag();
     }
@@ -130,36 +130,33 @@ const AppRoutes: React.FC = () => {
       />
     </Routes>
   );
-};
+}
 
-const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+function ThemeProvider({ children }: { children: ReactNode }) {
   useTheme();
   return <>{children}</>;
-};
+}
 
-const AppWithTheme: React.FC = () => {
+function AppWithTheme() {
   const { isLoading, token, isAuthenticated, refreshUser } = useAuth();
   const { toasts, removeToast } = useToast();
-  const [loadingTimeout, setLoadingTimeout] = React.useState(false);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (token && !isAuthenticated) {
       refreshUser();
     }
   }, [token, isAuthenticated, refreshUser]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLoading) {
       const timer = setTimeout(() => {
         setLoadingTimeout(true);
       }, 10000);
 
       return () => clearTimeout(timer);
-    } else {
-      setLoadingTimeout(false);
     }
+    queueMicrotask(() => setLoadingTimeout(false));
   }, [isLoading]);
 
   if (isLoading && !loadingTimeout) {
@@ -185,9 +182,9 @@ const AppWithTheme: React.FC = () => {
       <Toast toasts={toasts} onRemove={removeToast} />
     </div>
   );
-};
+}
 
-const App: React.FC = () => {
+function App() {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -200,6 +197,6 @@ const App: React.FC = () => {
       </QueryClientProvider>
     </Provider>
   );
-};
+}
 
 export default App;

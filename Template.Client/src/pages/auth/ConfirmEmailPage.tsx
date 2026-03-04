@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, Input, PageHeader } from "solstice-ui";
@@ -14,7 +14,7 @@ import { Mail, Lock, Eye, EyeOff, Key } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { APP_PATHS } from "@/config/constants";
 
-const ConfirmEmailPage: React.FC = () => {
+function ConfirmEmailPage() {
   const { showError, showSuccess } = useToast();
   const nav = useGenericNavigationFunctions();
   const dispatch = useAppDispatch();
@@ -178,6 +178,6 @@ const ConfirmEmailPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ConfirmEmailPage;

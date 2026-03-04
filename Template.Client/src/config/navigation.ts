@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import { NavigationItem } from "@/models";
 import AuditLogsPage from "@/pages/audit/AuditLogsPage";
 import PermissionContainer from "@/pages/permissions/PermissionContainer";
@@ -13,7 +14,7 @@ import {
 } from "@/config/modules";
 import { SubmenuConfig } from "@/config/modules/types";
 
-const MODULE_COMPONENTS: Record<string, React.ComponentType> = {
+const MODULE_COMPONENTS: Record<string, ComponentType> = {
   dashboard: DashboardContainer,
   "dashboard-management": DashboardContainer,
   "dashboard-administrator": DashboardContainer,
@@ -27,13 +28,13 @@ const MODULE_COMPONENTS: Record<string, React.ComponentType> = {
   audit: AuditLogsPage,
 };
 
-const getComponentForModule = (moduleId: string): React.ComponentType => {
+const getComponentForModule = (moduleId: string): ComponentType => {
   return MODULE_COMPONENTS[moduleId] || DashboardContainer;
 };
 
 const createNavigationChildren = (
   submenus: SubmenuConfig[],
-  defaultComponent?: React.ComponentType,
+  defaultComponent?: ComponentType,
   skipRouteRegistration = false
 ): NavigationItem[] => {
   return submenus.map((submenu) => ({

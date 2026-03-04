@@ -1,10 +1,9 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks";
 import { LoadingSpinner } from "solstice-ui";
 import { TEST_IDS, ROLE_KEYS } from "@/config";
 
-const RoleBasedDashboardRedirect: React.FC = () => {
+function RoleBasedDashboardRedirect() {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -40,6 +39,6 @@ const RoleBasedDashboardRedirect: React.FC = () => {
     default:
       return <Navigate to="/dashboard/operator" replace />;
   }
-};
+}
 
 export default RoleBasedDashboardRedirect;

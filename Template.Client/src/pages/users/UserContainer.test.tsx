@@ -29,14 +29,10 @@ jest.mock("@/components/BasePage/BasePage", () => ({
   ),
 }));
 jest.mock("@/components", () => {
-  const _React = require("react") as typeof import("react");
   const stubs = require("@/test/__mocks__/component-stubs").default;
   return {
     ...stubs,
-    ModalPortal: ({ children }: { children: _React.ReactNode }) => (
-      <div data-testid={TEST_IDS.MOCK_MODAL_PORTAL}>{children}</div>
-    ),
-    PermissionGuard: ({ children }: { children: _React.ReactNode }) => (
+    PermissionGuard: ({ children }: { children?: React.ReactNode }) => (
       <div data-testid={TEST_IDS.MOCK_PERMISSION_GUARD}>{children}</div>
     ),
   };
@@ -44,7 +40,7 @@ jest.mock("@/components", () => {
 
 jest.mock("@/components/Guards/PermissionGuard", () => ({
   __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => (
+  default: ({ children }: { children?: React.ReactNode }) => (
     <div data-testid={TEST_IDS.MOCK_PERMISSION_GUARD}>{children}</div>
   ),
 }));
@@ -118,7 +114,7 @@ jest.mock("@/hooks", () => {
 });
 
 jest.mock("@/services", () => ({
-  ...getServiceMocks,
+  ...getServiceMocks(),
   authService: {},
   dashboardApi: {},
 }));

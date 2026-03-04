@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Form, Input, PageHeader } from "solstice-ui";
@@ -13,7 +13,7 @@ import {
 import { Lock, Mail, Eye, EyeOff, Key } from "lucide-react";
 import { resetPassword } from "@/store/slices/auth/authSlice";
 
-const ResetPasswordPage: React.FC = () => {
+function ResetPasswordPage() {
   const { showError, showSuccess } = useToast();
   const nav = useGenericNavigationFunctions();
   const dispatch = useAppDispatch();
@@ -170,6 +170,6 @@ const ResetPasswordPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default ResetPasswordPage;

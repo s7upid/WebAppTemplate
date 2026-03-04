@@ -37,10 +37,10 @@ interface TestWrapperProps {
   store?: ReturnType<typeof createTestStore>;
 }
 
-export const TestWrapper: React.FC<TestWrapperProps> = ({
+export function TestWrapper({
   children,
   store = createTestStore(),
-}) => {
+}: TestWrapperProps) {
   const queryClient = createTestQueryClient();
   (window as unknown as Record<string, unknown>).__REDUX_STORE__ = store;
 

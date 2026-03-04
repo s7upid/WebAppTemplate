@@ -39,8 +39,11 @@ The Cypress test suite consists of **21 test files** covering authentication, us
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests (sequential)
 npm run cypress:run
+
+# Run all tests (parallel — 4 processes, ~3-4x faster)
+npm run cypress:run:parallel
 
 # Run tests in interactive mode
 npm run cypress:open
@@ -48,8 +51,12 @@ npm run cypress:open
 # Run specific test file
 npx cypress run --spec "cypress/e2e/auth/login.cy.ts"
 
-# Run with coverage (from project root)
-./scripts/coverage/3-run-fe-cypress-coverage.command   # or full: ./scripts/generate-test-report.command
+# Run with coverage (parallel + merge)
+npm run cypress:run:parallel:coverage
+npm run cypress:merge-coverage
+
+# Full coverage pipeline (from project root)
+./scripts/generate-test-report.command   # or: npm run coverage
 ```
 
 ### Writing Your First Test
@@ -364,8 +371,11 @@ waitForApiRequest('unauthorized', 10000);
 # Interactive mode (recommended for development)
 npm run cypress:open
 
-# Headless mode (for CI/CD)
+# Headless mode (sequential)
 npm run cypress:run
+
+# Headless mode (parallel — 4 processes, ~3-4x faster)
+npm run cypress:run:parallel
 
 # Run specific test file
 npx cypress run --spec "cypress/e2e/auth/login.cy.ts"
@@ -374,10 +384,29 @@ npx cypress run --spec "cypress/e2e/auth/login.cy.ts"
 npx cypress run --browser chrome
 npx cypress run --browser firefox
 npx cypress run --browser edge
-
-# Run with coverage (from project root)
-./scripts/coverage/3-run-fe-cypress-coverage.command   # or: npm run coverage (full pipeline)
 ```
+
+### Parallel Execution
+
+The project uses `cypress-split` + `concurrently` to run specs across 4 parallel processes on a single machine. Each process gets roughly one-quarter of the spec files.
+
+```bash
+# Without coverage
+npm run cypress:run:parallel
+
+# With coverage (parallel + merge)
+npm run cypress:run:parallel:coverage
+npm run cypress:merge-coverage
+
+# Full coverage pipeline (from project root — uses parallel automatically)
+./scripts/generate-test-report.command   # or: npm run coverage
+```
+
+How it works:
+- `cypress-split` reads `split` and `splitIndex` from `Cypress.env()` to partition specs
+- Each process writes its own coverage file (`coverage-split-N.json`) to `.c8_output/`
+- `cypress:merge-coverage` deep-merges all split files into `coverage/cypress/out.json`
+- Sequential `cypress:run` and `cypress:open` remain unchanged for debugging
 
 ### Advanced Options
 

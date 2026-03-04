@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "@/hooks";
 import { UserResponse } from "@/models";
 import { DangerZone, Card } from "solstice-ui";
@@ -16,14 +15,14 @@ interface UserActionsProps {
   onDeleteUser?: (user: UserResponse) => void;
 }
 
-const UserActions: React.FC<UserActionsProps> = ({
+function UserActions({
   permissions,
   user,
   onEditUser,
   onManageRoles,
   onManagePermissions,
   onDeleteUser,
-}) => {
+}: UserActionsProps) {
   const { user: loggedInUser } = useAuth();
   const isSelf = loggedInUser?.id === user.id;
   const quickActions = [
@@ -81,6 +80,6 @@ const UserActions: React.FC<UserActionsProps> = ({
       )}
     </div>
   );
-};
+}
 
 export default UserActions;

@@ -1,6 +1,6 @@
 # 🚀 Web App Template
 
-![Backend Coverage](https://img.shields.io/badge/backend-73%25-yellowgreen?style=flat-square&logo=dotnet) ![Unit Test Coverage](https://img.shields.io/badge/unit%20tests-70%25-yellowgreen?style=flat-square&logo=jest) ![E2E Test Coverage](https://img.shields.io/badge/e2e%20tests-27%25-red?style=flat-square&logo=cypress)
+![Backend Coverage](https://img.shields.io/badge/backend-48%25-red?style=flat-square&logo=dotnet) ![Unit Test Coverage](https://img.shields.io/badge/unit%20tests-76%25-yellowgreen?style=flat-square&logo=jest) ![E2E Test Coverage](https://img.shields.io/badge/e2e%20tests-25%25-red?style=flat-square&logo=cypress)
 
 ![Node.js](https://img.shields.io/badge/node-24%2B-brightgreen?style=flat-square&logo=node.js) ![Vulnerabilities](https://img.shields.io/badge/vulnerabilities-0-brightgreen?style=flat-square)
 
@@ -24,18 +24,18 @@ This is a production-ready full-stack web application template designed as a sta
 | Technology | Version | Purpose |
 |------------|---------|---------|
 | React | 19.2 | UI library |
-| TypeScript | 5.3 | Type safety |
-| Vite | 7.1 | Build tool and dev server |
-| React Router | 7.9 | Client-side routing |
-| TanStack Query | 5.9 | Server state management |
-| Redux Toolkit | 2.0 | Client state (auth, theme) |
-| Tailwind CSS | 4.1 | Styling framework |
-| Zod | 4.1 | Schema validation |
-| React Hook Form | 7.48 | Form management |
-| Lucide React | 0.562 | Icons |
-| Jest | 30 | Unit testing |
-| Cypress | 15 | E2E testing |
-| ESLint | 9.28 | Code linting |
+| TypeScript | 5.9 | Type safety |
+| Vite | 7.3 | Build tool and dev server |
+| React Router | 7.13 | Client-side routing |
+| TanStack Query | 5.90 | Server state management |
+| Redux Toolkit | 2.11 | Client state (auth, theme) |
+| Tailwind CSS | 4.2 | Styling framework |
+| Zod | 4.3 | Schema validation |
+| React Hook Form | 7.71 | Form management |
+| Lucide React | 0.577 | Icons |
+| Jest | 30.2 | Unit testing |
+| Cypress | 15.11 | E2E testing (with parallel support) |
+| ESLint | 9.39 | Code linting |
 
 ### Backend
 | Technology | Version | Purpose |
@@ -90,8 +90,8 @@ Template/
 │   ├── add-migration.command        # Create EF Core migration
 │   ├── regenerate-models.command    # Regenerate TS models & constants
 │   ├── clean.command                # Clean build artifacts
-│   ├── generate-test-report.command # Full coverage pipeline
-│   └── coverage/                    # Coverage step scripts
+│   └── generate-test-report.command # Full coverage pipeline
+├── test-coverage/                   # Coverage step scripts (see test-coverage/README.md)
 ├── generate-constants.js            # C# to TypeScript constant generator (run via scripts)
 └── README.md                        # This file
 ```
@@ -211,7 +211,8 @@ npm run preview          # Preview production build
 npm test                 # Run unit tests
 npm run test:coverage    # Run tests with coverage
 npm run cypress:open     # Open Cypress test runner
-npm run cypress:run      # Run Cypress tests headlessly
+npm run cypress:run      # Run Cypress tests headlessly (sequential)
+npm run cypress:run:parallel   # Run Cypress in parallel (4 processes, ~3-4x faster)
 ```
 
 ### Code Generation
@@ -252,31 +253,25 @@ Full coverage pipeline is in **scripts**. See [scripts/README.md](scripts/README
 ./scripts/generate-test-report.command
 # Or: npm run coverage
 
-# Individual steps (in scripts/coverage/)
-./scripts/coverage/1-run-be-coverage.command   # Backend (.NET) only
-./scripts/coverage/2-run-fe-jest-coverage.command  # Frontend Jest only
-./scripts/coverage/3-run-fe-cypress-coverage.command  # Frontend Cypress only
+# Individual steps (in test-coverage/)
+./test-coverage/1-run-be-coverage.sh        # Backend (.NET) only
+./test-coverage/2-run-fe-jest-coverage.sh   # Frontend Jest only
+./test-coverage/3-run-fe-cypress-coverage.sh  # Frontend Cypress only (uses parallel)
 
-# Extract results and update badges (run from repo root; install deps in scripts/coverage if needed)
-node scripts/coverage/4-extract-results.js
-node scripts/coverage/5-update-readme-badges.js
-
-# Clean up all coverage artifacts
-./scripts/coverage/cleanup.command
+# Extract results and update badges
+node test-coverage/4-extract-results.js
+node test-coverage/5-update-readme-badges.js
 ```
 
 ### Cleanup Scripts
 
 ```bash
-# Clean all coverage artifacts (from project root)
-./scripts/coverage/cleanup.command
-
 # Clean frontend only (from Template.Client)
 npm run clean           # Clean coverage artifacts
 npm run clean:all       # Clean everything including node_modules
 ```
 
-See [scripts/README.md](scripts/README.md#coverage-generate-test-report) for detailed documentation.
+See [scripts/README.md](scripts/README.md) for detailed documentation.
 
 ## Testing
 
@@ -323,4 +318,4 @@ For detailed testing information, see [Testing Guide](Documentation/Testing-Guid
 
 **Built with ❤️ for modern management**
 
-**Version**: 3.1
+**Version**: 3.2

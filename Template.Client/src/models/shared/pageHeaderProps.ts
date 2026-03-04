@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { LucideIcon } from "lucide-react";
 
 export interface PageHeaderProps {
@@ -5,6 +6,6 @@ export interface PageHeaderProps {
   description?: string;
   subtitle?: string;
   icon?: LucideIcon;
-  actions?: React.ReactNode;
+  actions?: ReactNode;
   className?: string;
 }

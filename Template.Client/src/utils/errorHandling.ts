@@ -38,10 +38,11 @@ export function getErrorMessage(response: ApiResponse<unknown>): string {
     );
   }
 
+  const raw = response.raw as { message?: string; errorMessage?: string } | undefined;
   return (
     response.message ||
-    response.raw?.message ||
-    response.raw?.errorMessage ||
+    raw?.message ||
+    raw?.errorMessage ||
     ERROR_MESSAGES.NETWORK_ERROR
   );
 }

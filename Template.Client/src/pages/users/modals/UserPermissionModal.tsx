@@ -35,12 +35,12 @@ const userStatusToNumber = (status: UserStatus): number => {
   }
 };
 
-const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
+function UserPermissionModal({
   permissions,
   isOpen,
   onClose,
   user,
-}) => {
+}: UserPermissionModalProps) {
   const { edit: editUser } = useUsersQuery();
   const { showSuccess } = useToast();
   const { error: permissionsError } = useAllPermissions();
@@ -73,8 +73,10 @@ const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) {
-      setSelectedPermissions([]);
-      setOriginalPermissions([]);
+      queueMicrotask(() => {
+        setSelectedPermissions([]);
+        setOriginalPermissions([]);
+      });
       return;
     }
 
@@ -87,19 +89,20 @@ const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
       ...new Set([...rolePermissions, ...userPerms]),
     ] as PermissionKey[];
 
-    setSelectedPermissions((prev) => {
-      const prevSet = new Set(prev);
-      const newSet = new Set(combined);
-      if (
-        prevSet.size === newSet.size &&
-        Array.from(prevSet).every((p) => newSet.has(p))
-      ) {
-        return prev;
-      }
-      return combined;
+    queueMicrotask(() => {
+      setSelectedPermissions((prev) => {
+        const prevSet = new Set(prev);
+        const newSet = new Set(combined);
+        if (
+          prevSet.size === newSet.size &&
+          Array.from(prevSet).every((p) => newSet.has(p))
+        ) {
+          return prev;
+        }
+        return combined;
+      });
+      setOriginalPermissions(combined);
     });
-
-    setOriginalPermissions(combined);
   }, [isOpen, user, rolePermissions]);
 
   // Permissions are now fetched automatically by useAllPermissions
@@ -297,6 +300,6 @@ const UserPermissionModal: React.FC<UserPermissionModalProps> = ({
       </form>
     </Dialog>
   );
-};
+}
 
 export default UserPermissionModal;

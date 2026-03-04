@@ -1,13 +1,13 @@
-import React from "react";
+import type { ReactNode } from "react";
 import { useAuth } from "@/hooks";
 
 interface RoleGuardProps {
   role: string | string[];
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
+  children: ReactNode;
+  fallback?: ReactNode;
 }
 
-const RoleGuard: React.FC<RoleGuardProps> = ({ role, children, fallback }) => {
+function RoleGuard({ role, children, fallback }: RoleGuardProps) {
   const { user } = useAuth();
 
   const required = Array.isArray(role) ? role : [role];
@@ -16,6 +16,6 @@ const RoleGuard: React.FC<RoleGuardProps> = ({ role, children, fallback }) => {
 
   if (!hasRole) return <>{fallback ?? null}</>;
   return <>{children}</>;
-};
+}
 
 export default RoleGuard;

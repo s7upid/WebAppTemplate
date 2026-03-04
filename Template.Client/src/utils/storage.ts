@@ -1,13 +1,31 @@
 import { env } from "./env";
 import { AuthResponse, UserResponse } from "@/models/generated";
-import CryptoJS from "crypto-js";
 
-const SECRET_KEY = env.VITE_STORAGE_SECRET_KEY || "super-secret-key";
+const SECRET_KEY = env.VITE_STORAGE_SECRET_KEY;
 const STORAGE_PREFIX = env.VITE_APP_NAME;
+
+const encoder = new TextEncoder();
+const decoder = new TextDecoder();
+
+function xorWithKey(input: Uint8Array, key: Uint8Array): Uint8Array {
+  if (key.length === 0) return input;
+  const output = new Uint8Array(input.length);
+  for (let i = 0; i < input.length; i++) {
+    output[i] = input[i] ^ key[i % key.length];
+  }
+  return output;
+}
 
 const encrypt = (data: string): string => {
   try {
-    return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+    const dataBytes = encoder.encode(data);
+    const keyBytes = encoder.encode(SECRET_KEY);
+    const xored = xorWithKey(dataBytes, keyBytes);
+    let binary = "";
+    for (let i = 0; i < xored.length; i++) {
+      binary += String.fromCharCode(xored[i]);
+    }
+    return btoa(binary);
   } catch {
     return data;
   }
@@ -15,8 +33,14 @@ const encrypt = (data: string): string => {
 
 const decrypt = (cipher: string): string => {
   try {
-    const bytes = CryptoJS.AES.decrypt(cipher, SECRET_KEY);
-    return bytes.toString(CryptoJS.enc.Utf8) || cipher;
+    const binary = atob(cipher);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    const keyBytes = encoder.encode(SECRET_KEY);
+    const decrypted = xorWithKey(bytes, keyBytes);
+    return decoder.decode(decrypted);
   } catch {
     return cipher;
   }

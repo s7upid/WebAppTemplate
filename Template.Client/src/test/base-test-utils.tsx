@@ -150,8 +150,6 @@ export const createCommonMocks = () => {
     handleEntityDelete: jest.fn(),
     handleSubmitForm: jest.fn(),
     handleEntitySave: jest.fn(),
-
-    Portal: ({ children }: any) => children,
   };
 };
 
@@ -458,8 +456,6 @@ export const getComponentMocks = () => {
       ),
     LoadingSpinner: ({ text }: any) =>
       ReactLib.createElement("div", { "data-testid": "spinner" }, text),
-    ModalPortal: ({ children }: { children: any }) =>
-      ReactLib.createElement("div", { "data-testid": "modal-portal" }, children),
   };
 };
 

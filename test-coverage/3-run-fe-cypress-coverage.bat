@@ -71,18 +71,18 @@ if exist "%NYC_OUTPUT_DIR%\out.json" del /F "%NYC_OUTPUT_DIR%\out.json"
 if exist "%CLIENT_DIR%\.nyc_output\out.json" del /F "%CLIENT_DIR%\.nyc_output\out.json"
 if exist "%CLIENT_DIR%\.c8_output" rmdir /S /Q "%CLIENT_DIR%\.c8_output"
 
-if "%CYPRESS_SPEC%"=="" (
-    REM Run all Cypress tests
-    set SPEC=cypress/e2e/**/*.cy.ts
-) else (
-    set SPEC=%CYPRESS_SPEC%
-)
-echo Running Cypress specs: %SPEC%
 echo NYC output directory: %NYC_OUTPUT_DIR%
-call node_modules\.bin\cypress run --config video=false,screenshotOnRunFailure=false,baseUrl=http://localhost:%SERVER_PORT% --env ENABLE_COVERAGE=true --spec "%SPEC%" --browser chrome --headless
+
+REM Run Cypress tests in parallel (4 processes) with coverage enabled
+echo Running Cypress tests in parallel with coverage...
+call npm run cypress:run:parallel:coverage
 
 set CYPRESS_EXIT_CODE=%errorlevel%
 echo Cypress tests completed with exit code: %CYPRESS_EXIT_CODE%
+
+REM Merge per-split coverage files into final output
+echo Merging coverage from parallel processes...
+call npm run cypress:merge-coverage
 
 REM Look for coverage data in multiple possible locations
 echo Looking for coverage data...

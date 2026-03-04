@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { Dialog, Button, Input, Dropdown, LoadingSpinner } from "solstice-ui";
 import { AvatarUploader } from "@/components";
 import { XCircle, Save, Mail, UserIcon } from "lucide-react";
@@ -27,7 +27,7 @@ interface UserFormModalProps {
   formMode?: "create" | "edit";
 }
 
-const UserFormModal: React.FC<UserFormModalProps> = ({
+function UserFormModal({
   permissions,
   isOpen,
   onClose,
@@ -35,7 +35,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
   onSave,
   isProfileEdit = false,
   formMode = "edit",
-}) => {
+}: UserFormModalProps) {
   const isEditMode = formMode === "edit";
   const isCreateMode = formMode === "create";
   const { roles, isLoading } = useRolesQuery();
@@ -53,27 +53,29 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) return;
-    if (user && isEditMode) {
-      setFormData({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        avatar: user.avatar || "",
-        status: typeof user.userStatus === "number" ? user.userStatus : 0,
-        roleId: user.role?.id || "",
-      });
-      setAvatarPreview(user.avatar || null);
-    } else {
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        avatar: "",
-        status: 2,
-        roleId: "",
-      });
-      setAvatarPreview(null);
-    }
+    queueMicrotask(() => {
+      if (user && isEditMode) {
+        setFormData({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          avatar: user.avatar || "",
+          status: typeof user.userStatus === "number" ? user.userStatus : 0,
+          roleId: user.role?.id || "",
+        });
+        setAvatarPreview(user.avatar || null);
+      } else {
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          avatar: "",
+          status: 2,
+          roleId: "",
+        });
+        setAvatarPreview(null);
+      }
+    });
   }, [isOpen, user, isEditMode]);
 
   if (isEditMode && !isProfileEdit && !permissions.canEditUsers) return null;
@@ -154,7 +156,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
 
         <Input
           value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
           type="email"
           label="Email"
           placeholder="Enter email address"
@@ -165,7 +167,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
 
         <Input
           value={formData.firstName}
-          onChange={(e) =>
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setFormData({ ...formData, firstName: e.target.value })
           }
           label="First Name"
@@ -176,7 +178,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
 
         <Input
           value={formData.lastName}
-          onChange={(e) =>
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setFormData({ ...formData, lastName: e.target.value })
           }
           label="Last Name"
@@ -198,7 +200,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
                 options={roles.map((r: RoleResponse) => ({ value: r.id, label: r.name }))}
                 disabled={roles.length === 0}
                 value={formData.roleId}
-                onValueChange={(value) =>
+                onValueChange={(value: string) =>
                   setFormData({ ...formData, roleId: value })
                 }
               />
@@ -216,7 +218,7 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
               { value: 3, label: "Suspended" },
             ]}
             value={formData.status}
-            onValueChange={(value) =>
+            onValueChange={(value: string) =>
               setFormData({ ...formData, status: Number(value) })
             }
           />
@@ -238,6 +240,6 @@ const UserFormModal: React.FC<UserFormModalProps> = ({
       </form>
     </Dialog>
   );
-};
+}
 
 export default UserFormModal;

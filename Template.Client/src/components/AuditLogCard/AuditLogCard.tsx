@@ -1,4 +1,4 @@
-import React from "react";
+import type { CSSProperties } from "react";
 import { AuditLog, AuditEventType } from "@/models";
 import {
   Clock,
@@ -27,11 +27,11 @@ interface AuditLogCardProps {
   onClick?: () => void;
 }
 
-const AuditLogCard: React.FC<AuditLogCardProps> = ({
+function AuditLogCard({
   log,
   variant = "modern",
   onClick,
-}) => {
+}: AuditLogCardProps) {
   const getEventIcon = (eventType: AuditEventType) => {
     const iconProps = { size: 18, strokeWidth: 1.5 };
     switch (eventType) {
@@ -123,7 +123,7 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({
     return "System";
   };
 
-  const eventColorVar = { "--event-color": getEventColor(log.eventType) } as React.CSSProperties;
+  const eventColorVar = { "--event-color": getEventColor(log.eventType) } as CSSProperties;
 
   if (variant === "compact") {
     return (
@@ -203,6 +203,6 @@ const AuditLogCard: React.FC<AuditLogCardProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default AuditLogCard;

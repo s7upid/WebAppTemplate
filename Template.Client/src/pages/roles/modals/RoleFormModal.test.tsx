@@ -197,7 +197,7 @@ describe("RoleFormModal", () => {
       ).toBeInTheDocument();
     });
 
-    it("renders edit form when formMode is edit", () => {
+    it("renders edit form when formMode is edit", async () => {
       const role = mockRoles[0];
       render(
         <RoleFormModal
@@ -211,11 +211,13 @@ describe("RoleFormModal", () => {
       );
 
       expect(screen.getByText("Edit Role")).toBeInTheDocument();
-      expect(screen.getByDisplayValue(role.name)).toBeInTheDocument();
-      expect(screen.getByDisplayValue(role.description)).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByDisplayValue(role.name)).toBeInTheDocument();
+        expect(screen.getByDisplayValue(role.description)).toBeInTheDocument();
+      });
     });
 
-    it("initializes form with role data in edit mode", () => {
+    it("initializes form with role data in edit mode", async () => {
       const role = {
         ...mockRoles[0],
         permissions: [
@@ -243,8 +245,10 @@ describe("RoleFormModal", () => {
         />
       );
 
-      expect(screen.getByDisplayValue(role.name)).toBeInTheDocument();
-      expect(screen.getByDisplayValue(role.description)).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByDisplayValue(role.name)).toBeInTheDocument();
+        expect(screen.getByDisplayValue(role.description)).toBeInTheDocument();
+      });
     });
   });
 
@@ -421,6 +425,11 @@ describe("RoleFormModal", () => {
           onSave={mockOnSave}
         />
       );
+
+      // Wait for deferred form data to be applied
+      await waitFor(() => {
+        expect(screen.getByDisplayValue(role.name)).toBeInTheDocument();
+      });
 
       // Update name
       fireEvent.change(screen.getByPlaceholderText("Role name"), {

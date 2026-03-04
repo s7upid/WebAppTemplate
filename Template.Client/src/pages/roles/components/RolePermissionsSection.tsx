@@ -1,4 +1,3 @@
-import React from "react";
 import { CheckCircle, Shield } from "lucide-react";
 import { cn } from "@/utils";
 import styles from "./RolePermissionsSection.module.css";
@@ -10,10 +9,10 @@ interface RolePermissionsSectionProps {
   showDescription?: boolean;
 }
 
-const RolePermissionsSection: React.FC<RolePermissionsSectionProps> = ({
+function RolePermissionsSection({
   role,
   showDescription = false,
-}) => {
+}: RolePermissionsSectionProps) {
   if (!role) {
     return <div className="card">Loading role...</div>;
   }
@@ -60,6 +59,6 @@ const RolePermissionsSection: React.FC<RolePermissionsSectionProps> = ({
       </div>
     </Card>
   );
-};
+}
 
 export default RolePermissionsSection;

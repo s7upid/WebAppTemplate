@@ -1,4 +1,4 @@
-import React from "react";
+import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MODULES, ModuleId } from "@/config/modules";
 
@@ -32,9 +32,9 @@ const buildRouteConfig = (moduleId: string) => {
 };
 
 const ROUTE_CONFIGS: Record<string, ReturnType<typeof buildRouteConfig>> = {};
-Object.keys(MODULES).forEach((moduleId) => {
+for (const moduleId of Object.keys(MODULES)) {
   ROUTE_CONFIGS[moduleId] = buildRouteConfig(moduleId);
-});
+}
 
 export function parseRouteInfo(pathname: string, entityType: EntityType): RouteInfo {
   const config = ROUTE_CONFIGS[entityType];
@@ -118,7 +118,7 @@ export function useGenericNavigationFunctions() {
     return config?.basePath ?? "/";
   };
 
-  return React.useMemo(
+  return useMemo(
     () => ({
       goToUsers: () => navigate(getModulePath("users")),
       goToRoles: () => navigate(getModulePath("roles")),

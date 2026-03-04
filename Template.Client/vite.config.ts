@@ -1,6 +1,7 @@
 import { defineConfig, PluginOption } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import fs from "fs";
 
 export default defineConfig(async ({ mode }) => {
   const plugins: PluginOption[] = [react()];
@@ -18,6 +19,20 @@ export default defineConfig(async ({ mode }) => {
     );
   }
 
+  // Use stub when solstice-ui is missing or not built (package.json points to dist/ which may not exist)
+  const solsticeUiEntry = path.resolve(__dirname, "node_modules/solstice-ui/dist/solstice-ui.js");
+  const hasBuiltSolsticeUi = fs.existsSync(solsticeUiEntry);
+
+  const resolveAlias: Record<string, string> = {
+    "@": path.resolve(__dirname, "./src"),
+    "solstice-ui/styles": hasBuiltSolsticeUi
+      ? path.resolve(__dirname, "node_modules/solstice-ui/dist/style.css")
+      : path.resolve(__dirname, "./src/stubs/solstice-ui-styles.css"),
+  };
+  if (!hasBuiltSolsticeUi) {
+    resolveAlias["solstice-ui"] = path.resolve(__dirname, "./src/test/__mocks__/solstice-ui.tsx");
+  }
+
   return {
     plugins,
     css: {
@@ -26,9 +41,7 @@ export default defineConfig(async ({ mode }) => {
       },
     },
     resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
+      alias: resolveAlias,
     },
     server: {
       port: 3000,

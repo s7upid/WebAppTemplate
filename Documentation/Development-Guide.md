@@ -465,26 +465,16 @@ const { users, isLoading, add, edit, remove } = useUsersQuery();
 
 ### Component Structure
 
+Use plain function declarations (not `React.FC`) — this is the modern React convention:
+
 ```typescript
-
-import React from 'react';
-import { ComponentProps } from '@/models';
-
-
 interface ComponentNameProps {
-
+  title: string;
 }
 
-
-const ComponentName: React.FC<ComponentNameProps> = ({ ...props }) => {
-
-  return (
-
-  );
-};
-
-
-export default ComponentName;
+export default function ComponentName({ title }: ComponentNameProps) {
+  return <div>{title}</div>;
+}
 ```
 
 ### Testing Components
@@ -551,28 +541,32 @@ class FeatureService extends BaseService {
 }
 ```
 
-### Service Hook Pattern
+### Service Hook Pattern (TanStack Query)
+
+All server data hooks use TanStack Query — no manual `useState`/`useCallback` loading patterns:
 
 ```typescript
-export const useServiceName = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export const useFeatureQuery = (params?: QueryParams) => {
+  const queryClient = useQueryClient();
 
-  const getData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const result = await serviceName.getData();
-      return result;
-    } catch (err: any) {
-      setError(err.message);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["features", params],
+    queryFn: () => featureService.getList(buildQueryString(params)),
+  });
 
-  return { getData, isLoading, error };
+  const addMutation = useMutation({
+    mutationFn: featureService.create,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["features"] }),
+  });
+
+  return {
+    features: data?.items ?? [],
+    paginationResult: data,
+    isLoading,
+    error,
+    refetch,
+    add: addMutation.mutateAsync,
+  };
 };
 ```
 
@@ -658,10 +652,10 @@ npm run test:coverage          # With coverage
 
 # E2E Testing
 npm run cypress:open           # Interactive mode
-npm run cypress:run            # Headless mode
+npm run cypress:run            # Headless (sequential)
+npm run cypress:run:parallel   # Headless (4 parallel processes, ~3-4x faster)
 
 # With Coverage (from project root)
-./scripts/coverage/3-run-fe-cypress-coverage.command   # Cypress only
 ./scripts/generate-test-report.command   # Full pipeline; or: npm run coverage
 ```
 
@@ -693,8 +687,9 @@ navigate("/components-reference");
 
 ### State Management
 
-- Use Redux for global state
-- Use local state for component-specific data
+- Use TanStack Query for all server/API data
+- Use Redux only for client state (auth, theme)
+- Use local state for component-specific UI data
 - Implement proper memoization with `useMemo` and `useCallback`
 
 ## Debugging

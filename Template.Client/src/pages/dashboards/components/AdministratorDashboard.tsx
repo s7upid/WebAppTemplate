@@ -1,4 +1,4 @@
-import React from "react";
+import type { ReactNode } from "react";
 import { useAuth, useDashboardQuery } from "@/hooks";
 import { PageHeader, LoadingSpinner, Card, List, Button, EmptyState } from "solstice-ui";
 import { AuditLogTimeline } from "@/components";
@@ -6,7 +6,7 @@ import { Users, Shield, Key, Activity, Database, Settings } from "lucide-react";
 import { TEST_IDS } from "@/config";
 import { AuditLog } from "@/models";
 
-const AdministratorDashboard: React.FC = () => {
+function AdministratorDashboard() {
   const { user } = useAuth();
   const { recentLogs, isLoading, error, refetch } = useDashboardQuery();
 
@@ -92,7 +92,7 @@ const AdministratorDashboard: React.FC = () => {
         <Card title="Database Overview" icon={Database}>
           <List
           items={[]}
-          renderItem={(metric) => (
+          renderItem={(metric: ReactNode) => (
             <div className="db-metric-item">{metric}</div>
           )}
           listClassName="metrics-list"
@@ -102,6 +102,6 @@ const AdministratorDashboard: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AdministratorDashboard;

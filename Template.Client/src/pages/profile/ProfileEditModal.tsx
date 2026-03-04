@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Save, UserIcon, XCircle } from "lucide-react";
 import { Button, Input, Dialog } from "solstice-ui";
@@ -18,10 +18,10 @@ interface ProfileFormData {
   avatar?: string;
 }
 
-const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
+function ProfileEditModal({
   isOpen,
   onClose,
-}) => {
+}: ProfileEditModalProps) {
   const { addToast } = useToast();
   const { user } = useAuth();
   const { updateProfile, mutations } = useUsersQuery();
@@ -175,6 +175,6 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
       </form>
     </Dialog>
   );
-};
+}
 
 export default ProfileEditModal;

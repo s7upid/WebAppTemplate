@@ -1,4 +1,3 @@
-import React from "react";
 import { TabNavigation } from "solstice-ui";
 import type { TabItem } from "solstice-ui";
 import { USERS_MODULE, UserManagementPermissions } from "@/config/modules";
@@ -13,11 +12,11 @@ interface UserManagementTabsProps {
  * User Management Tabs - Uses the reusable TabNavigation component
  * with configuration from the users module.
  */
-const UserManagementTabs: React.FC<UserManagementTabsProps> = ({
+function UserManagementTabs({
   permissions,
   activeTab,
   onTabChange,
-}) => {
+}: UserManagementTabsProps) {
   // Convert module page tabs to TabItem format with visibility based on permissions
   const tabs: TabItem[] = (USERS_MODULE.pageTabs ?? []).map((tab) => ({
     id: tab.id,
@@ -32,10 +31,10 @@ const UserManagementTabs: React.FC<UserManagementTabsProps> = ({
     <TabNavigation
       tabs={tabs}
       activeTab={activeTab}
-      onTabChange={(tabId) => onTabChange(tabId as "all" | "pending")}
+      onTabChange={(tabId: string) => onTabChange(tabId as "all" | "pending")}
       testId={USERS_MODULE.testIds.tabs}
     />
   );
-};
+}
 
 export default UserManagementTabs;

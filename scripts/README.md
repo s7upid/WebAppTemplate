@@ -46,21 +46,15 @@ Frontend test scripts (`npm test`, `npm run test:coverage`, `npm run test:ci`) a
 
 ## Coverage (generate-test-report)
 
-The **generate-test-report** script runs **lint** first; if lint fails, the script exits. It then uses the helpers in `scripts/coverage/`:
+The **generate-test-report** script runs **lint** first; if lint fails, the script exits. It then uses the step scripts in `test-coverage/`:
 
-- `1-run-be-coverage.command` / `.bat` – .NET tests with Coverlet + ReportGenerator
-- `2-run-fe-jest-coverage.command` / `.bat` – Jest unit test coverage
-- `3-run-fe-cypress-coverage.command` / `.bat` – Cypress E2E coverage
+- `1-run-be-coverage.sh` / `.bat` – .NET tests with Coverlet + ReportGenerator
+- `2-run-fe-jest-coverage.sh` / `.bat` – Jest unit test coverage
+- `3-run-fe-cypress-coverage.sh` / `.bat` – Cypress E2E coverage (runs parallel, then merges)
 - `4-extract-results.js` – Writes `Template.Client/coverage-report.json`
 - `5-update-readme-badges.js` – Updates badges in root `README.md`
-- `cleanup.command` / `cleanup.bat` – Removes coverage output folders and report file
 
-To only clean coverage artifacts, run:
-
-```bash
-./scripts/coverage/cleanup.command   # macOS/Linux/Git Bash
-scripts\coverage\cleanup.bat         # Windows
-```
+Cypress coverage uses parallel execution (4 processes via `cypress-split` + `concurrently`) with a merge step that combines per-process coverage files. See [test-coverage/README.md](../test-coverage/README.md) for details.
 
 ---
 

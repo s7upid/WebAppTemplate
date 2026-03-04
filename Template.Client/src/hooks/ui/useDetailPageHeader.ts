@@ -12,7 +12,10 @@ export function useDetailPageHeader(
 ): void {
   const defaultHeaderRef = useRef(defaultHeader);
   const setHeaderPropsRef = useRef(setHeaderProps);
-  setHeaderPropsRef.current = setHeaderProps;
+
+  useEffect(() => {
+    setHeaderPropsRef.current = setHeaderProps;
+  });
 
   useEffect(() => {
     if (detailsHeader) {
@@ -21,9 +24,9 @@ export function useDetailPageHeader(
   }, [detailsHeader]);
 
   useEffect(() => {
-    const defaultHeader = defaultHeaderRef.current;
+    const savedDefault = defaultHeaderRef.current;
     return () => {
-      setHeaderPropsRef.current(defaultHeader);
+      setHeaderPropsRef.current(savedDefault);
     };
   }, []);
 }

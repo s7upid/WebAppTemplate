@@ -5,11 +5,6 @@ import { mockUsers } from "@/mock";
 import { TEST_IDS } from "@/config";
 
 jest.mock("@/components", () => ({
-  Button: ({ children, onClick, "data-testid": dataTestId }: any) => (
-    <button type="button" onClick={onClick} data-testid={dataTestId}>
-      {children}
-    </button>
-  ),
   QuickActions: ({ actions, testId }: any) => (
     <div data-testid={testId}>
       {actions.map((a: any) => (
@@ -17,21 +12,6 @@ jest.mock("@/components", () => ({
           {a.description ? `${a.title} — ${a.description}` : a.title}
         </button>
       ))}
-    </div>
-  ),
-  DangerZone: ({ title, description, buttonLabel, onConfirm, testId }: any) => (
-    <div>
-      <h4>{title}</h4>
-      <p>{description}</p>
-      <button data-testid={testId} onClick={onConfirm}>
-        {buttonLabel}
-      </button>
-    </div>
-  ),
-  Card: ({ children, title }: any) => (
-    <div>
-      {title && <h3>{title}</h3>}
-      {children}
     </div>
   ),
 }));
@@ -190,7 +170,7 @@ describe("UserActions", () => {
       />
     );
 
-    expect(screen.getByText("Danger Zone")).toBeTruthy();
+    expect(screen.getByTestId("card-title")).toHaveTextContent("Danger Zone");
     expect(screen.getByRole("button", { name: /delete user/i })).toBeTruthy();
   });
 
@@ -213,7 +193,7 @@ describe("UserActions", () => {
       />
     );
 
-    expect(screen.queryByText("Danger Zone")).not.toBeTruthy();
+    expect(screen.queryByTestId("card-title")).toBeNull();
     expect(screen.queryByRole("button", { name: /delete user/i })).toBeNull();
   });
 

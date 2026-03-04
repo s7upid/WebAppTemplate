@@ -33,16 +33,7 @@ jest.mock("@/hooks", () => {
 
 jest.mock("@/services", () => {
   const { getServiceMocks } = require("@/test/base-test-utils");
-  return {
-    ...getServiceMocks({
-      dashboardService: true,
-    }),
-    dashboardApiService: {
-      getAdministratorStatsSafe: jest.fn().mockResolvedValue({
-        recentActivity: [],
-      }),
-    },
-  };
+  return getServiceMocks({ dashboardService: true });
 });
 
 describe("AdministratorDashboard", () => {
@@ -54,11 +45,7 @@ describe("AdministratorDashboard", () => {
     expect(screen.getByTestId(TEST_IDS.QUICK_ACTIONS)).toBeInTheDocument();
   });
 
-  it("renders empty states when API returns empty data", async () => {
-    const { dashboardApiService } = jest.requireMock("@/services");
-    dashboardApiService.getAdministratorStatsSafe.mockResolvedValue({
-      recentActivity: [],
-    });
+  it("renders empty states when data is empty", async () => {
     const { findByTestId } = renderWithProviders(<AdministratorDashboard />);
     await findByTestId(TEST_IDS.ADMINISTRATOR_DASHBOARD);
     expect(

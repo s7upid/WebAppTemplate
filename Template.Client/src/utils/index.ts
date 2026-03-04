@@ -2,7 +2,6 @@ export { cn } from "./cn";
 export { scrollToTop } from "./scroll";
 export { env } from "./env";
 export { logger } from "./logger";
-export { Portal } from "./portal";
 export { SecureStorage } from "./storage";
 
 export {

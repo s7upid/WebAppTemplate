@@ -1,4 +1,3 @@
-import React from "react";
 import { Mail, UserIcon, Users } from "lucide-react";
 import { cn } from "@/utils";
 import { UserResponse, UserStatus } from "@/models";
@@ -11,11 +10,11 @@ interface RoleUsersSectionProps {
   onUserClick: (userId: string) => void;
 }
 
-const RoleUsersSection: React.FC<RoleUsersSectionProps> = ({
+function RoleUsersSection({
   users,
   usersLoading,
   onUserClick,
-}) => {
+}: RoleUsersSectionProps) {
   return (
     <Card
       title={`Users with this Role (${users.length})`}
@@ -92,6 +91,6 @@ const RoleUsersSection: React.FC<RoleUsersSectionProps> = ({
       )}
     </Card>
   );
-};
+}
 
 export default RoleUsersSection;

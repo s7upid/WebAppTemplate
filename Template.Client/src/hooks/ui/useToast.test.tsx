@@ -9,13 +9,13 @@ const { cleanup } = setupBaseTest({
   mockRouteUtils: false,
 });
 
-import React from "react";
+import { type ReactNode } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { useToast, ToastProvider } from "./useToast";
 
-const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ToastProvider>{children}</ToastProvider>
-);
+function wrapper({ children }: { children: ReactNode }) {
+  return <ToastProvider>{children}</ToastProvider>;
+}
 
 describe("useToast", () => {
   beforeEach(() => {

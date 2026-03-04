@@ -1,111 +1,102 @@
 import { defineConfig } from "cypress";
 import webpackPreprocessor from "@cypress/webpack-preprocessor";
+import cypressSplit from "cypress-split";
 import path from "path";
 import fs from "fs";
 
 const enableCoverage = process.env.ENABLE_COVERAGE === "true" || 
                        process.env.CYPRESS_COVERAGE === "true";
 
-// Custom coverage tasks - writes to both .nyc_output and coverage/cypress
-function setupCoverageTasks(on: Cypress.PluginEvents) {
+// Custom coverage tasks - writes to both .nyc_output and coverage/cypress.
+// Parallel-safe: each split process writes to its own file (coverage-split-<index>.json).
+function setupCoverageTasks(on: Cypress.PluginEvents, splitIndex: string | number | undefined) {
   const c8OutputDir = path.resolve(__dirname, ".c8_output");
   const nycOutputDir = path.resolve(__dirname, ".nyc_output");
   const cypressCoverageDir = path.resolve(__dirname, "coverage", "cypress");
-  
-  // Ensure all coverage directories exist
+  const suffix = splitIndex != null ? `-split-${splitIndex}` : "";
+
   [c8OutputDir, nycOutputDir, cypressCoverageDir].forEach(dir => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
   });
 
-  // Track accumulated coverage
   let accumulatedCoverage: Record<string, unknown> = {};
 
   on("task", {
-    // Save coverage data after each test
     saveCoverage(coverage: object) {
       if (!coverage) {
-        console.log("⚠️  No coverage data received in saveCoverage task");
+        console.log("Warning: No coverage data received in saveCoverage task");
         return null;
       }
-      
-      // Merge into accumulated coverage
       Object.assign(accumulatedCoverage, coverage);
-      
-      // Also save to individual file for debugging
-      const filename = `coverage-${Date.now()}.json`;
+
+      const filename = `coverage${suffix}-${Date.now()}.json`;
       const filepath = path.join(c8OutputDir, filename);
       fs.writeFileSync(filepath, JSON.stringify(coverage));
-      console.log(`📊 Coverage saved to ${filepath} (${Object.keys(coverage).length} files)`);
+      console.log(`Coverage saved to ${filepath} (${Object.keys(coverage).length} files)`);
       return null;
     },
-    
-    // Get combined coverage (for reporting)
+
     getCoverage() {
-      // First, try to use accumulated coverage
       if (Object.keys(accumulatedCoverage).length > 0) {
         return accumulatedCoverage;
       }
-      
-      // Fallback: read from individual files
       if (!fs.existsSync(c8OutputDir)) return {};
-      
+
       const files = fs.readdirSync(c8OutputDir).filter(f => f.endsWith(".json"));
       const combined: Record<string, unknown> = {};
-      
       for (const file of files) {
         try {
           const content = JSON.parse(fs.readFileSync(path.join(c8OutputDir, file), "utf8"));
           Object.assign(combined, content);
         } catch (e) {
-          console.log(`⚠️  Error reading ${file}: ${e}`);
+          console.log(`Warning: Error reading ${file}: ${e}`);
         }
       }
-      
       return combined;
     },
-    
-    // Clear coverage data
+
+    // Only clears files belonging to the current split (or all files when running without splits).
     clearCoverage() {
       accumulatedCoverage = {};
-      
+
       [c8OutputDir, nycOutputDir].forEach(dir => {
-        if (fs.existsSync(dir)) {
-          const files = fs.readdirSync(dir).filter(f => f.endsWith(".json"));
-          for (const file of files) {
-            try {
-              fs.unlinkSync(path.join(dir, file));
-            } catch {
-              // Ignore errors
-            }
-          }
+        if (!fs.existsSync(dir)) return;
+        const pattern = suffix ? `coverage${suffix}-` : "coverage";
+        const files = fs.readdirSync(dir).filter(f => f.endsWith(".json") && f.startsWith(pattern));
+        for (const file of files) {
+          try { fs.unlinkSync(path.join(dir, file)); } catch { /* ignore */ }
         }
       });
-      console.log("🧹 Coverage data cleared");
+      console.log(`Coverage data cleared${suffix ? ` (split ${splitIndex})` : ""}`);
       return null;
     },
-    
-    // Write final coverage to all expected locations
+
     writeFinalCoverage(coverage: object) {
       if (!coverage || Object.keys(coverage).length === 0) {
-        console.log("⚠️  No coverage data to write");
+        console.log("Warning: No coverage data to write");
         return null;
       }
-      
-      const coverageJson = JSON.stringify(coverage, null, 2);
+
       const fileCount = Object.keys(coverage).length;
-      
-      // Write to .nyc_output (for nyc/c8 compatibility)
-      const nycPath = path.join(nycOutputDir, "out.json");
-      fs.writeFileSync(nycPath, coverageJson);
-      console.log(`📊 Coverage written to ${nycPath} (${fileCount} files)`);
-      
-      // Write to coverage/cypress (for extraction script)
-      const cypressPath = path.join(cypressCoverageDir, "out.json");
-      fs.writeFileSync(cypressPath, coverageJson);
-      console.log(`📊 Coverage written to ${cypressPath} (${fileCount} files)`);
-      
+
+      if (suffix) {
+        // Parallel mode: write a per-split file; the merge script combines them later.
+        const splitPath = path.join(c8OutputDir, `coverage${suffix}.json`);
+        fs.writeFileSync(splitPath, JSON.stringify(coverage, null, 2));
+        console.log(`Coverage written to ${splitPath} (${fileCount} files)`);
+      } else {
+        // Sequential mode: write directly to final locations.
+        const coverageJson = JSON.stringify(coverage, null, 2);
+        const nycPath = path.join(nycOutputDir, "out.json");
+        fs.writeFileSync(nycPath, coverageJson);
+        console.log(`Coverage written to ${nycPath} (${fileCount} files)`);
+
+        const cypressPath = path.join(cypressCoverageDir, "out.json");
+        fs.writeFileSync(cypressPath, coverageJson);
+        console.log(`Coverage written to ${cypressPath} (${fileCount} files)`);
+      }
       return null;
     }
   });
@@ -129,7 +120,8 @@ export default defineConfig({
     responseTimeout: 8000,
     pageLoadTimeout: 30000,
     setupNodeEvents(on, config) {
-      // Configure webpack preprocessor with path aliases
+      cypressSplit(on, config);
+
       const webpackOptions = {
         resolve: {
           extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -166,11 +158,12 @@ export default defineConfig({
 
       on("file:preprocessor", webpackPreprocessor({ webpackOptions }));
 
-      // Setup custom coverage tasks (c8-compatible)
-      if (enableCoverage) {
-        setupCoverageTasks(on);
+      const coverageEnabled = enableCoverage || config.env?.ENABLE_COVERAGE === true || config.env?.ENABLE_COVERAGE === "true";
+      if (coverageEnabled) {
+        const splitIndex = config.env?.splitIndex;
+        setupCoverageTasks(on, splitIndex);
       }
-      
+
       return config;
     },
   },

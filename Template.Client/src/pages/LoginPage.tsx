@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth, useToast, useErrorHandler } from "@/hooks";
@@ -14,9 +14,11 @@ import {
 } from "@/config";
 import { ApiResponse } from "@/models/shared/api";
 
-const LoginPage: React.FC = () => {
+function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(
+    () => !!localStorage.getItem("rememberedEmail")
+  );
   const { login, isAuthenticated, isLoading } = useAuth();
   const { showError } = useToast();
   const { handleError } = useErrorHandler();
@@ -46,7 +48,6 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     const storedEmail = localStorage.getItem("rememberedEmail");
     if (storedEmail) {
-      setRememberMe(true);
       setTimeout(() => {
         setValue("email", storedEmail);
         const emailInput = document.getElementById("email") as HTMLInputElement;
@@ -181,6 +182,6 @@ const LoginPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LoginPage;

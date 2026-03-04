@@ -1,5 +1,4 @@
-import React from "react";
-import { GridPage } from "solstice-ui";
+import { DataPage } from "solstice-ui";
 import { EntityToolbar } from "@/components";
 import { PagedResult, PermissionResponse } from "@/models";
 import { TEST_IDS } from "@/config";
@@ -9,25 +8,24 @@ import {
   renderPermissionGridItem,
   SORT_FIELDS,
 } from "../shared";
-import { useGridFilters, usePaginationWithScroll, type GridPaginationHandlers } from "@/hooks";
+import { useGridFilters, usePaginationWithScroll, type GridListPaginationHandlers } from "@/hooks";
 
 interface PermissionGridPageProps {
   paginationResult: PagedResult<PermissionResponse>;
-  paginationHandlers: GridPaginationHandlers;
+  paginationHandlers: GridListPaginationHandlers;
   isLoading: boolean;
 }
 
-const PermissionGridPage: React.FC<PermissionGridPageProps> = ({
+function PermissionGridPage({
   paginationResult,
   paginationHandlers,
   isLoading,
-}) => {
+}: PermissionGridPageProps) {
   const { actionLoading, applyFilters, clearAll } =
     useGridFilters(paginationHandlers);
   const { onPageChange, onPageSizeChange } =
     usePaginationWithScroll(paginationHandlers);
-  const { items, totalCount, pageNumber, totalPages, pageSize } =
-    paginationResult;
+  const { items, pageNumber, totalPages, pageSize } = paginationResult;
 
   const toolbar = (
     <EntityToolbar
@@ -42,25 +40,24 @@ const PermissionGridPage: React.FC<PermissionGridPageProps> = ({
 
   return (
     <div data-testid={`${TEST_IDS.PERMISSION_PAGE}-page`}>
-      <GridPage<PermissionResponse>
-        content={toolbar}
+      <DataPage<PermissionResponse>
+        layout="grid"
+        contentBetweenHeaderAndContent={toolbar}
         items={items}
         loading={isLoading}
-        renderCard={(permission) => renderPermissionGridItem(permission)}
+        renderCard={(permission: PermissionResponse) => renderPermissionGridItem(permission)}
         columns={3}
         emptyTitle={PERMISSION_GRID_CONFIG.emptyStateTitle ?? "No items found"}
         emptyDescription={PERMISSION_GRID_CONFIG.emptyStateDescription}
-        keyExtractor={(p) => p.id ?? p.key ?? ""}
-        pageNumber={pageNumber}
+        keyExtractor={(p: PermissionResponse) => p.id ?? p.key ?? ""}
+        currentPage={pageNumber}
         totalPages={totalPages}
-        totalCount={totalCount}
         pageSize={pageSize}
         onPageChange={onPageChange}
         onPageSizeChange={onPageSizeChange}
-        testId={TEST_IDS.PERMISSION_PAGE}
       />
     </div>
   );
-};
+}
 
 export default PermissionGridPage;

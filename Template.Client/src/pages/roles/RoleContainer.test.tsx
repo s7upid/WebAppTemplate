@@ -1,3 +1,4 @@
+import React from "react";
 import { setupBaseTest } from "@/test/base-test-utils";
 
 const { cleanup } = setupBaseTest({
@@ -49,12 +50,10 @@ jest.mock("@/components/BasePage/BasePage", () => ({
   default: ({ children }: any) => <div>{children}</div>,
 }));
 jest.mock("@/components", () => {
-  const React = require("react");
   const stubs = require("@/test/__mocks__/component-stubs").default;
   return {
     ...stubs,
-    ModalPortal: ({ children }: any) => <div>{children}</div>,
-    PermissionGuard: ({ children }: any) => (
+    PermissionGuard: ({ children }: { children?: React.ReactNode }) => (
       <div data-testid={TEST_IDS.MOCK_PERMISSION_GUARD}>{children}</div>
     ),
   };

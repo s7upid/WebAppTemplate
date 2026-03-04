@@ -1,4 +1,3 @@
-import React from "react";
 import { AuditLog } from "@/models";
 import AuditLogCard from "../AuditLogCard/AuditLogCard";
 import styles from "./AuditLogTimeline.module.css";
@@ -10,12 +9,12 @@ interface AuditLogTimelineProps {
   maxItems?: number;
 }
 
-const AuditLogTimeline: React.FC<AuditLogTimelineProps> = ({
+function AuditLogTimeline({
   logs,
   title,
   emptyMessage = "No recent activity",
   maxItems,
-}) => {
+}: AuditLogTimelineProps) {
   const displayLogs = maxItems ? logs.slice(0, maxItems) : logs;
 
   if (displayLogs.length === 0) {
@@ -40,6 +39,6 @@ const AuditLogTimeline: React.FC<AuditLogTimelineProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default AuditLogTimeline;

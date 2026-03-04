@@ -1,4 +1,3 @@
-import React from "react";
 import { Shield, Users, Calendar } from "lucide-react";
 import { RoleResponse } from "@/models";
 import { Card } from "solstice-ui";
@@ -7,7 +6,7 @@ interface RoleStatsSectionProps {
   role: RoleResponse;
 }
 
-const RoleStatsSection: React.FC<RoleStatsSectionProps> = ({ role }) => {
+function RoleStatsSection({ role }: RoleStatsSectionProps) {
   return (
     <Card
       title={`${role.name}`}
@@ -39,6 +38,6 @@ const RoleStatsSection: React.FC<RoleStatsSectionProps> = ({ role }) => {
       ]}
     />
   );
-};
+}
 
 export default RoleStatsSection;

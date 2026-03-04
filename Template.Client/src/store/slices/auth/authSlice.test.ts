@@ -78,7 +78,6 @@ jest.mock("@/utils", () => ({
   }),
   logger: { error: jest.fn(), warn: jest.fn(), info: jest.fn() },
   cn: jest.fn((...args) => args.filter(Boolean).join(" ")),
-  Portal: ({ children }: any) => children,
 }));
 
 import { configureStore } from "@reduxjs/toolkit";

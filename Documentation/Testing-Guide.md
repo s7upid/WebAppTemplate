@@ -12,8 +12,10 @@ Comprehensive testing strategy with Jest, React Testing Library, and Cypress cov
 |------|---------|---------|
 | Jest | 30.2 | Test runner |
 | React Testing Library | 16.3 | Component testing |
-| Cypress | 15.3 | E2E testing |
-| c8 | 10.1 | Native V8 code coverage (Node.js 24+ compatible) |
+| Cypress | 15.11 | E2E testing |
+| cypress-split | 1.24 | Parallel spec distribution |
+| concurrently | 9.2 | Run multiple Cypress processes |
+| c8 | 11.0 | Native V8 code coverage (Node.js 24+ compatible) |
 
 ### Backend Testing
 
@@ -40,7 +42,8 @@ npm run test:ci                # CI mode
 
 ```bash
 npm run cypress:open           # Interactive GUI
-npm run cypress:run            # Headless
+npm run cypress:run            # Headless (sequential)
+npm run cypress:run:parallel   # Headless (4 parallel processes, ~3-4x faster)
 ```
 
 ### Backend Testing
@@ -396,13 +399,14 @@ The test suite covers all major API endpoints:
 # Frontend unit test coverage
 npm run test:coverage
 
-# Frontend E2E test coverage (use scripts/coverage)
-./scripts/coverage/3-run-fe-cypress-coverage.command  # macOS / Linux / Git Bash
+# Frontend E2E test coverage (runs parallel Cypress + merges coverage)
+./test-coverage/3-run-fe-cypress-coverage.sh  # macOS / Linux / Git Bash
+test-coverage\3-run-fe-cypress-coverage.bat   # Windows
 
 # Backend test coverage
 dotnet test Template.Tests --collect:"XPlat Code Coverage"
 
-# All coverage reports
+# All coverage reports (lint → backend → Jest → Cypress → extract → badges)
 ./scripts/generate-test-report.command   # or: npm run coverage
 ```
 
@@ -415,9 +419,9 @@ dotnet test Template.Tests --collect:"XPlat Code Coverage"
 ### Update README Badges
 
 ```bash
-# From repo root
-node scripts/coverage/4-extract-results.js      # Extract coverage data
-node scripts/coverage/5-update-readme-badges.js # Update badges
+# From repo root (extract-results and update-badges are in test-coverage/)
+node test-coverage/4-extract-results.js      # Extract coverage data
+node test-coverage/5-update-readme-badges.js # Update badges
 ```
 
 ## Test Data Management
@@ -440,11 +444,12 @@ node scripts/coverage/5-update-readme-badges.js # Update badges
 ### Cypress Performance
 
 ```bash
-# Fast mode (3-5x faster)
-node scripts/test-cypress.js fast
+# Parallel execution (4 processes, ~3-4x faster)
+npm run cypress:run:parallel
 
-# Debug mode (with videos/screenshots)
-node scripts/test-cypress.js debug "cypress/e2e/auth.cy.ts"
+# Parallel with coverage
+npm run cypress:run:parallel:coverage
+npm run cypress:merge-coverage
 ```
 
 ### Test Optimization
@@ -452,7 +457,7 @@ node scripts/test-cypress.js debug "cypress/e2e/auth.cy.ts"
 - Use `cy.intercept()` for API mocking
 - Implement proper waiting strategies
 - Optimize test data setup
-- Use parallel test execution
+- Use `npm run cypress:run:parallel` for ~3-4x faster E2E runs
 
 ## CI/CD Integration
 
@@ -462,10 +467,7 @@ node scripts/test-cypress.js debug "cypress/e2e/auth.cy.ts"
 - name: Run Tests
   run: |
     npm run test:ci
-    npm run cypress:run
-
-    # Optional: generate and upload E2E test inventory
-    node scripts/generate-cypress-cases.js
+    npm run cypress:run:parallel
 ```
 
 ### Coverage Reporting
@@ -518,4 +520,5 @@ node scripts/test-cypress.js debug "cypress/e2e/auth.cy.ts"
 ## Related Documentation
 
 - **[Cypress Guide](./Cypress-Testing-Complete.md)** - E2E testing with Cypress
-- **[Scripts (incl. coverage)](../scripts/README.md)** - Test coverage and main scripts
+- **[Scripts](../scripts/README.md)** - Main scripts
+- **[Test Coverage](../test-coverage/README.md)** - Coverage step scripts

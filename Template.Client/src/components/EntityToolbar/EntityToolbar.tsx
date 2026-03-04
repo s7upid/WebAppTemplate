@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { SearchInput, Dropdown, Button } from "solstice-ui";
 import styles from "./EntityToolbar.module.css";
 import { ToolbarFilterConfig, ToolbarSortField } from "@/models";
@@ -18,7 +18,7 @@ interface EntityToolbarProps {
   onClear?: () => void | Promise<unknown>;
 }
 
-const EntityToolbar: React.FC<EntityToolbarProps> = ({
+function EntityToolbar({
   searchPlaceholder = "Search...",
   initialSearch = "",
   filters = [],
@@ -26,7 +26,7 @@ const EntityToolbar: React.FC<EntityToolbarProps> = ({
   loading = false,
   onApply,
   onClear,
-}) => {
+}: EntityToolbarProps) {
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [localFilters, setLocalFilters] = useState<Record<string, string>>(() =>
     filters.reduce<Record<string, string>>((acc, f) => {
@@ -149,6 +149,6 @@ const EntityToolbar: React.FC<EntityToolbarProps> = ({
       </div>
     </div>
   );
-};
+}
 
 export default EntityToolbar;

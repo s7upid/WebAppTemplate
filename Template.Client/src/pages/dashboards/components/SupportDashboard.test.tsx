@@ -9,27 +9,11 @@ jest.mock("@/hooks", () => {
   });
 });
 
-jest.mock("@/services", () => ({
-  dashboardApiService: {
-    getSupportStatsSafe: jest.fn().mockResolvedValue({}),
-  },
-}));
-
 describe("SupportDashboard", () => {
   it("renders loading then content", async () => {
     const { findByTestId } = render(<SupportDashboard />);
     await findByTestId(TEST_IDS.SUPPORT_DASHBOARD);
     expect(screen.getByTestId(TEST_IDS.SUPPORT_DASHBOARD)).toBeInTheDocument();
     expect(screen.getByText(/Support Dashboard/)).toBeInTheDocument();
-  });
-
-  it("renders with empty recent activity", async () => {
-    const { dashboardApiService } = jest.requireMock("@/services");
-    dashboardApiService.getSupportStatsSafe.mockResolvedValue({
-      recentActivity: [],
-    });
-    const { findByTestId } = render(<SupportDashboard />);
-    await findByTestId(TEST_IDS.SUPPORT_DASHBOARD);
-    expect(screen.getByTestId(TEST_IDS.SUPPORT_DASHBOARD)).toBeInTheDocument();
   });
 });

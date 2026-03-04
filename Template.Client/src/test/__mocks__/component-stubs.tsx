@@ -9,6 +9,7 @@ const Noop = () => null;
 const Fragment = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
 
 export default {
+  ConfirmationDialog: Noop,
   QuickActions: Noop,
   AuditLogCard: Noop,
   AuditLogTimeline: Noop,

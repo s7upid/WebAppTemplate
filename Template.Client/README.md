@@ -103,7 +103,7 @@ Template.Client/
 └── README.md                    # This file
 ```
 
-**UI library:** Primitives (Button, Card, Input, GridPage, LoadingSpinner, EmptyState, Dialog, etc.) come from **solstice-ui**. Import them from `"solstice-ui"`; do not re-export from `@/components`.
+**UI library:** Primitives (Button, Card, Input, DataPage, LoadingSpinner, EmptyState, Dialog, etc.) come from **solstice-ui**. Import them from `"solstice-ui"`; do not re-export from `@/components`. Use **DataPage** with `layout="grid"` or `layout="list"` for grid/list pages; use **Dialog** with `footerActions` for confirmations (or the app’s **ConfirmationDialog** from `@/components`).
 
 ## 🛠️ Technologies
 
@@ -112,32 +112,32 @@ Template.Client/
 | Package | Version | Purpose |
 |---------|---------|---------|
 | React | 19.2 | UI library |
-| TypeScript | 5.3 | Type safety |
-| Vite | 7.1 | Build tool and dev server |
-| React Router | 7.9 | Client-side routing |
+| TypeScript | 5.9 | Type safety |
+| Vite | 7.3 | Build tool and dev server |
+| React Router | 7.13 | Client-side routing |
 
 ### State Management
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| TanStack Query | 5.9 | Server state management (API data) |
-| Redux Toolkit | 2.0 | Client state (auth, theme) |
-| React Redux | 9.0 | React bindings for Redux |
+| TanStack Query | 5.90 | Server state management (API data) |
+| Redux Toolkit | 2.11 | Client state (auth, theme) |
+| React Redux | 9.2 | React bindings for Redux |
 
 ### Forms & Validation
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| React Hook Form | 7.48 | Form state management |
-| Zod | 4.1 | Schema validation |
+| React Hook Form | 7.71 | Form state management |
+| Zod | 4.3 | Schema validation |
 | @hookform/resolvers | 5.2 | Zod integration |
 
 ### Styling
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| Tailwind CSS | 4.1 | Utility-first CSS framework |
-| Lucide React | 0.562 | Icons |
+| Tailwind CSS | 4.2 | Utility-first CSS framework |
+| Lucide React | 0.577 | Icons |
 | clsx + tailwind-merge | - | Class name utilities |
 
 ### Testing
@@ -146,16 +146,18 @@ Template.Client/
 |---------|---------|---------|
 | Jest | 30.2 | Unit testing framework |
 | React Testing Library | 16.3 | Component testing |
-| Cypress | 15.3 | End-to-end testing |
-| c8 | 10.1 | Native V8 code coverage |
+| Cypress | 15.11 | End-to-end testing |
+| cypress-split | 1.24 | Parallel spec distribution |
+| concurrently | 9.2 | Run multiple Cypress processes |
+| c8 | 11.0 | Native V8 code coverage |
 
 ### Development Tools
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| ESLint | 9.28 | Code linting |
-| typescript-eslint | 8.33 | TypeScript ESLint support |
-| Vite | 7.1 | Fast development server |
+| ESLint | 9.39 | Code linting |
+| typescript-eslint | 8.56 | TypeScript ESLint support |
+| Vite | 7.3 | Fast development server |
 
 ## 🚀 Development
 
@@ -175,7 +177,8 @@ npm run test:ci          # Run tests for CI/CD
 
 # E2E Testing
 npm run cypress:open     # Open Cypress test runner
-npm run cypress:run      # Run Cypress tests headlessly
+npm run cypress:run      # Run Cypress tests headlessly (sequential)
+npm run cypress:run:parallel   # Run in parallel (4 processes, ~3-4x faster)
 
 # Cleanup
 npm run clean            # Clean coverage artifacts
@@ -271,11 +274,18 @@ src/
 # Open Cypress test runner
 npm run cypress:open
 
-# Run Cypress tests headlessly
+# Run Cypress tests headlessly (sequential)
 npm run cypress:run
 
-# Run with coverage (from project root)
-./scripts/coverage/3-run-fe-cypress-coverage.command   # or full pipeline: ./scripts/generate-test-report.command
+# Run in parallel (4 processes, ~3-4x faster)
+npm run cypress:run:parallel
+
+# Run with coverage (parallel + merge)
+npm run cypress:run:parallel:coverage
+npm run cypress:merge-coverage
+
+# Full coverage pipeline (from project root)
+./scripts/generate-test-report.command   # or: npm run coverage
 ```
 ## 🔐 Authentication
 
@@ -358,29 +368,25 @@ These are exported from `src/components/index.ts`:
 Import from `"solstice-ui"` (do not re-export from `@/components`):
 
 - **Button**, **Input**, **Form**, **Dropdown**, **SearchInput**
-- **Card**, **GridPage**, **EmptyState**, **Alert**
+- **Card**, **DataPage**, **EmptyState**, **Alert**
 - **LoadingSpinner**, **PageHeader**, **Dialog**, **Pagination**
 - **ThemeToggle**, **TabNavigation** (and type **TabItem**)
 
 ### Component usage
 
 ```typescript
-import { Button, Card, GridPage } from "solstice-ui";
+import { Button, Card, DataPage } from "solstice-ui";
 import { EntityToolbar, Layout } from "@/components";
 
 function MyPage() {
   return (
     <Layout>
-      <EntityToolbar
-        searchPlaceholder="Search..."
-        onApply={applyFilters}
-        onClear={clearAll}
-      />
-      <GridPage
+      <DataPage
+        layout="grid"
         items={items}
         loading={isLoading}
         renderCard={(item) => <Card>...</Card>}
-        content={<EntityToolbar ... />}
+        contentBetweenHeaderAndContent={<EntityToolbar ... />}
       />
       <Button variant="primary">Submit</Button>
     </Layout>
@@ -550,10 +556,10 @@ VITE_NODE_ENV=production
 
 ```dockerfile
 # Dockerfile example
-FROM node:18-alpine as builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 COPY . .
 RUN npm run build
 

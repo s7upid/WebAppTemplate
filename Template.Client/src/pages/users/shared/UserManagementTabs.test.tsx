@@ -25,7 +25,6 @@ jest.mock("@/utils", () => {
     },
     logger: mocks.logger,
     cn: mocks.cn,
-    Portal: mocks.Portal,
     handleEntityDelete: mocks.handleEntityDelete,
     handleSubmitForm: mocks.handleSubmitForm,
     handleEntitySave: mocks.handleEntitySave,

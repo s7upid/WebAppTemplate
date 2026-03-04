@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Routes, Route } from "react-router-dom";
-import { ConfirmationDialog, ModalPortal } from "solstice-ui";
-import { BasePage, PermissionGuard } from "@/components";
+import { ConfirmationDialog, BasePage, PermissionGuard } from "@/components";
 import {
   CreateUserRequest,
   UpdateUserRequest,
@@ -34,13 +33,15 @@ import {
   getActiveTab,
   useRouteInfo,
 } from "@/utils";
+import { ModalPortal } from "solstice-ui";
 
-const UserContainer: React.FC = () => {
+function UserContainer() {
   const permissions = useUserManagementPermissions();
   const routeInfo = useRouteInfo("users");
   const activeTab = getActiveTab(routeInfo);
   const nav = useGenericNavigationFunctions();
   const { showSuccess, showError } = useToast();
+  const confirmation = useConfirmation();
   const {
     add: addUser,
     edit: editUser,
@@ -74,8 +75,7 @@ const UserContainer: React.FC = () => {
       const currentTab = activeTab || "all";
 
       if (prevTabRef.current !== currentTab || prevTabRef.current === null) {
-        // Mark that we're loading data for a different tab
-        setLoadedDataTab(null);
+        queueMicrotask(() => setLoadedDataTab(null));
 
         if (routeInfo.isMainPage) {
           paginationHandlers.refreshWithParams({
@@ -102,14 +102,14 @@ const UserContainer: React.FC = () => {
   useEffect(() => {
     const currentTab = activeTab || "all";
     if (!isLoading && loadedDataTab !== currentTab) {
-      setLoadedDataTab(currentTab);
+      queueMicrotask(() => setLoadedDataTab(currentTab));
     }
   }, [isLoading, activeTab, loadedDataTab]);
 
   // Show loading if data doesn't match current tab
   const isDataStale = loadedDataTab !== (activeTab || "all");
 
-  const closeModal = () => setState({ ...state, modal: undefined });
+  const closeModal = () => setState((prev) => ({ ...prev, modal: undefined }));
 
   const defaultHeader: PageHeaderProps | null =
     activeTab === "pending"
@@ -244,11 +244,11 @@ const UserContainer: React.FC = () => {
               user={state.selectedUser}
             />
           )}
-          <ConfirmationDialog {...useConfirmation().dialogProps} />
         </ModalPortal>
+        <ConfirmationDialog {...confirmation.dialogProps} />
       </BasePage>
     </PermissionGuard>
   );
-};
+}
 
 export default UserContainer;

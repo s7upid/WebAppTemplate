@@ -3,7 +3,7 @@ import { PageHeader } from "solstice-ui";
 import { TEST_IDS } from "@/config";
 import { Monitor } from "lucide-react";
 
-const OperatorDashboard: React.FC = () => {
+function OperatorDashboard() {
   const { user } = useAuth();
 
   return (
@@ -15,6 +15,6 @@ const OperatorDashboard: React.FC = () => {
       />
     </div>
   );
-};
+}
 
 export default OperatorDashboard;

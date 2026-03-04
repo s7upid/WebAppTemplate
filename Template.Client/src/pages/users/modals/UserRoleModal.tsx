@@ -15,12 +15,12 @@ interface UserRoleModalProps {
   user?: UserResponse;
 }
 
-const UserRoleModal: React.FC<UserRoleModalProps> = ({
+function UserRoleModal({
   permissions,
   isOpen,
   onClose,
   user,
-}) => {
+}: UserRoleModalProps) {
   const { edit: editUser, refetch } = useUsersQuery();
   const { showSuccess } = useToast();
   const { roles, paginationHandlers, isLoading } = useRolesQuery();
@@ -37,11 +37,15 @@ const UserRoleModal: React.FC<UserRoleModalProps> = ({
     if (isOpen && user) {
       paginationHandlers?.refreshWithCurrentFilters?.();
       const currentRoleId = user.role?.id || "";
-      setSelectedRole(currentRoleId);
-      setOriginalRole(currentRoleId);
+      queueMicrotask(() => {
+        setSelectedRole(currentRoleId);
+        setOriginalRole(currentRoleId);
+      });
     } else if (!isOpen) {
-      setSelectedRole("");
-      setOriginalRole("");
+      queueMicrotask(() => {
+        setSelectedRole("");
+        setOriginalRole("");
+      });
     }
   }, [isOpen, user, paginationHandlers]);
 
@@ -214,6 +218,6 @@ const UserRoleModal: React.FC<UserRoleModalProps> = ({
       </form>
     </Dialog>
   );
-};
+}
 
 export default UserRoleModal;
