@@ -18,6 +18,14 @@ import {
 import { Calendar, Key, Shield, UserIcon } from "lucide-react";
 import { ConfirmationDialog } from "@/components";
 import { Card, LoadingSpinner, EmptyState } from "solstice-ui";
+import type { BadgeVariant } from "solstice-ui";
+
+const STATUS_VARIANT: Record<string, BadgeVariant> = {
+  Active: "success",
+  Inactive: "error",
+  Pending: "warning",
+  Suspended: "error",
+};
 import {
   BUTTON_LABELS,
   ERROR_MESSAGES,
@@ -126,6 +134,7 @@ function UserDetailsPage({
           avatar={user.avatar}
           layout="horizontal"
           status={user.userStatus}
+          statusVariant={STATUS_VARIANT[user.userStatus] ?? "default"}
           detailsPerRow={4}
           details={[
             { label: "Role", value: roleString, icon: Shield },

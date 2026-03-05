@@ -99,7 +99,7 @@ function PendingUsersPage({
   const { items, pageNumber, totalPages, pageSize } = result;
 
   return (
-    <div className="p-6" data-testid={TEST_IDS.PENDING_USERS_PAGE}>
+    <div data-testid={TEST_IDS.PENDING_USERS_PAGE}>
       <DataPage<UserResponse>
         layout="grid"
         items={items}

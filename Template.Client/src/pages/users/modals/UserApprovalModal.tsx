@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Button, Dialog } from "solstice-ui";
+import { Button, Dialog, Dropdown } from "solstice-ui";
 import { RoleResponse, UserResponse } from "@/models";
 import { useRolesQuery } from "@/hooks";
 import { CheckCircle } from "lucide-react";
@@ -58,31 +58,24 @@ function UserApprovalModal({
             </div>
           </div>
 
-          <div>
-            <label className="input-label">Assign Role</label>
-            <select
-              value={selectedRole?.id}
-              onChange={(e) => {
-                const next = roles.find((r: RoleResponse) => r.id === e.target.value);
-                if (next) onRoleChange(next);
-              }}
-              className="input-field"
-              disabled={isLoading || roles.length === 0}
-            >
-              <option value="">Choose a role</option>
-              {roles.map((role: RoleResponse) => (
-                <option key={role.id} value={role.id}>
-                  {role.name}
-                </option>
-              ))}
-            </select>
-            {isLoading && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Loading roles...</p>
-            )}
-            {!isLoading && roles.length === 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">No roles available</p>
-            )}
-          </div>
+          <Dropdown
+            label="Assign Role"
+            placeholderOption="Choose a role"
+            options={roles.map((r: RoleResponse) => ({ value: r.id, label: r.name }))}
+            value={selectedRole?.id ?? ""}
+            onValueChange={(value: string) => {
+              const next = roles.find((r: RoleResponse) => r.id === value);
+              if (next) onRoleChange(next);
+            }}
+            disabled={isLoading || roles.length === 0}
+            helperText={
+              isLoading
+                ? "Loading roles..."
+                : roles.length === 0
+                  ? "No roles available"
+                  : undefined
+            }
+          />
 
           <div className="modal-actions">
             <Button variant="secondary" onClick={onClose} disabled={loading}>

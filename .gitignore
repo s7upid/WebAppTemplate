@@ -343,8 +343,9 @@ healthchecksdb
 
 coverage/
 
-# Temp directory for solstice-ui build
+# solstice-ui local build artifacts (package is installed from GitHub releases)
 _solstice-ui-tmp/
+Template.Client/solstice-ui-*.tgz
 
 # Test Coverage Output Files
 .nyc_output/

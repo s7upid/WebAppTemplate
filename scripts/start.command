@@ -33,13 +33,6 @@ echo "[3/4] Starting .NET Backend Server..."
 dotnet run --project Template.Server/Template.Server.csproj &
 
 echo "[4/4] Starting Vite Frontend Dev Server..."
-if [ ! -f "Template.Client/solstice-ui-1.0.0.tgz" ]; then
-    echo "Building solstice-ui from GitHub..."
-    git clone --depth 1 https://github.com/s7upid/solstice-ui.git _solstice-ui-tmp
-    (cd _solstice-ui-tmp && npm install && npm run build && npm pack)
-    cp _solstice-ui-tmp/solstice-ui-1.0.0.tgz Template.Client/solstice-ui-1.0.0.tgz
-    rm -rf _solstice-ui-tmp
-fi
 if [ ! -d "Template.Client/node_modules" ]; then
     echo "Installing frontend dependencies..."
     (cd Template.Client && npm install)

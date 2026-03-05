@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Dialog } from "solstice-ui";
+import { Button, Input, Dialog, Form } from "solstice-ui";
 import { useAuth, useToast } from "@/hooks";
 import { Lock, Eye, EyeOff, XCircle, Save } from "lucide-react";
 import { ChangePasswordRequest } from "@/models";
@@ -90,8 +90,7 @@ function PasswordChangeModal({
       title="Change Password"
       size="md"
     >
-      <div className="space-y-6">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <Input
             {...register("currentPassword")}
             type={showCurrentPassword ? "text" : "password"}
@@ -100,56 +99,64 @@ function PasswordChangeModal({
             placeholder="Enter your current password"
             error={errors.currentPassword?.message}
             required
+            endAdornment={
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 0 }}
+                aria-label="Toggle password visibility"
+                tabIndex={-1}
+              >
+                {showCurrentPassword ? (
+                  <EyeOff size={16} className="text-gray-400" />
+                ) : (
+                  <Eye size={16} className="text-gray-400" />
+                )}
+              </button>
+            }
           />
-          <button
-            type="button"
-            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-            className="password-toggle-btn"
-          >
-            {showCurrentPassword ? (
-              <EyeOff className="picon-size" />
-            ) : (
-              <Eye className="picon-size" />
-            )}
-          </button>
 
-          <div className="password-input">
-            <Input
-              {...register("newPassword")}
-              type={showNewPassword ? "text" : "password"}
-              label="New Password"
-              icon={Lock}
-              placeholder="Enter your new password"
-              error={errors.newPassword?.message}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowNewPassword(!showNewPassword)}
-              className="password-toggle-btn"
-            >
-              {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
+          <Input
+            {...register("newPassword")}
+            type={showNewPassword ? "text" : "password"}
+            label="New Password"
+            icon={Lock}
+            placeholder="Enter your new password"
+            error={errors.newPassword?.message}
+            required
+            endAdornment={
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 0 }}
+                aria-label="Toggle password visibility"
+                tabIndex={-1}
+              >
+                {showNewPassword ? <EyeOff size={16} className="text-gray-400" /> : <Eye size={16} className="text-gray-400" />}
+              </button>
+            }
+          />
 
-          <div className="password-input">
-            <Input
-              {...register("confirmPassword")}
-              type={showConfirmPassword ? "text" : "password"}
-              label="Confirm New Password"
-              icon={Lock}
-              placeholder="Confirm your new password"
-              error={errors.confirmPassword?.message}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="password-toggle-btn"
-            >
-              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
+          <Input
+            {...register("confirmPassword")}
+            type={showConfirmPassword ? "text" : "password"}
+            label="Confirm New Password"
+            icon={Lock}
+            placeholder="Confirm your new password"
+            error={errors.confirmPassword?.message}
+            required
+            endAdornment={
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 0 }}
+                aria-label="Toggle password visibility"
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? <EyeOff size={16} className="text-gray-400" /> : <Eye size={16} className="text-gray-400" />}
+              </button>
+            }
+          />
 
           <div className="password-requirements-container">
             <h4 className="input-label">Password Requirements:</h4>
@@ -181,8 +188,7 @@ function PasswordChangeModal({
               Change Password
             </Button>
           </div>
-        </form>
-      </div>
+        </Form>
     </Dialog>
   );
 }

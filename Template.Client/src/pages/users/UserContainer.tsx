@@ -33,7 +33,6 @@ import {
   getActiveTab,
   useRouteInfo,
 } from "@/utils";
-import { ModalPortal } from "solstice-ui";
 
 function UserContainer() {
   const permissions = useUserManagementPermissions();
@@ -208,43 +207,41 @@ function UserContainer() {
           />
         </Routes>
 
-        <ModalPortal>
-          {state.modal === "userForm" && (
-            <UserFormModal
-              permissions={permissions}
-              isOpen
-              onClose={closeModal}
-              user={state.selectedUser}
-              onSave={handleSaveUser}
-              formMode="edit"
-            />
-          )}
-          {state.modal === "userCreate" && (
-            <UserFormModal
-              permissions={permissions}
-              isOpen
-              onClose={closeModal}
-              onSave={handleSaveUser}
-              formMode="create"
-            />
-          )}
-          {state.modal === "role" && (
-            <UserRoleModal
-              permissions={permissions}
-              isOpen
-              onClose={closeModal}
-              user={state.selectedUser}
-            />
-          )}
-          {state.modal === "permission" && (
-            <UserPermissionModal
-              permissions={permissions}
-              isOpen
-              onClose={closeModal}
-              user={state.selectedUser}
-            />
-          )}
-        </ModalPortal>
+        {state.modal === "userForm" && (
+          <UserFormModal
+            permissions={permissions}
+            isOpen
+            onClose={closeModal}
+            user={state.selectedUser}
+            onSave={handleSaveUser}
+            formMode="edit"
+          />
+        )}
+        {state.modal === "userCreate" && (
+          <UserFormModal
+            permissions={permissions}
+            isOpen
+            onClose={closeModal}
+            onSave={handleSaveUser}
+            formMode="create"
+          />
+        )}
+        {state.modal === "role" && (
+          <UserRoleModal
+            permissions={permissions}
+            isOpen
+            onClose={closeModal}
+            user={state.selectedUser}
+          />
+        )}
+        {state.modal === "permission" && (
+          <UserPermissionModal
+            permissions={permissions}
+            isOpen
+            onClose={closeModal}
+            user={state.selectedUser}
+          />
+        )}
         <ConfirmationDialog {...confirmation.dialogProps} />
       </BasePage>
     </PermissionGuard>

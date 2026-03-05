@@ -204,7 +204,8 @@ export const Alert = ({
     {children}
   </div>
 );
-export const Badge = () => null;
+export const Badge = ({ children }: { children?: React.ReactNode }) =>
+  children ? <span>{children}</span> : null;
 
 export const Input = ({
   label,
@@ -310,9 +311,6 @@ export const Form = ({
 );
 
 export const List = () => null;
-export const ModalPortal = ({ children }: { children?: React.ReactNode }) => (
-  <div data-testid="mock-modal-portal">{children}</div>
-);
 export const PageHeader = ({
   title,
   description,
@@ -434,5 +432,29 @@ export const TabNavigation = ({
     ))}
   </div>
 );
+export const Toggle = (props: {
+  variant?: string;
+  state?: string;
+  onStateChange?: (s: string) => void;
+  label?: string;
+  triState?: boolean;
+  "aria-label"?: string;
+}) => {
+  const { variant, state, onStateChange, label, "aria-label": ariaLabel } = props;
+  if (variant === "checkbox") {
+    return (
+      <label>
+        <input
+          type="checkbox"
+          checked={state === "on"}
+          onChange={() => onStateChange?.(state === "on" ? "off" : "on")}
+          aria-label={ariaLabel}
+        />
+        {label}
+      </label>
+    );
+  }
+  return null;
+};
 export const ThemeToggle = () => null;
 export const Toast = () => null;

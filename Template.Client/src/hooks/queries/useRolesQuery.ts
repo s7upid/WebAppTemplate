@@ -99,17 +99,30 @@ export const useRolesQuery = (initialQuery?: PageQuery) => {
   const refreshWithCurrentFilters = listQuery.refetch;
 
   /* ---------- Derived Data ---------- */
-  const paginationResult = useMemo(
-    () =>
-      listQuery.data?.data ?? {
-        items: [],
+  const paginationResult = useMemo(() => {
+    const raw = listQuery.data?.data;
+    if (!raw) {
+      return {
+        items: [] as RoleResponse[],
         totalCount: 0,
         pageNumber: 1,
         pageSize: 10,
         totalPages: 0,
-      },
-    [listQuery.data?.data]
-  );
+      };
+    }
+    const items = Array.isArray(raw.items) ? raw.items : (raw as Record<string, unknown>).Items != null ? (raw as { Items: RoleResponse[] }).Items : [];
+    const totalCount = typeof raw.totalCount === "number" ? raw.totalCount : (raw as Record<string, unknown>).TotalCount as number ?? 0;
+    const pageSize = typeof raw.pageSize === "number" ? raw.pageSize : (raw as Record<string, unknown>).PageSize as number ?? 10;
+    const pageNumber = typeof raw.pageNumber === "number" ? raw.pageNumber : (raw as Record<string, unknown>).PageNumber as number ?? 1;
+    const totalPages = typeof raw.totalPages === "number" ? raw.totalPages : Math.ceil(totalCount / pageSize) || 0;
+    return {
+      items,
+      totalCount,
+      pageNumber,
+      pageSize,
+      totalPages,
+    };
+  }, [listQuery.data?.data]);
   const isLoading =
     listQuery.isLoading ||
     createMutation.isPending ||

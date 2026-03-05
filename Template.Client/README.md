@@ -103,7 +103,7 @@ Template.Client/
 └── README.md                    # This file
 ```
 
-**UI library:** Primitives (Button, Card, Input, DataPage, LoadingSpinner, EmptyState, Dialog, etc.) come from **solstice-ui**. Import them from `"solstice-ui"`; do not re-export from `@/components`. Use **DataPage** with `layout="grid"` or `layout="list"` for grid/list pages; use **Dialog** with `footerActions` for confirmations (or the app’s **ConfirmationDialog** from `@/components`).
+**UI library:** Primitives (Button, Card, Input, DataPage, LoadingSpinner, EmptyState, Dialog, etc.) come from **[solstice-ui](https://github.com/s7upid/solstice-ui)**, installed from the [latest GitHub release](https://github.com/s7upid/solstice-ui/releases). Import from `"solstice-ui"`; do not re-export from `@/components`. Use **DataPage** with `layout="grid"` or `layout="list"` for grid/list pages; use **Dialog** with `footerActions` for confirmations (or the app’s **ConfirmationDialog** from `@/components`).
 
 ## 🛠️ Technologies
 

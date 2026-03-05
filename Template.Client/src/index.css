@@ -1,19 +1,12 @@
 @import "tailwindcss";
 
-body {
-  @apply bg-gray-50 text-gray-900;
-}
-
-.dark body {
-  @apply bg-gray-900 text-gray-100;
+/* Reserve scrollbar space so layout does not shift when switching tabs (e.g. Pending Approvals). */
+html {
+  scrollbar-gutter: stable;
 }
 
 .main-content {
   @apply py-6;
-}
-
-.space-y-6 {
-  @apply space-y-6;
 }
 
 .pending-user-actions {
@@ -68,22 +61,6 @@ body {
   @apply text-red-400;
 }
 
-.password-input {
-  @apply relative;
-}
-
-/* Explicit size so button is always visible/clickable (e.g. in Cypress); parent height may not apply. */
-.password-toggle-btn {
-  @apply absolute right-2 top-1/2 flex min-h-10 min-w-10 -translate-y-1/2 cursor-pointer items-center justify-center;
-}
-
-.dark .password-toggle-btn {
-  @apply text-gray-400;
-}
-
-.dark .password-toggle-btn:hover {
-  @apply text-gray-300;
-}
 
 .modal-actions {
   @apply flex justify-end pt-4 space-x-3;

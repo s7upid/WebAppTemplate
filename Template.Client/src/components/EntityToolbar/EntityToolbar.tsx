@@ -91,7 +91,7 @@ function EntityToolbar({
               label={f.label}
               value={localFilters[f.key] ?? ""}
               options={f.options}
-              placeholderOption={f.label}
+              placeholderOption="All"
               onValueChange={(v: string) => handleFilterChange(f.key, v)}
               className={styles.filter}
             />

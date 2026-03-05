@@ -125,7 +125,7 @@ Template/
    cd Template.Client
    npm install
    ```
-   The Client uses the **Solstice UI** component library from GitHub: [s7upid/solstice-ui](https://github.com/s7upid/solstice-ui). It is installed via `"solstice-ui": "github:s7upid/solstice-ui"`. After `npm install`, if the library has no built `dist/`, run `cd node_modules/solstice-ui && npm run build` so styles and components load. For full UI library and component docs, see [UI Library and Components](Documentation/UI-Library-and-Components.md).
+   The Client uses the **[Solstice UI](https://github.com/s7upid/solstice-ui)** component library, installed from the latest GitHub release. Running `npm install` will download it automatically. For full UI library and component docs, see [UI Library and Components](Documentation/UI-Library-and-Components.md).
 
 4. **Environment Configuration**
 

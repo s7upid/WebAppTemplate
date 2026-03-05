@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Save, UserIcon, XCircle } from "lucide-react";
-import { Button, Input, Dialog } from "solstice-ui";
+import { Button, Input, Dialog, Form } from "solstice-ui";
 import { AvatarUploader } from "@/components";
 import { useToast, useUsersQuery, useAuth } from "@/hooks";
 import styles from "./ProfileEditModal.module.css";
@@ -113,7 +113,7 @@ function ProfileEditModal({
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose} title="Edit Profile" size="md">
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <Form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <AvatarUploader
           avatarUrl={avatarPreview || undefined}
           editable
@@ -172,7 +172,7 @@ function ProfileEditModal({
             {isLoading ? "Saving..." : "Save Changes"}
           </Button>
         </div>
-      </form>
+      </Form>
     </Dialog>
   );
 }

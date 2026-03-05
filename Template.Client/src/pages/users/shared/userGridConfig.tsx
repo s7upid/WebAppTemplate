@@ -1,4 +1,5 @@
 import { Button, Card } from "solstice-ui";
+import type { BadgeVariant } from "solstice-ui";
 import { TEST_IDS } from "@/config";
 import {
   Calendar,
@@ -16,6 +17,13 @@ import type {
   ToolbarSortField,
   UserResponse,
 } from "@/models";
+
+const STATUS_VARIANT: Record<string, BadgeVariant> = {
+  Active: "success",
+  Inactive: "error",
+  Pending: "warning",
+  Suspended: "error",
+};
 
 export const USER_GRID_CONFIG: GridConfig = {
   gridContainerClass: "grid-container",
@@ -72,6 +80,7 @@ export const renderPendingUserGridItem: RenderPendingUserItemFn = (
       icon={UserIcon}
       layout="horizontal"
       status={user.userStatus}
+      statusVariant={STATUS_VARIANT[user.userStatus] ?? "default"}
       detailsPerRow={2}
       details={[
         {
@@ -133,9 +142,17 @@ export type RenderUserItemFn = (
 
 export const renderUserGridItem: RenderUserItemFn = (user, handleClick) => (
   <div
-    onClick={() => handleClick(user)}
-    className="grid-page-item"
     data-testid={TEST_IDS.USER_ROW}
+    role="button"
+    tabIndex={0}
+    className="h-full cursor-pointer"
+    onClick={() => handleClick(user)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleClick(user);
+      }
+    }}
   >
     <Card
       title={`${user.firstName} ${user.lastName}`}
@@ -144,6 +161,7 @@ export const renderUserGridItem: RenderUserItemFn = (user, handleClick) => (
       avatar={user.avatar}
       layout="vertical"
       status={user.userStatus}
+      statusVariant={STATUS_VARIANT[user.userStatus] ?? "default"}
       detailsPerRow={2}
       details={[
         {

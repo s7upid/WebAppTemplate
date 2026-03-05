@@ -18,7 +18,6 @@ import {
 } from "@/config";
 import { PageHeaderProps } from "@/models";
 import { useRouteInfo } from "@/utils";
-import { ModalPortal } from "solstice-ui";
 
 function RoleContainer() {
   const permissions = useRoleManagementPermissions();
@@ -95,18 +94,16 @@ function RoleContainer() {
           />
         </Routes>
 
-        <ModalPortal>
-          {state.modalOpen && (
-            <RoleFormModal
-              permissions={permissions}
-              isOpen
-              onClose={closeModal}
-              role={state.selectedRole}
-              formMode={state.formMode}
-              onSave={handleSaveRole}
-            />
-          )}
-        </ModalPortal>
+        {state.modalOpen && (
+          <RoleFormModal
+            permissions={permissions}
+            isOpen
+            onClose={closeModal}
+            role={state.selectedRole}
+            formMode={state.formMode}
+            onSave={handleSaveRole}
+          />
+        )}
         <ConfirmationDialog {...confirmation.dialogProps} />
       </BasePage>
     </PermissionGuard>

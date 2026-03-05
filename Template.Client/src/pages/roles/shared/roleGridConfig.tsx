@@ -41,12 +41,23 @@ export type RenderRoleItemFn = (
 ) => React.ReactNode;
 
 export const renderRoleGridItem: RenderRoleItemFn = (role, handleRoleClick) => (
-  <div onClick={() => handleRoleClick(role)} className="grid-page-item">
+  <div
+    data-testid={TEST_IDS.ROLE_ROW}
+    role="button"
+    tabIndex={0}
+    className="h-full cursor-pointer"
+    onClick={() => handleRoleClick(role)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleRoleClick(role);
+      }
+    }}
+  >
     <Card
       title={role.name!}
       description={role.description}
       icon={Shield}
-      data-testid={TEST_IDS.ROLE_ROW}
       stats={[
         {
           label: "Users",

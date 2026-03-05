@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth, useToast, useErrorHandler } from "@/hooks";
 import { useGenericNavigationFunctions } from "@/utils";
-import { Input, Button, Form, PageHeader } from "solstice-ui";
+import { Button, Form, Input, PageHeader } from "solstice-ui";
 import { loginSchema, LoginFormData } from "@/validations/schemas";
 import { Lock, Mail, LogIn, Eye, EyeOff } from "lucide-react";
 import {
@@ -120,42 +120,40 @@ function LoginPage() {
             aria-label="Email address"
           />
 
-          <div className="password-input">
-            <Input
-              {...register("password")}
-              type={showPassword ? "text" : "password"}
-              label="Password"
-              icon={Lock}
-              placeholder="Enter your password"
-              error={errors.password?.message}
-              required
-              id="password"
-              data-testid={TEST_IDS.PASSWORD_INPUT}
-              aria-label="Password"
-            />
+          <Input
+            {...register("password")}
+            type={showPassword ? "text" : "password"}
+            label="Password"
+            icon={Lock}
+            placeholder="Enter your password"
+            error={errors.password?.message}
+            required
+            id="password"
+            data-testid={TEST_IDS.PASSWORD_INPUT}
+            aria-label="Password"
+            endAdornment={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 0 }}
+                data-testid={TEST_IDS.PASSWORD_TOGGLE}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={16} className="text-gray-400" /> : <Eye size={16} className="text-gray-400" />}
+              </button>
+            }
+          />
 
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="password-toggle-btn"
-              data-testid={TEST_IDS.PASSWORD_TOGGLE}
-              aria-label={showPassword ? "Hide password" : "Show password"}
-              tabIndex={-1}
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-
-          <label className="flex-center-gap-1">
+          <label className="flex items-center gap-2" data-testid={TEST_IDS.REMEMBER_ME}>
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="mr-2"
-              data-testid={TEST_IDS.REMEMBER_ME}
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:checked:bg-blue-600"
               aria-label="Remember me"
             />
-            <span className="text-sm-secondary">
+            <span className="text-sm text-gray-600 dark:text-gray-400">
               {BUTTON_LABELS.REMEMBER_ME}
             </span>
           </label>

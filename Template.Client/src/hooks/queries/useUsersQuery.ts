@@ -118,13 +118,30 @@ export const useUsersQuery = (initialQuery?: PageQuery) => {
 
   /* ---------- Derived State ---------- */
 
-  const paginationResult = listQuery.data?.data ?? {
-    items: [] as UserResponse[],
-    totalCount: 0,
-    pageNumber: 1,
-    pageSize: 10,
-    totalPages: 0,
-  };
+  const raw = listQuery.data?.data;
+  const paginationResult = (() => {
+    if (!raw) {
+      return {
+        items: [] as UserResponse[],
+        totalCount: 0,
+        pageNumber: 1,
+        pageSize: 10,
+        totalPages: 0,
+      };
+    }
+    const items = Array.isArray(raw.items) ? raw.items : (raw as Record<string, unknown>).Items != null ? (raw as { Items: UserResponse[] }).Items : [];
+    const totalCount = typeof raw.totalCount === "number" ? raw.totalCount : (raw as Record<string, unknown>).TotalCount as number ?? 0;
+    const pageSize = typeof raw.pageSize === "number" ? raw.pageSize : (raw as Record<string, unknown>).PageSize as number ?? 10;
+    const pageNumber = typeof raw.pageNumber === "number" ? raw.pageNumber : (raw as Record<string, unknown>).PageNumber as number ?? 1;
+    const totalPages = typeof raw.totalPages === "number" ? raw.totalPages : Math.ceil(totalCount / pageSize) || 0;
+    return {
+      items,
+      totalCount,
+      pageNumber,
+      pageSize,
+      totalPages,
+    };
+  })();
 
   const isLoading =
     listQuery.isLoading ||

@@ -19,17 +19,9 @@ BACKEND_FAILED=0
 JEST_FAILED=0
 CYPRESS_FAILED=0
 
-echo "[0/6] Building solstice-ui from GitHub and running Lint..."
+echo "[0/6] Installing dependencies and running Lint..."
 echo "----------------------------------------"
 cd "$ROOT_DIR"
-echo "Cloning and building solstice-ui..."
-rm -rf _solstice-ui-tmp
-git clone --depth 1 https://github.com/s7upid/solstice-ui.git _solstice-ui-tmp
-(cd _solstice-ui-tmp && npm install && npm run build && npm pack)
-cp _solstice-ui-tmp/solstice-ui-1.0.0.tgz "$ROOT_DIR/Template.Client/solstice-ui-1.0.0.tgz"
-rm -rf _solstice-ui-tmp
-echo "[SUCCESS] solstice-ui package updated."
-echo
 
 cd "$ROOT_DIR/Template.Client"
 echo "Installing Template.Client dependencies..."

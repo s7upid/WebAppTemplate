@@ -1,7 +1,7 @@
 import { Mail, UserIcon, Users } from "lucide-react";
 import { cn } from "@/utils";
 import { UserResponse, UserStatus } from "@/models";
-import { LoadingSpinner, Card } from "solstice-ui";
+import { LoadingSpinner, Card, Badge } from "solstice-ui";
 import styles from "./RoleUsersSection.module.css";
 
 interface RoleUsersSectionProps {
@@ -72,16 +72,20 @@ function RoleUsersSection({
                     <span className={styles.emailTruncate}>{user.email}</span>
                   </div>
                   <div className={styles.actions}>
-                    <span
-                      className={cn(
-                        styles.statusBadge,
+                    <Badge
+                      variant={
                         user.userStatus === UserStatus.Active
-                          ? styles.statusActive
-                          : styles.statusInactive
-                      )}
+                          ? "success"
+                          : user.userStatus === UserStatus.Pending
+                            ? "warning"
+                            : user.userStatus === UserStatus.Suspended
+                              ? "error"
+                              : "neutral"
+                      }
+                      pill
                     >
-                      {user.userStatus}
-                    </span>
+                      {String(user.userStatus)}
+                    </Badge>
                   </div>
                 </div>
               </div>

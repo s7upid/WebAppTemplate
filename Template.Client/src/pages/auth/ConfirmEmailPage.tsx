@@ -114,49 +114,49 @@ function ConfirmEmailPage() {
             required
           />
 
-          <div className="password-input">
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              label="Password"
-              placeholder="Enter your password"
-              icon={Lock}
-              {...register("password")}
-              error={errors.password?.message}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="password-toggle-btn"
-              aria-label="Toggle password visibility"
-              tabIndex={-1}
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            label="Password"
+            placeholder="Enter your password"
+            icon={Lock}
+            {...register("password")}
+            error={errors.password?.message}
+            required
+            endAdornment={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 0 }}
+                aria-label="Toggle password visibility"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={16} className="text-gray-400" /> : <Eye size={16} className="text-gray-400" />}
+              </button>
+            }
+          />
 
-          <div className="password-input">
-            <Input
-              id="confirmPassword"
-              type={showConfirmPassword ? "text" : "password"}
-              label="Confirm Password"
-              placeholder="Confirm your password"
-              icon={Lock}
-              {...register("confirmPassword")}
-              error={errors.confirmPassword?.message}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="password-toggle-btn"
-              aria-label="Toggle password visibility"
-              tabIndex={-1}
-            >
-              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
+          <Input
+            id="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            label="Confirm Password"
+            placeholder="Confirm your password"
+            icon={Lock}
+            {...register("confirmPassword")}
+            error={errors.confirmPassword?.message}
+            required
+            endAdornment={
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={{ background: "none", border: "none", cursor: "pointer", display: "flex", padding: 0 }}
+                aria-label="Toggle password visibility"
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? <EyeOff size={16} className="text-gray-400" /> : <Eye size={16} className="text-gray-400" />}
+              </button>
+            }
+          />
 
           <Button
             type="submit"

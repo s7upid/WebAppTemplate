@@ -39,17 +39,6 @@ echo [3/4] Starting .NET Backend Server in new window...
 start "Backend" cmd /k "cd /d "%~dp0\.." && set ASPNETCORE_ENVIRONMENT=Development && dotnet run --project Template.Server/Template.Server.csproj"
 
 echo [4/4] Starting Vite Frontend Dev Server in new window...
-if not exist "Template.Client\solstice-ui-1.0.0.tgz" (
-    echo Building solstice-ui from GitHub...
-    git clone --depth 1 https://github.com/s7upid/solstice-ui.git _solstice-ui-tmp
-    cd _solstice-ui-tmp
-    call npm install
-    call npm run build
-    call npm pack
-    copy /Y solstice-ui-1.0.0.tgz "..\Template.Client\solstice-ui-1.0.0.tgz"
-    cd ..
-    rmdir /s /q _solstice-ui-tmp
-)
 if not exist "Template.Client\node_modules" (
     echo Installing frontend dependencies...
     cd Template.Client

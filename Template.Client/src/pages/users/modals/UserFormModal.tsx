@@ -1,5 +1,5 @@
 import { useEffect, useState, type ChangeEvent } from "react";
-import { Dialog, Button, Input, Dropdown, LoadingSpinner } from "solstice-ui";
+import { Dialog, Button, Input, Dropdown, LoadingSpinner, Form } from "solstice-ui";
 import { AvatarUploader } from "@/components";
 import { XCircle, Save, Mail, UserIcon } from "lucide-react";
 import { useRolesQuery, useToast } from "@/hooks";
@@ -53,30 +53,29 @@ function UserFormModal({
 
   useEffect(() => {
     if (!isOpen) return;
-    queueMicrotask(() => {
-      if (user && isEditMode) {
-        setFormData({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          avatar: user.avatar || "",
-          status: typeof user.userStatus === "number" ? user.userStatus : 0,
-          roleId: user.role?.id || "",
-        });
-        setAvatarPreview(user.avatar || null);
-      } else {
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          avatar: "",
-          status: 2,
-          roleId: "",
-        });
-        setAvatarPreview(null);
-      }
-    });
-  }, [isOpen, user, isEditMode]);
+    // Create mode: always start with empty form. Edit mode: populate from user.
+    if (isCreateMode) {
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        avatar: "",
+        status: 2,
+        roleId: "",
+      });
+      setAvatarPreview(null);
+    } else if (user && isEditMode) {
+      setFormData({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        avatar: user.avatar || "",
+        status: typeof user.userStatus === "number" ? user.userStatus : 0,
+        roleId: user.role?.id || "",
+      });
+      setAvatarPreview(user.avatar || null);
+    }
+  }, [isOpen, isCreateMode, isEditMode, user]);
 
   if (isEditMode && !isProfileEdit && !permissions.canEditUsers) return null;
   if (isCreateMode && !permissions.canCreateUsers) return null;
@@ -138,14 +137,13 @@ function UserFormModal({
       }
       size="md"
     >
-      <form
+      <Form
         id="user-form"
         data-testid={TEST_IDS.USER_FORM}
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit();
         }}
-        className="space-y-6"
       >
         <AvatarUploader
           avatarUrl={avatarPreview || undefined}
@@ -234,10 +232,10 @@ function UserFormModal({
             Cancel
           </Button>
           <Button type="submit" form="user-form" icon={Save} variant="primary">
-            Save Changes
+            {isCreateMode ? "Create User" : "Save Changes"}
           </Button>
         </div>
-      </form>
+      </Form>
     </Dialog>
   );
 }

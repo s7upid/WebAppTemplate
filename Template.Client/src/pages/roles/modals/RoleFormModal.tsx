@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect, type ChangeEvent, type FormEvent } from "react";
-import { Dialog, Button, Input } from "solstice-ui";
+import { Dialog, Button, Input, Form } from "solstice-ui";
 import { PermissionSelector } from "@/pages";
 import { Save, XCircle } from "lucide-react";
 import { TEST_IDS, RoleManagementPermissions } from "@/config";
@@ -114,14 +114,13 @@ function RoleFormModal({
       title={isEditMode ? "Edit Role" : "Create Role"}
       size="md"
     >
-      <form
+      <Form
         id="role-form"
         data-testid={TEST_IDS.ROLE_FORM}
         onSubmit={(e: FormEvent<HTMLFormElement>) => {
           e.preventDefault();
           onSubmit();
         }}
-        className="space-y"
       >
         <Input
           value={formData.name}
@@ -169,7 +168,7 @@ function RoleFormModal({
             Save Changes
           </Button>
         </div>
-      </form>
+      </Form>
     </Dialog>
   );
 }

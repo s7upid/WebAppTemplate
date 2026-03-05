@@ -45,7 +45,7 @@ All notable changes to this project will be documented in this file.
 - Removed unused `import React` statements (automatic JSX transform)
 - Wrapped synchronous `setState` calls in `useEffect` with `queueMicrotask` to satisfy `react-hooks/set-state-in-effect` lint rule
 - Added `solstice-ui.d.ts` ambient module declarations for type safety
-- solstice-ui is used only from the GitHub package (no stub or mock fallback); build the package in `node_modules/solstice-ui` if `dist/` is missing
+- solstice-ui is installed from the [latest GitHub release](https://github.com/s7upid/solstice-ui/releases); tests use the mock
 - Explicit parameter typing to eliminate implicit `any` warnings
 
 ### Documentation Updates
