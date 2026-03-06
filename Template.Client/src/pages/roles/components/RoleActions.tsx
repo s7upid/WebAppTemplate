@@ -2,7 +2,7 @@ import { RoleResponse } from "@/models";
 import { DangerZone, Card } from "solstice-ui";
 import { QuickActions } from "@/components";
 import { Edit, ShieldAlert, Zap } from "lucide-react";
-import { RoleManagementPermissions, TEST_IDS } from "@/config";
+import { RoleManagementPermissions } from "@/config";
 import styles from "./RoleActions.module.css";
 
 interface RoleActionsProps {
@@ -44,13 +44,14 @@ function RoleActions({
 
       {permissions.canDeleteRoles && !role.isSystem && (
         <Card title="Danger Zone" icon={ShieldAlert} iconSize="sm">
-          <DangerZone
-            title="Delete Role"
-            description=" Permanently remove this role from the system. This action cannot be undone."
-            buttonLabel="Delete Role"
-            onConfirm={() => onDeleteRole?.(role)}
-            testId={TEST_IDS.CONFIRM_DELETE_BUTTON}
-          />
+          <div>
+            <DangerZone
+              title="Delete Role"
+              description=" Permanently remove this role from the system. This action cannot be undone."
+              buttonLabel="Delete Role"
+              onConfirm={() => onDeleteRole?.(role)}
+            />
+          </div>
         </Card>
       )}
     </div>

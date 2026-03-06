@@ -69,13 +69,14 @@ function UserActions({
 
       {permissions.canDeleteUsers && !isSelf && (
         <Card title="Danger Zone" icon={ShieldAlert} iconSize="sm">
-          <DangerZone
-            title="Delete User"
-            description=" Permanently remove this user from the system. This action cannot be undone."
-            buttonLabel="Delete User"
-            onConfirm={() => onDeleteUser?.(user)}
-            testId={TEST_IDS.DELETE_USER_BUTTON}
-          />
+          <div data-testid={TEST_IDS.DELETE_USER_BUTTON}>
+            <DangerZone
+              title="Delete User"
+              description=" Permanently remove this user from the system. This action cannot be undone."
+              buttonLabel="Delete User"
+              onConfirm={() => onDeleteUser?.(user)}
+            />
+          </div>
         </Card>
       )}
     </div>

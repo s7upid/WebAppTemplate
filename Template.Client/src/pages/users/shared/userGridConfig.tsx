@@ -18,12 +18,17 @@ import type {
   UserResponse,
 } from "@/models";
 
+type CardStatusVariant = "default" | "success" | "warning" | "error" | "info";
+
 const STATUS_VARIANT: Record<string, BadgeVariant> = {
   Active: "success",
   Inactive: "error",
   Pending: "warning",
   Suspended: "error",
 };
+
+const toCardStatusVariant = (v: BadgeVariant): CardStatusVariant =>
+  v === "neutral" ? "default" : v;
 
 export const USER_GRID_CONFIG: GridConfig = {
   gridContainerClass: "grid-container",
@@ -80,7 +85,7 @@ export const renderPendingUserGridItem: RenderPendingUserItemFn = (
       icon={UserIcon}
       layout="horizontal"
       status={user.userStatus}
-      statusVariant={STATUS_VARIANT[user.userStatus] ?? "default"}
+      statusVariant={toCardStatusVariant(STATUS_VARIANT[user.userStatus] ?? "default")}
       detailsPerRow={2}
       details={[
         {
@@ -161,7 +166,7 @@ export const renderUserGridItem: RenderUserItemFn = (user, handleClick) => (
       avatar={user.avatar}
       layout="vertical"
       status={user.userStatus}
-      statusVariant={STATUS_VARIANT[user.userStatus] ?? "default"}
+      statusVariant={toCardStatusVariant(STATUS_VARIANT[user.userStatus] ?? "default")}
       detailsPerRow={2}
       details={[
         {

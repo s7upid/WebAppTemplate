@@ -290,7 +290,7 @@ describe("Login Functionality", () => {
           );
           cy.get(`[data-testid="${TEST_IDS.PASSWORD_INPUT}"]`).type("admin123");
           if ($b.find(`[data-testid="${TEST_IDS.REMEMBER_ME}"]`).length > 0) {
-            cy.get(`[data-testid="${TEST_IDS.REMEMBER_ME}"]`).check();
+            cy.get(`[data-testid="${TEST_IDS.REMEMBER_ME}"]`).find("input[type=checkbox]").check();
           }
           cy.get(`[data-testid="${TEST_IDS.LOGIN_BUTTON}"]`).click();
         }

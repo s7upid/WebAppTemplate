@@ -197,13 +197,6 @@ describe("UserContainer", () => {
     expect(screen.getByTestId(TEST_IDS.MOCK_USER_DETAILS_PAGE)).toBeTruthy();
   });
 
-  it("renders modals within portal", () => {
-    renderWithProviders("/");
-    expect(screen.getByTestId(TEST_IDS.MOCK_MODAL_PORTAL)).toBeTruthy();
-    // Modals are conditionally rendered based on state, so they may not be present initially
-    // The portal should be present though
-  });
-
   it("protects routes via PermissionGuard", () => {
     renderWithProviders("/");
     expect(

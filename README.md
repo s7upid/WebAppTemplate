@@ -1,6 +1,6 @@
 # 🚀 Web App Template
 
-![Backend Coverage](https://img.shields.io/badge/backend-48%25-red?style=flat-square&logo=dotnet) ![Unit Test Coverage](https://img.shields.io/badge/unit%20tests-76%25-yellowgreen?style=flat-square&logo=jest) ![E2E Test Coverage](https://img.shields.io/badge/e2e%20tests-25%25-red?style=flat-square&logo=cypress)
+![Backend Coverage](https://img.shields.io/badge/backend-48%25-red?style=flat-square&logo=dotnet) ![Unit Test Coverage](https://img.shields.io/badge/unit%20tests-76%25-yellowgreen?style=flat-square&logo=jest) ![E2E Test Coverage](https://img.shields.io/badge/e2e%20tests-24%25-red?style=flat-square&logo=cypress)
 
 ![Node.js](https://img.shields.io/badge/node-24%2B-brightgreen?style=flat-square&logo=node.js) ![Vulnerabilities](https://img.shields.io/badge/vulnerabilities-0-brightgreen?style=flat-square)
 

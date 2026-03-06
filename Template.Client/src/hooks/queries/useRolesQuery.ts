@@ -110,10 +110,11 @@ export const useRolesQuery = (initialQuery?: PageQuery) => {
         totalPages: 0,
       };
     }
-    const items = Array.isArray(raw.items) ? raw.items : (raw as Record<string, unknown>).Items != null ? (raw as { Items: RoleResponse[] }).Items : [];
-    const totalCount = typeof raw.totalCount === "number" ? raw.totalCount : (raw as Record<string, unknown>).TotalCount as number ?? 0;
-    const pageSize = typeof raw.pageSize === "number" ? raw.pageSize : (raw as Record<string, unknown>).PageSize as number ?? 10;
-    const pageNumber = typeof raw.pageNumber === "number" ? raw.pageNumber : (raw as Record<string, unknown>).PageNumber as number ?? 1;
+    const rawObj = raw as unknown;
+    const items = Array.isArray(raw.items) ? raw.items : (rawObj as Record<string, unknown>).Items != null ? (rawObj as { Items: RoleResponse[] }).Items : [];
+    const totalCount = typeof raw.totalCount === "number" ? raw.totalCount : (rawObj as Record<string, unknown>).TotalCount as number ?? 0;
+    const pageSize = typeof raw.pageSize === "number" ? raw.pageSize : (rawObj as Record<string, unknown>).PageSize as number ?? 10;
+    const pageNumber = typeof raw.pageNumber === "number" ? raw.pageNumber : (rawObj as Record<string, unknown>).PageNumber as number ?? 1;
     const totalPages = typeof raw.totalPages === "number" ? raw.totalPages : Math.ceil(totalCount / pageSize) || 0;
     return {
       items,

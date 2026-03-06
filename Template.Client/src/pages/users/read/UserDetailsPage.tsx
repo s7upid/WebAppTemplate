@@ -20,12 +20,17 @@ import { ConfirmationDialog } from "@/components";
 import { Card, LoadingSpinner, EmptyState } from "solstice-ui";
 import type { BadgeVariant } from "solstice-ui";
 
+type CardStatusVariant = "default" | "success" | "warning" | "error" | "info";
+
 const STATUS_VARIANT: Record<string, BadgeVariant> = {
   Active: "success",
   Inactive: "error",
   Pending: "warning",
   Suspended: "error",
 };
+
+const toCardStatusVariant = (v: BadgeVariant): CardStatusVariant =>
+  v === "neutral" ? "default" : v;
 import {
   BUTTON_LABELS,
   ERROR_MESSAGES,
@@ -134,7 +139,7 @@ function UserDetailsPage({
           avatar={user.avatar}
           layout="horizontal"
           status={user.userStatus}
-          statusVariant={STATUS_VARIANT[user.userStatus] ?? "default"}
+          statusVariant={toCardStatusVariant(STATUS_VARIANT[user.userStatus] ?? "default")}
           detailsPerRow={4}
           details={[
             { label: "Role", value: roleString, icon: Shield },

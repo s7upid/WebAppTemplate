@@ -90,14 +90,15 @@ function AdministratorDashboard() {
 
       <div data-testid="database-overview">
         <Card title="Database Overview" icon={Database}>
-          <List
-          items={[]}
-          renderItem={(metric: ReactNode) => (
-            <div className="db-metric-item">{metric}</div>
-          )}
-          listClassName="metrics-list"
-          testId="metrics-list"
-        />
+          <div data-testid="metrics-list">
+            <List
+              items={[]}
+              renderItem={(metric: ReactNode) => (
+                <div className="db-metric-item">{metric}</div>
+              )}
+              listClassName="metrics-list"
+            />
+          </div>
         </Card>
       </div>
     </div>

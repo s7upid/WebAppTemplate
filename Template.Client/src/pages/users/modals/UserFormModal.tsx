@@ -54,26 +54,37 @@ function UserFormModal({
   useEffect(() => {
     if (!isOpen) return;
     // Create mode: always start with empty form. Edit mode: populate from user.
-    if (isCreateMode) {
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        avatar: "",
-        status: 2,
-        roleId: "",
+    // Defer setState to avoid synchronous setState in effect (react-hooks/set-state-in-effect).
+    const next = isCreateMode
+      ? {
+          formData: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            avatar: "",
+            status: 2,
+            roleId: "",
+          } as UserFormData,
+          avatarPreview: null as string | null,
+        }
+      : user && isEditMode
+        ? {
+            formData: {
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              avatar: user.avatar || "",
+              status: typeof user.userStatus === "number" ? user.userStatus : 0,
+              roleId: user.role?.id || "",
+            } as UserFormData,
+            avatarPreview: user.avatar || null,
+          }
+        : null;
+    if (next) {
+      queueMicrotask(() => {
+        setFormData(next.formData);
+        setAvatarPreview(next.avatarPreview);
       });
-      setAvatarPreview(null);
-    } else if (user && isEditMode) {
-      setFormData({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        avatar: user.avatar || "",
-        status: typeof user.userStatus === "number" ? user.userStatus : 0,
-        roleId: user.role?.id || "",
-      });
-      setAvatarPreview(user.avatar || null);
     }
   }, [isOpen, isCreateMode, isEditMode, user]);
 
