@@ -1,6 +1,6 @@
-import { DataPage } from "solstice-ui";
+import { DataPage, EmptyState } from "solstice-ui";
 import { EntityToolbar } from "@/components";
-import { PagedResult, PermissionResponse } from "@/models";
+import { PagedResult, PermissionResponse, createEmptyPagedResult } from "@/models";
 import { TEST_IDS } from "@/config";
 import {
   FILTERS,
@@ -14,18 +14,35 @@ interface PermissionGridPageProps {
   paginationResult: PagedResult<PermissionResponse>;
   paginationHandlers: GridListPaginationHandlers;
   isLoading: boolean;
+  error?: string | null;
+  onRetry?: () => void;
 }
 
 function PermissionGridPage({
   paginationResult,
   paginationHandlers,
   isLoading,
+  error,
+  onRetry,
 }: PermissionGridPageProps) {
   const { actionLoading, applyFilters, clearAll } =
     useGridFilters(paginationHandlers);
   const { onPageChange, onPageSizeChange } =
     usePaginationWithScroll(paginationHandlers);
-  const { items, pageNumber, totalPages, pageSize } = paginationResult;
+  const result = isLoading
+    ? createEmptyPagedResult<PermissionResponse>()
+    : (paginationResult ?? createEmptyPagedResult<PermissionResponse>());
+  const { items, pageNumber, totalPages, pageSize } = result;
+
+  if (error && !isLoading) {
+    return (
+      <EmptyState
+        title="Failed to load permissions"
+        description={error}
+        primaryAction={onRetry ? { label: "Retry", onClick: onRetry } : undefined}
+      />
+    );
+  }
 
   const toolbar = (
     <EntityToolbar

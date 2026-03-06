@@ -22,7 +22,21 @@ export function normalizeApiResponse<T>(input: unknown): ApiResponse<T> {
   }
 
   const fieldErrors = extractFieldErrors(input);
-  const message = extractErrorMessage(input);
+  let message = extractErrorMessage(input);
+  const connectionMessage =
+    "Unable to connect. Please check that the backend server is running.";
+  const isGenericNetworkError =
+    status === 0 &&
+    (!message || message === "Network error" || message === "Failed to fetch");
+  const isGenericServerError =
+    (status === 500 || status === 502 || status === 503) &&
+    (!message ||
+      /internal server error|connection refused|econnrefused|bad gateway|service unavailable/i.test(
+        message
+      ));
+  if (isGenericNetworkError || isGenericServerError) {
+    message = connectionMessage;
+  }
 
   return {
     success: false,

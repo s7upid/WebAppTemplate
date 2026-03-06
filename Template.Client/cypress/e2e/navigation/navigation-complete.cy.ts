@@ -328,7 +328,7 @@ describe("Complete Navigation Tests", () => {
     });
 
     it("should support tab navigation through menu items", () => {
-      cy.get("body").find("a, button").first().focus();
+      cy.get("body").find("a, button").filter(":visible").first().focus();
       cy.focused().should("exist");
     });
 

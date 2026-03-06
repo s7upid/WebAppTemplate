@@ -183,7 +183,6 @@ describe("useUsersQuery", () => {
       expect(createResult.success).toBe(true);
       expect(mockUserService.createUser).toHaveBeenCalledWith(
         expect.objectContaining({ firstName: "Jane", lastName: "Doe" }),
-        expect.anything(),
       );
     });
 
@@ -237,10 +236,7 @@ describe("useUsersQuery", () => {
       const deleteResult = await result.current.remove("1");
 
       expect(deleteResult.success).toBe(true);
-      expect(mockUserService.deleteUser).toHaveBeenCalledWith(
-        "1",
-        expect.anything(),
-      );
+      expect(mockUserService.deleteUser).toHaveBeenCalledWith("1");
     });
 
     it("approves user", async () => {
@@ -285,10 +281,145 @@ describe("useUsersQuery", () => {
       const rejectResult = await result.current.rejectUser("1");
 
       expect(rejectResult.success).toBe(true);
-      expect(mockUserService.rejectUser).toHaveBeenCalledWith(
-        "1",
-        expect.anything(),
+      expect(mockUserService.rejectUser).toHaveBeenCalledWith("1");
+    });
+
+    it("updateProfile succeeds", async () => {
+      mockUserService.getUsers.mockResolvedValue(mockPaginatedResponse);
+      mockUserService.updateProfile.mockResolvedValue({
+        success: true,
+        data: { ...mockUser, firstName: "Updated" },
+        message: "",
+      });
+
+      const { result } = renderHook(() => useUsersQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const updateResult = await result.current.updateProfile({
+        firstName: "Updated",
+        lastName: "Doe",
+        avatar: undefined,
+        roleId: "role-1",
+        permissionKeys: [],
+        status: 0,
+      });
+
+      expect(updateResult.success).toBe(true);
+      expect(mockUserService.updateProfile).toHaveBeenCalledWith(
+        expect.objectContaining({ firstName: "Updated", lastName: "Doe" }),
       );
+    });
+
+    it("create user returns error on failure", async () => {
+      mockUserService.getUsers.mockResolvedValue(mockPaginatedResponse);
+      mockUserService.createUser.mockResolvedValue({
+        success: false,
+        data: null as unknown as UserResponse,
+        message: "Email already exists",
+      });
+
+      const { result } = renderHook(() => useUsersQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const createResult = await result.current.add({
+        firstName: "Jane",
+        lastName: "Doe",
+        email: "jane@example.com",
+        roleId: "role-1",
+        status: 0,
+      });
+
+      expect(createResult.success).toBe(false);
+      expect(createResult.message).toBe("Email already exists");
+      expect(mockUserService.createUser).toHaveBeenCalledWith(
+        expect.objectContaining({ email: "jane@example.com" }),
+      );
+    });
+
+    it("update user returns error on failure", async () => {
+      mockUserService.getUsers.mockResolvedValue(mockPaginatedResponse);
+      mockUserService.updateUser.mockResolvedValue({
+        success: false,
+        data: null as unknown as UserResponse,
+        message: "User not found",
+      });
+
+      const { result } = renderHook(() => useUsersQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const updateResult = await result.current.edit({
+        id: "999",
+        data: {
+          firstName: "Updated",
+          lastName: "Doe",
+          avatar: undefined,
+          roleId: "role-1",
+          permissionKeys: [],
+          status: 0,
+        },
+      });
+
+      expect(updateResult.success).toBe(false);
+      expect(updateResult.message).toBe("User not found");
+      expect(mockUserService.updateUser).toHaveBeenCalledWith(
+        "999",
+        expect.objectContaining({ firstName: "Updated" }),
+      );
+    });
+
+    it("delete user returns error on failure", async () => {
+      mockUserService.getUsers.mockResolvedValue(mockPaginatedResponse);
+      mockUserService.deleteUser.mockResolvedValue({
+        success: false,
+data: null as unknown as string,
+          message: "Cannot delete user",
+      });
+
+      const { result } = renderHook(() => useUsersQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const deleteResult = await result.current.remove("1");
+
+      expect(deleteResult.success).toBe(false);
+      expect(deleteResult.message).toBe("Cannot delete user");
+      expect(mockUserService.deleteUser).toHaveBeenCalledWith("1");
+    });
+
+    it("approve user returns error on failure", async () => {
+      mockUserService.getUsers.mockResolvedValue(mockPaginatedResponse);
+      mockUserService.approveUser.mockResolvedValue({
+        success: false,
+        data: null as unknown as UserResponse,
+        message: "User already approved",
+      });
+
+      const { result } = renderHook(() => useUsersQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const approveResult = await result.current.approveUser("1", {
+        roleId: "role-1",
+      });
+
+      expect(approveResult.success).toBe(false);
+      expect(approveResult.message).toBe("User already approved");
+      expect(mockUserService.approveUser).toHaveBeenCalledWith("1", {
+        roleId: "role-1",
+      });
     });
   });
 });

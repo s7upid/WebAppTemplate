@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 
 interface ConfirmationOptions {
   title: string;
@@ -25,6 +25,16 @@ export const useConfirmation = () => {
     variant: "danger",
     isLoading: false,
   });
+  const closeTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current != null) {
+        window.clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const showConfirmation = useCallback(
     (options: ConfirmationOptions): Promise<boolean> => {
@@ -34,7 +44,10 @@ export const useConfirmation = () => {
           ...options,
           onConfirm: () => {
             setState((prev) => ({ ...prev, isLoading: true }));
-            setTimeout(() => {
+            if (closeTimeoutRef.current != null) {
+              window.clearTimeout(closeTimeoutRef.current);
+            }
+            closeTimeoutRef.current = window.setTimeout(() => {
               setState((prev) => ({
                 ...prev,
                 isOpen: false,
@@ -44,6 +57,10 @@ export const useConfirmation = () => {
             resolve(true);
           },
           onCancel: () => {
+            if (closeTimeoutRef.current != null) {
+              window.clearTimeout(closeTimeoutRef.current);
+              closeTimeoutRef.current = null;
+            }
             setState((prev) => ({ ...prev, isOpen: false }));
             resolve(false);
           },

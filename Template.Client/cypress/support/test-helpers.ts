@@ -57,11 +57,14 @@ export function waitForPageLoad(validPaths: string[] = ["/", "/login"]) {
 }
 
 /**
- * Verify authentication token exists in localStorage
+ * Verify authentication token exists in localStorage.
+ * Checks both legacy "auth-token" and app SecureStorage "Template_authToken".
  */
 export function verifyTokenExists() {
   cy.window().then((win) => {
-    const token = win.localStorage.getItem("auth-token");
+    const token =
+      win.localStorage.getItem("auth-token") ||
+      win.localStorage.getItem("Template_authToken");
     expect(token).to.not.be.null;
   });
 }
@@ -174,6 +177,12 @@ export function setExpiringToken() {
  * Find and click logout button using multiple strategies
  */
 export function clickLogout() {
+  // Wait for loading overlay to disappear so logout is clickable
+  cy.get("body").then(($body) => {
+    if ($body.find('[role="status"][aria-label="Loading"]').length > 0) {
+      cy.get('[role="status"][aria-label="Loading"]', { timeout: 15000 }).should("not.be.visible");
+    }
+  });
   cy.get("body").then(($b) => {
     // Try logout button first
     if ($b.find(`[data-testid="${TEST_IDS.LOGOUT_BUTTON}"]`).length > 0) {

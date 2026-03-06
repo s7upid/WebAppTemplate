@@ -55,7 +55,8 @@ export function parseRouteInfo(pathname: string, entityType: EntityType): RouteI
   const entityId = idMatch ? idMatch[1] : undefined;
   const isCreatePage = false;
   const isEditPage = false;
-  const isPendingPage = pathname.includes("/pending");
+  const isPendingPage =
+    pathname === config.basePath + "/pending" || pathname.startsWith(config.basePath + "/pending/");
   const isDetailPage =
     config.detailPath && !isPendingPage
       ? !!(pathname.match(new RegExp(`${config.basePath}/[^/]+$`)) && !isEditPage)

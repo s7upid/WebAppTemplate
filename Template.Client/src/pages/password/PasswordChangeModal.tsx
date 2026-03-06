@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Dialog, Form } from "solstice-ui";
@@ -25,6 +25,16 @@ function PasswordChangeModal({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { changePassword } = useAuth();
   const { showSuccess, showError } = useToast();
+  const closeTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current != null) {
+        window.clearTimeout(closeTimeoutRef.current);
+        closeTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const {
     register,
@@ -57,7 +67,10 @@ function PasswordChangeModal({
           "Password Changed",
           "Your password has been changed successfully!"
         );
-        setTimeout(() => {
+        if (closeTimeoutRef.current != null) {
+          window.clearTimeout(closeTimeoutRef.current);
+        }
+        closeTimeoutRef.current = window.setTimeout(() => {
           onClose();
           reset();
         }, 2000);

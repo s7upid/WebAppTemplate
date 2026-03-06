@@ -259,6 +259,114 @@ describe("useRolesQuery", () => {
         "perm-2",
       ]);
     });
+
+    it("create role returns error on failure", async () => {
+      mockRoleService.getRoles.mockResolvedValue(mockPaginatedResponse);
+      mockRoleService.createRole.mockResolvedValue({
+        success: false,
+        data: null as unknown as RoleResponse,
+        message: "Role name already exists",
+      });
+
+      const { result } = renderHook(() => useRolesQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const createResult = await result.current.add({
+        name: "New Role",
+        description: "New role description",
+        permissionKeys: [],
+      });
+
+      expect(createResult.success).toBe(false);
+      expect(createResult.error).toBe("Role name already exists");
+      expect(mockRoleService.createRole).toHaveBeenCalledWith({
+        name: "New Role",
+        description: "New role description",
+        permissionKeys: [],
+      });
+    });
+
+    it("update role returns error on failure", async () => {
+      mockRoleService.getRoles.mockResolvedValue(mockPaginatedResponse);
+      mockRoleService.updateRole.mockResolvedValue({
+        success: false,
+        data: null as unknown as RoleResponse,
+        message: "Role not found",
+      });
+
+      const { result } = renderHook(() => useRolesQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const updateResult = await result.current.edit({
+        id: "999",
+        data: {
+          name: "Updated",
+          description: "Updated description",
+          permissionKeys: [],
+        },
+      });
+
+      expect(updateResult.success).toBe(false);
+      expect(updateResult.error).toBe("Role not found");
+      expect(mockRoleService.updateRole).toHaveBeenCalledWith("999", {
+        name: "Updated",
+        description: "Updated description",
+        permissionKeys: [],
+      });
+    });
+
+    it("delete role returns error on failure", async () => {
+      mockRoleService.getRoles.mockResolvedValue(mockPaginatedResponse);
+      mockRoleService.deleteRole.mockResolvedValue({
+        success: false,
+data: null as unknown as string,
+          message: "Cannot delete system role",
+      });
+
+      const { result } = renderHook(() => useRolesQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const deleteResult = await result.current.remove("1");
+
+      expect(deleteResult.success).toBe(false);
+      expect(deleteResult.error).toBe("Cannot delete system role");
+      expect(mockRoleService.deleteRole).toHaveBeenCalledWith("1");
+    });
+
+    it("update role permissions returns error on failure", async () => {
+      mockRoleService.getRoles.mockResolvedValue(mockPaginatedResponse);
+      mockRoleService.updateRolePermissions.mockResolvedValue({
+        success: false,
+        data: null as unknown as RoleResponse,
+        message: "Invalid permission",
+      });
+
+      const { result } = renderHook(() => useRolesQuery(), {
+        wrapper: createWrapper(),
+      });
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const updateResult = await result.current.updatePermissions("1", [
+        "perm-1",
+      ]);
+
+      expect(updateResult.success).toBe(false);
+      expect(updateResult.error).toBe("Invalid permission");
+      expect(mockRoleService.updateRolePermissions).toHaveBeenCalledWith(
+        "1",
+        ["perm-1"],
+      );
+    });
   });
 });
 

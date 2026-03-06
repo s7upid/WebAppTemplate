@@ -1,13 +1,37 @@
 import { TEST_IDS } from "../../src/config/constants";
+import { ALL_PERMISSION_KEYS } from "../../src/config/generated/permissionKeys.generated";
 import {
   clickLogout,
   waitForLogin,
   waitForLoginRedirect,
   verifyTokenExists,
   verifyAuthDataCleared,
+  createExpiringToken,
 } from "./test-helpers";
 
-// Mock user data for different roles
+// Must match app's SecureStorage when running against dev server (.env.development or defaultEnv)
+const STORAGE_PREFIX = "Template";
+const SECRET_KEY = "local-dev-storage-secret";
+
+function xorEncrypt(plain: string, key: string): string {
+  const encoder = new TextEncoder();
+  const dataBytes = encoder.encode(plain);
+  const keyBytes = encoder.encode(key);
+  const out = new Uint8Array(dataBytes.length);
+  for (let i = 0; i < dataBytes.length; i++) {
+    out[i] = dataBytes[i] ^ keyBytes[i % keyBytes.length];
+  }
+  let binary = "";
+  for (let i = 0; i < out.length; i++) binary += String.fromCharCode(out[i]);
+  return btoa(binary);
+}
+
+function setSecureStorageItem(win: Window, key: string, value: string) {
+  const fullKey = `${STORAGE_PREFIX}_${key}`;
+  win.localStorage.setItem(fullKey, xorEncrypt(value, SECRET_KEY));
+}
+
+// Mock user data for different roles (flat shape for loginAsAdmin/loginAsUser)
 const MOCK_USERS: Record<
   string,
   {
@@ -55,12 +79,60 @@ const MOCK_USERS: Record<
   },
 };
 
-// Helper to set mock auth data in localStorage
+// UserResponse-like shape so app's user.role?.name and permission checks work
+function toAppUser(flat: {
+  id: string;
+  email: string;
+  role: string;
+  firstName: string;
+  lastName: string;
+}) {
+  const isAdmin = flat.role.toLowerCase() === "administrator" || flat.role.toLowerCase() === "admin";
+  return {
+    id: flat.id,
+    email: flat.email,
+    firstName: flat.firstName,
+    lastName: flat.lastName,
+    customPermissionsCount: 0,
+    isActive: true,
+    userStatus: 1,
+    lastLogin: undefined,
+    createdAt: new Date().toISOString(),
+    updatedAt: undefined,
+    avatar: undefined,
+    permissionKeys: isAdmin ? [...ALL_PERMISSION_KEYS] : [],
+    role: {
+      id: flat.id,
+      name: flat.role.charAt(0).toUpperCase() + flat.role.slice(1),
+      description: "",
+      permissions: [],
+      users: [],
+      isSystem: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    permissions: [],
+  };
+}
+
+// Set auth in app's SecureStorage (Template_authToken, Template_user) so protected routes work
+function setAppAuth(email: string) {
+  const flat = MOCK_USERS[email] || MOCK_USERS["admin@admin.com"];
+  const user = toAppUser(flat);
+  const token = createExpiringToken(); // JWT with exp in future so isAuthenticated() passes
+  cy.window().then((win) => {
+    setSecureStorageItem(win, "authToken", token);
+    setSecureStorageItem(win, "user", JSON.stringify(user));
+  });
+}
+
+// Legacy: set mock auth in old keys (kept for any tests that might read auth-token directly)
 function setMockAuthData(email: string) {
   const user = MOCK_USERS[email] || MOCK_USERS["admin@admin.com"];
   cy.window().then((win) => {
     win.localStorage.setItem("auth-token", `mock-token-${user.id}`);
     win.localStorage.setItem("auth-user", JSON.stringify(user));
+    setAppAuth(email);
   });
 }
 
@@ -73,30 +145,30 @@ Cypress.Commands.add("loginAsUser", () => {
   setMockAuthData("user@example.com");
 });
 
-// Mock-based login - sets localStorage directly without real API calls
+// Mock-based login - sets app's SecureStorage (Template_authToken, Template_user) + E2E_USE_MOCK so auth and mock data persist
 Cypress.Commands.add("login", (email: string, _password: string) => {
   cy.session([email], () => {
-    // Set mock auth data directly - no real API calls
+    cy.visit("/");
+    const flat = MOCK_USERS[email] || MOCK_USERS["admin@admin.com"];
+    const user = toAppUser(flat);
+    const token = createExpiringToken();
     cy.window().then((win) => {
-      const user = MOCK_USERS[email] || {
-        id: "99",
-        email: email,
-        role: "user",
-        firstName: "Test",
-        lastName: "User",
-      };
-      win.localStorage.setItem("auth-token", `mock-token-${user.id}`);
-      win.localStorage.setItem("auth-user", JSON.stringify(user));
+      setSecureStorageItem(win, "authToken", token);
+      setSecureStorageItem(win, "user", JSON.stringify(user));
+      win.localStorage.setItem("E2E_USE_MOCK", "1");
     });
   });
 });
 
 Cypress.Commands.add("logout", () => {
-  // Clear localStorage directly
   cy.window().then((win) => {
     win.localStorage.removeItem("auth-token");
     win.localStorage.removeItem("auth-user");
     win.localStorage.removeItem("refresh-token");
+    // Clear app's SecureStorage
+    Object.keys(win.localStorage)
+      .filter((k) => k.startsWith(STORAGE_PREFIX + "_"))
+      .forEach((k) => win.localStorage.removeItem(k));
   });
   clickLogout();
 });

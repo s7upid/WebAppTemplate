@@ -34,6 +34,7 @@ export default defineConfig(async ({ mode }) => {
       port: 3000,
       open: false,
       proxy: {
+        // Backend must be running (e.g. dotnet run in Template.Server or scripts/start.bat)
         "/api": {
           target: "http://localhost:5249",
           changeOrigin: true,

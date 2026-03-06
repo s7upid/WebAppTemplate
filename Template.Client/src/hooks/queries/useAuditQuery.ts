@@ -20,7 +20,13 @@ export const useAuditQuery = (initialQuery?: PageQuery) => {
   /* ---------- Query ---------- */
   const listQuery = useQuery<ApiResponse<PagedResult<AuditLog>>, Error>({
     queryKey: queryKeys.audit.list(query),
-    queryFn: () => auditService.getLogs(query),
+    queryFn: async () => {
+      const res = await auditService.getLogs(query);
+      if (!res.success) {
+        throw new Error(res.message || "Failed to load audit logs");
+      }
+      return res;
+    },
     keepPreviousData: true,
   } as UseQueryOptions<ApiResponse<PagedResult<AuditLog>>, Error>);
 

@@ -179,6 +179,10 @@ npm run test:ci          # Run tests for CI/CD
 npm run cypress:open     # Open Cypress test runner
 npm run cypress:run      # Run Cypress tests headlessly (sequential)
 npm run cypress:run:parallel   # Run in parallel (4 processes, ~3-4x faster)
+npm run cypress:run:crud      # Run only user + role CRUD e2e (create/update/delete)
+npm run cypress:run:crud:coverage   # Same with coverage (requires app on port 3000 in coverage mode)
+npm run crud:e2e:coverage     # One-shot: build, server, CRUD e2e with coverage, then update coverage report
+npm run report:coverage       # Update coverage-report.json from Jest/Cypress outputs (from repo root)
 
 # Cleanup
 npm run clean            # Clean coverage artifacts
@@ -244,6 +248,8 @@ npm run test:coverage
 npm test -- Button.test.tsx
 ```
 
+Unit tests cover list/pagination and **create, update, delete** (success and failure) for users and roles in `useUsersQuery.test.tsx` and `useRolesQuery.test.tsx`. The permissions module is read-only (list only); no create/update/delete tests for permissions.
+
 ### Test Structure
 
 ```
@@ -284,9 +290,21 @@ npm run cypress:run:parallel
 npm run cypress:run:parallel:coverage
 npm run cypress:merge-coverage
 
+# Run only CRUD e2e (user + role create/update/delete)
+npm run cypress:run:crud
+
+# Run CRUD e2e with coverage and update coverage %
+npm run cypress:run:crud:coverage   # requires dev server on port 3000 with coverage mode
+npm run crud:e2e:coverage           # one-shot: build, server, CRUD tests, extract-results
+
+# Update coverage-report.json from existing Jest/Cypress outputs (from Template.Client)
+npm run report:coverage
+
 # Full coverage pipeline (from project root)
 ./scripts/generate-test-report.command   # or: npm run coverage
 ```
+
+**CRUD E2E (user and role)** tests live in `cypress/e2e/user-management/user-flows.cy.ts` and `cypress/e2e/role-management/role-flows.cy.ts`. They mirror real user flow: **login → navigate to User/Role Management via sidebar → create new entity → open a detail → update → open a detail → delete** (with success toasts and cancel variants). Running `crud:e2e:coverage` runs these specs with instrumentation and updates the E2E coverage % in `coverage-report.json`.
 ## 🔐 Authentication
 
 ### Authentication Flow
@@ -601,6 +619,24 @@ npm install
 # Check Node.js version
 node --version  # Should be 24+
 ```
+
+#### npm install: EPERM / "Failed to remove some directories" (Windows)
+
+If you see `EPERM: operation not permitted, unlink` for files under `node_modules` (e.g. `rollup`, `esbuild`, `tailwindcss`, `lightningcss`), another process is locking those files. Try:
+
+1. **Close anything using the project**: stop the dev server (`npm run dev`), close the IDE/editor, and any terminal in this folder.
+2. **Run install again** in a new terminal. If it still fails, run the terminal as **Administrator** or exclude the project folder from real-time antivirus scanning.
+3. **Full clean reinstall** (when nothing is using the folder):
+   ```bash
+   # Windows (PowerShell)
+   Remove-Item -Recurse -Force node_modules; npm install
+   ```
+
+Install usually **succeeds** despite the cleanup warnings; only the final cleanup step fails. Lint and build can still run.
+
+#### npm install: deprecated package warnings (inflight, glob, whatwg-encoding)
+
+These warnings come from **transitive dependencies** (e.g. inside ESLint, Vite, or Tailwind). They do not block install or lint. You can ignore them; upstream packages will update over time. To try reducing them (optional), use npm overrides in `package.json` only if you have verified nothing breaks.
 
 #### Build Issues
 

@@ -488,7 +488,9 @@ describe("BaseService", () => {
 
       expect(result.success).toBe(false);
       expect(result.status).toBe(500);
-      expect(result.message).toBe("Internal server error");
+      expect(result.message).toBe(
+        "Unable to connect. Please check that the backend server is running."
+      );
     });
 
     it("handles 403 forbidden errors", async () => {

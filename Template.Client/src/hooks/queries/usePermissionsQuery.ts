@@ -23,7 +23,13 @@ export const usePermissionsQuery = (initialQuery?: PageQuery) => {
     Error
   >({
     queryKey: queryKeys.permissions.list(query),
-    queryFn: () => permissionService.getPermissions(query),
+    queryFn: async () => {
+      const res = await permissionService.getPermissions(query);
+      if (!res.success) {
+        throw new Error(res.message || "Failed to load permissions");
+      }
+      return res;
+    },
     staleTime: 10 * 60 * 1000,
     keepPreviousData: true,
   } as UseQueryOptions<ApiResponse<PagedResult<PermissionResponse>>, Error>);
@@ -126,8 +132,16 @@ export const useAllPermissions = () => {
     Error
   >({
     queryKey: queryKeys.permissions.list({ page: 1, pageSize: 1000 }),
-    queryFn: () =>
-      permissionService.getPermissions({ page: 1, pageSize: 1000 }),
+    queryFn: async () => {
+      const res = await permissionService.getPermissions({
+        page: 1,
+        pageSize: 1000,
+      });
+      if (!res.success) {
+        throw new Error(res.message || "Failed to load permissions");
+      }
+      return res;
+    },
     staleTime: 10 * 60 * 1000,
   } as UseQueryOptions<ApiResponse<PagedResult<PermissionResponse>>, Error>);
 

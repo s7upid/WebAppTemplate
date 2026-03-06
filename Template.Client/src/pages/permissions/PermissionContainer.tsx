@@ -10,7 +10,7 @@ import {
 } from "@/config";
 
 function PermissionContainer() {
-  const { paginationResult, paginationHandlers, isLoading } = usePermissionsQuery();
+  const { paginationResult, paginationHandlers, isLoading, error, refetch } = usePermissionsQuery();
   const initializedRef = useRef(false);
 
   useEffect(() => {
@@ -35,6 +35,8 @@ function PermissionContainer() {
                 paginationResult={paginationResult!}
                 paginationHandlers={paginationHandlers}
                 isLoading={isLoading && paginationResult?.totalCount === 0}
+                error={error ?? null}
+                onRetry={refetch}
               />
             }
           />

@@ -103,6 +103,10 @@ function setupCoverageTasks(on: Cypress.PluginEvents, splitIndex: string | numbe
 }
 
 export default defineConfig({
+  allowCypressEnv: false,
+  expose: {
+    ENABLE_COVERAGE: enableCoverage,
+  },
   e2e: {
     baseUrl: "http://localhost:3000",
     supportFile: "cypress/support/e2e.ts",

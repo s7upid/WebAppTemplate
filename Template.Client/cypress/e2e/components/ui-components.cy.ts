@@ -88,16 +88,23 @@ describe("UI Component Tests", () => {
 
   describe("Input Component", () => {
     beforeEach(() => {
-      cy.visit("/login");
+      // Clear auth so /login shows the form instead of redirecting (session would otherwise restore login)
+      cy.visit("/login", {
+        onBeforeLoad(win) {
+          win.localStorage.clear();
+          win.sessionStorage.clear();
+        },
+      });
       cy.get("body").should("be.visible");
+      cy.url().should("include", "/login");
     });
 
     it("should render text input", () => {
-      cy.get('input[type="email"], input[type="text"]').should("exist");
+      cy.get('input[type="email"], input[type="text"]', { timeout: 8000 }).should("exist");
     });
 
     it("should render password input", () => {
-      cy.get('input[type="password"]').should("exist");
+      cy.get('input[type="password"]', { timeout: 8000 }).should("exist");
     });
 
     it("should show focus state on input", () => {
@@ -449,7 +456,12 @@ describe("UI Component Tests", () => {
 
     it("should display table rows", () => {
       cy.get("body").then(($body) => {
-        if ($body.find('[data-testid^="table-row-"]').length > 0) {
+        if ($body.find(`[data-testid="${TEST_IDS.USER_ROW}"]`).length > 0) {
+          cy.get(`[data-testid="${TEST_IDS.USER_ROW}"]`).should(
+            "have.length.greaterThan",
+            0
+          );
+        } else if ($body.find('[data-testid^="table-row-"]').length > 0) {
           cy.get('[data-testid^="table-row-"]').should(
             "have.length.greaterThan",
             0
@@ -462,7 +474,9 @@ describe("UI Component Tests", () => {
 
     it("should click on table row", () => {
       cy.get("body").then(($body) => {
-        if ($body.find('[data-testid^="table-row-"]').length > 0) {
+        if ($body.find(`[data-testid="${TEST_IDS.USER_ROW}"]`).length > 0) {
+          cy.get(`[data-testid="${TEST_IDS.USER_ROW}"]`).first().click();
+        } else if ($body.find('[data-testid^="table-row-"]').length > 0) {
           cy.get('[data-testid^="table-row-"]').first().click();
         }
       });
@@ -684,8 +698,8 @@ describe("UI Component Tests", () => {
 
     it("should show confirmation dialog", () => {
       cy.get("body").then(($body) => {
-        if ($body.find('[data-testid^="table-row-"]').length > 0) {
-          cy.get('[data-testid^="table-row-"]').first().click();
+        if ($body.find(`[data-testid="${TEST_IDS.USER_ROW}"]`).length > 0) {
+          cy.get(`[data-testid="${TEST_IDS.USER_ROW}"]`).first().click();
           cy.wait(300);
 
           cy.get("body").then(($detailBody) => {

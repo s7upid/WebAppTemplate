@@ -29,14 +29,20 @@ export const useUsersQuery = (initialQuery?: PageQuery) => {
 
   const listQuery = useQuery<ApiResponse<PagedResult<UserResponse>>, Error>({
     queryKey: queryKeys.users.list(query),
-    queryFn: () => userService.getUsers(query),
+    queryFn: async () => {
+      const res = await userService.getUsers(query);
+      if (!res.success) {
+        throw new Error(res.message || "Failed to load users");
+      }
+      return res;
+    },
     keepPreviousData: true,
   } as UseQueryOptions<ApiResponse<PagedResult<UserResponse>>, Error>);
 
   /* ---------- Mutations ---------- */
 
   const createMutation = useMutation({
-    mutationFn: userService.createUser,
+    mutationFn: (data: CreateUserRequest) => userService.createUser(data),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.users.lists() }),
   });
@@ -51,7 +57,7 @@ export const useUsersQuery = (initialQuery?: PageQuery) => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: userService.deleteUser,
+    mutationFn: (id: string) => userService.deleteUser(id),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.users.lists() }),
   });
@@ -69,13 +75,13 @@ export const useUsersQuery = (initialQuery?: PageQuery) => {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: userService.rejectUser,
+    mutationFn: (userId: string) => userService.rejectUser(userId),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.users.lists() }),
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: userService.updateProfile,
+    mutationFn: (data: UpdateUserRequest) => userService.updateProfile(data),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.users.lists() }),
   });
@@ -212,7 +218,13 @@ export const useUserQuery = (id?: string) => {
 
   const query = useQuery<ApiResponse<UserResponse>, Error>({
     queryKey: id ? queryKeys.users.detail(id) : ["users", "detail", "empty"],
-    queryFn: () => userService.getUserById(id!),
+    queryFn: async () => {
+      const res = await userService.getUserById(id!);
+      if (!res.success) {
+        throw new Error(res.message || "Failed to load user");
+      }
+      return res;
+    },
     enabled: !!id,
   } as UseQueryOptions<ApiResponse<UserResponse>, Error>);
 

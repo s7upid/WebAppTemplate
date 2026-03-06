@@ -30,6 +30,8 @@ function RoleContainer() {
     paginationResult,
     paginationHandlers,
     isLoading,
+    error,
+    refetch,
   } = useRolesQuery();
 
   useOnceWhen(!!paginationHandlers && routeInfo.isMainPage, () => {
@@ -78,6 +80,8 @@ function RoleContainer() {
                 paginationResult={paginationResult!}
                 paginationHandlers={paginationHandlers}
                 isLoading={isLoading && paginationResult?.totalCount === 0}
+                error={error ?? null}
+                onRetry={refetch}
               />
             }
           />

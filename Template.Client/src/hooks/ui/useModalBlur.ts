@@ -42,7 +42,8 @@ export const useModalBlur = (isOpen: boolean) => {
     }
 
     return () => {
-      if (!isOpen) {
+      const remainingModals = document.querySelectorAll(".modal-container");
+      if (remainingModals.length === 0) {
         document.body.style.overflow = "unset";
         document.documentElement.style.overflow = "unset";
         document.body.style.position = "";

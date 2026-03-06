@@ -48,13 +48,14 @@ function LoginPage() {
   useEffect(() => {
     const storedEmail = localStorage.getItem("rememberedEmail");
     if (storedEmail) {
-      setTimeout(() => {
+      const t = window.setTimeout(() => {
         setValue("email", storedEmail);
         const emailInput = document.getElementById("email") as HTMLInputElement;
         if (emailInput) {
           emailInput.value = storedEmail;
         }
       }, 0);
+      return () => window.clearTimeout(t);
     }
   }, [setValue]);
 

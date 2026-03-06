@@ -27,19 +27,15 @@ describe("Profile Management", () => {
     });
 
     it("should display user name in menu", () => {
-      cy.get("body").then(($body) => {
-        if ($body.find(`[data-testid="${TEST_IDS.USER_NAME}"]`).length > 0) {
-          cy.get(`[data-testid="${TEST_IDS.USER_NAME}"]`).should("be.visible");
-        }
-      });
+      // UserMenu shows name in the button only at lg viewport (hidden lg:block)
+      cy.viewport(1280, 720);
+      cy.get(`[data-testid="${TEST_IDS.USER_NAME}"]`, { timeout: 5000 }).should("be.visible");
     });
 
     it("should display user email in menu", () => {
-      cy.get("body").then(($body) => {
-        if ($body.find(`[data-testid="${TEST_IDS.USER_EMAIL}"]`).length > 0) {
-          cy.get(`[data-testid="${TEST_IDS.USER_EMAIL}"]`).should("be.visible");
-        }
-      });
+      // UserMenu shows email in the button only at lg viewport (hidden lg:block)
+      cy.viewport(1280, 720);
+      cy.get(`[data-testid="${TEST_IDS.USER_EMAIL}"]`, { timeout: 5000 }).should("be.visible");
     });
 
     it("should open user menu dropdown on click", () => {

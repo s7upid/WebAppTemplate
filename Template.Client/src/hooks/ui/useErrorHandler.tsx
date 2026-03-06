@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { ApiResponse } from "@/models/shared/api";
 import { useToast } from "./useToast";
 import {
@@ -12,6 +12,16 @@ import { useGenericNavigationFunctions } from "@/utils";
 export function useErrorHandler() {
   const { showError, showWarning } = useToast();
   const nav = useGenericNavigationFunctions();
+  const navTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (navTimeoutRef.current != null) {
+        window.clearTimeout(navTimeoutRef.current);
+        navTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const handleError = useCallback(
     (response: ApiResponse<unknown>, customTitle?: string) => {
@@ -30,7 +40,10 @@ export function useErrorHandler() {
       }
 
       if (isTokenRevocationError(response)) {
-        setTimeout(() => {
+        if (navTimeoutRef.current != null) {
+          window.clearTimeout(navTimeoutRef.current);
+        }
+        navTimeoutRef.current = window.setTimeout(() => {
           nav.goToLogin();
         }, 2000);
       }

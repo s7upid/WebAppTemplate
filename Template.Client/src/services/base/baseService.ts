@@ -6,6 +6,8 @@ let navigateToLogin: (() => void) | null = null;
 let clearAuthState: (() => void) | null = null;
 let globalRefreshToken: (() => Promise<boolean>) | null = null;
 
+let networkStatusHandler: ((online: boolean, errorMessage?: string) => void) | null = null;
+
 let isRefreshing = false;
 let refreshPromise: Promise<boolean> | null = null;
 let hasNavigatedToLogin = false;
@@ -18,6 +20,12 @@ export const setNavigateToLogin = (
   if (clearAuthFn) {
     clearAuthState = clearAuthFn;
   }
+};
+
+export const setNetworkStatusHandler = (
+  handler: ((online: boolean, errorMessage?: string) => void) | null
+) => {
+  networkStatusHandler = handler;
 };
 
 export const resetLoginNavigationFlag = () => {
@@ -80,6 +88,9 @@ export abstract class BaseService {
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Network error";
+      if (networkStatusHandler) {
+        networkStatusHandler(false, errorMessage);
+      }
       return normalizeApiResponse<T>({
         message: errorMessage,
         status: 0,
@@ -87,10 +98,11 @@ export abstract class BaseService {
     }
 
     if (!response) {
-      return normalizeApiResponse<T>({
-        message: "No response received",
-        status: 0,
-      });
+      const message = "No response received";
+      if (networkStatusHandler) {
+        networkStatusHandler(false, message);
+      }
+      return normalizeApiResponse<T>({ message, status: 0 });
     }
 
     let responseText: string = "";
@@ -108,6 +120,10 @@ export abstract class BaseService {
       }
     } catch {
       responseJson = response?.statusText || "Failed to parse response";
+    }
+
+    if (response.status >= 200 && response.status < 300 && networkStatusHandler) {
+      networkStatusHandler(true);
     }
 
     if (response.status === 401 && !isRetry && this.getToken()) {
@@ -191,9 +207,17 @@ export abstract class BaseService {
       });
     }
 
-    return normalizeApiResponse<T>({
+    const result = normalizeApiResponse<T>({
       ...(typeof responseJson === "object" ? responseJson : { message: responseJson }),
       status: response.status,
     });
+    if (
+      !result.success &&
+      (response.status === 500 || response.status === 502 || response.status === 503) &&
+      networkStatusHandler
+    ) {
+      networkStatusHandler(false, result.message);
+    }
+    return result;
   }
 }

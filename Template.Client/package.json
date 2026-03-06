@@ -72,10 +72,14 @@
     "test:ci": "jest --config jest.config.ts --ci --coverage --watchAll=false",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
+    "cypress:run:crud": "cypress run --spec \"cypress/e2e/user-management/user-flows.cy.ts,cypress/e2e/role-management/role-flows.cy.ts\"",
+    "cypress:run:crud:coverage": "cypress run --spec \"cypress/e2e/user-management/user-flows.cy.ts,cypress/e2e/role-management/role-flows.cy.ts\" --env ENABLE_COVERAGE=true",
     "cypress:run:parallel": "concurrently \"cypress run --env split=4,splitIndex=0\" \"cypress run --env split=4,splitIndex=1\" \"cypress run --env split=4,splitIndex=2\" \"cypress run --env split=4,splitIndex=3\"",
     "cypress:run:parallel:coverage": "concurrently \"cypress run --env split=4,splitIndex=0,ENABLE_COVERAGE=true\" \"cypress run --env split=4,splitIndex=1,ENABLE_COVERAGE=true\" \"cypress run --env split=4,splitIndex=2,ENABLE_COVERAGE=true\" \"cypress run --env split=4,splitIndex=3,ENABLE_COVERAGE=true\"",
     "cypress:merge-coverage": "node scripts/merge-cypress-coverage.mjs",
     "cypress:coverage": "c8 report --reporter=json --reporter=html --reporter=text -o coverage/cypress --src src",
+    "report:coverage": "node ../test-coverage/4-extract-results.js",
+    "crud:e2e:coverage": "node scripts/run-cypress-crud-coverage.mjs",
     "clean": "rimraf coverage .nyc_output .c8_output build dist coverage-report.json",
     "clean:all": "rimraf coverage .nyc_output .c8_output build dist coverage-report.json node_modules"
   }

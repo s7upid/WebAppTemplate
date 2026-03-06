@@ -20,7 +20,15 @@ export const useRolesQuery = (initialQuery?: PageQuery) => {
   /* ---------- Roles List Query ---------- */
   const listQuery = useQuery({
     queryKey: queryKeys.roles.list(query),
-    queryFn: () => roleService.getRoles(query),
+    queryFn: async () => {
+      const res = await roleService.getRoles(query);
+      if (!res.success) {
+        throw new Error(
+          (res as { message?: string }).message || "Failed to load roles"
+        );
+      }
+      return res;
+    },
   });
 
   /* ---------- Mutations ---------- */
@@ -252,7 +260,15 @@ export const useRoleQuery = (id: string | undefined) => {
     queryKey: id
       ? queryKeys.roles.detail(id)
       : ["roles", "detail", "undefined"],
-    queryFn: () => roleService.getRoleById(id!),
+    queryFn: async () => {
+      const res = await roleService.getRoleById(id!);
+      if (!res.success) {
+        throw new Error(
+          (res as { message?: string }).message || "Failed to load role"
+        );
+      }
+      return res;
+    },
     enabled: !!id,
   });
 

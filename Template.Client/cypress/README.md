@@ -9,10 +9,18 @@ cypress/
 ├── e2e/                    # Test files organized by feature
 │   ├── auth/              # Authentication tests
 │   ├── user-management/   # User management tests
+│   │   ├── user-flows.cy.ts  # User flows incl. create/update/delete (UX flow)
+│   │   ├── user-flows.cy.ts
+│   │   ├── user-list.cy.ts
+│   │   └── user-edge-cases.cy.ts
 │   ├── role-management/   # Role management tests
-│   ├── permission-management/ # Permission tests
+│   │   ├── role-flows.cy.ts  # Role flows incl. create/update/delete (UX flow)
+│   │   ├── role-flows.cy.ts
+│   │   ├── role-list.cy.ts
+│   │   └── role-edge-cases.cy.ts
+│   ├── permission-management/ # Permission tests (read-only list)
 │   ├── navigation/        # Navigation tests
-│   └── regression/        # Regression tests
+│   └── regression/       # Regression tests
 └── support/               # Test utilities and helpers
     ├── base-test.ts      # Base test setup functions
     ├── test-helpers.ts   # Helper functions
@@ -33,6 +41,14 @@ npm run cypress:run:parallel
 
 # Run tests in interactive mode
 npm run cypress:open
+
+# Run only CRUD e2e (user + role create/update/delete)
+# Requires backend + frontend running (e.g. run scripts/start.bat from repo root)
+npm run cypress:run:crud
+
+# Run CRUD e2e with coverage and update coverage %
+npm run cypress:run:crud:coverage   # dev server must be on port 3000 in coverage mode
+npm run crud:e2e:coverage           # one-shot: build, server, CRUD tests, report
 
 # Run specific test file
 npx cypress run --spec "cypress/e2e/auth/login.cy.ts"
@@ -91,11 +107,13 @@ All tests follow these standards:
 ## 🎯 Test Coverage
 
 - **Authentication**: Login, logout, token management, session management
-- **User Management**: User CRUD operations, permissions
-- **Role Management**: Role CRUD operations, assignments
-- **Permission Management**: Permission management and assignments
+- **User Management**: User flows (create/update/delete, list, detail) in `user-flows.cy.ts` — login → sidebar to User Management → create → open detail → update/delete; plus list, edge cases
+- **Role Management**: Role flows in `role-flows.cy.ts` — same UX flow via sidebar; create/update/delete, list, edge cases
+- **Permission Management**: Read-only list and demo (no create/update/delete)
 - **Navigation**: Navigation flows, routing
 - **Regression**: Error handling, validation, data integrity, theme, pagination
+
+CRUD e2e tests are written to match user experience: navigate via the sidebar (e.g. Access Management → User Management) instead of direct URL visits, then create, open a row to detail, edit or delete.
 
 ## 🔧 Helper Functions
 

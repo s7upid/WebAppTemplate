@@ -1,6 +1,6 @@
 # 🚀 Web App Template
 
-![Backend Coverage](https://img.shields.io/badge/backend-48%25-red?style=flat-square&logo=dotnet) ![Unit Test Coverage](https://img.shields.io/badge/unit%20tests-76%25-yellowgreen?style=flat-square&logo=jest) ![E2E Test Coverage](https://img.shields.io/badge/e2e%20tests-24%25-red?style=flat-square&logo=cypress)
+![Backend Coverage](https://img.shields.io/badge/backend-48%25-red?style=flat-square&logo=dotnet) ![Unit Test Coverage](https://img.shields.io/badge/unit%20tests-76%25-yellowgreen?style=flat-square&logo=jest) ![E2E Test Coverage](https://img.shields.io/badge/e2e%20tests-31%25-red?style=flat-square&logo=cypress)
 
 ![Node.js](https://img.shields.io/badge/node-24%2B-brightgreen?style=flat-square&logo=node.js) ![Vulnerabilities](https://img.shields.io/badge/vulnerabilities-0-brightgreen?style=flat-square)
 
@@ -213,6 +213,9 @@ npm run test:coverage    # Run tests with coverage
 npm run cypress:open     # Open Cypress test runner
 npm run cypress:run      # Run Cypress tests headlessly (sequential)
 npm run cypress:run:parallel   # Run Cypress in parallel (4 processes, ~3-4x faster)
+npm run cypress:run:crud # Run only user + role CRUD e2e (create/update/delete)
+npm run crud:e2e:coverage      # Run CRUD e2e with coverage and update E2E coverage %
+npm run report:coverage  # Update coverage-report.json from Jest/Cypress outputs
 ```
 
 ### Code Generation
@@ -258,6 +261,9 @@ Full coverage pipeline is in **scripts**. See [scripts/README.md](scripts/README
 ./test-coverage/2-run-fe-jest-coverage.sh   # Frontend Jest only
 ./test-coverage/3-run-fe-cypress-coverage.sh  # Frontend Cypress only (uses parallel)
 
+# CRUD e2e only with coverage (from Template.Client)
+cd Template.Client && npm run crud:e2e:coverage   # Build, server, CRUD specs, then extract-results
+
 # Extract results and update badges
 node test-coverage/4-extract-results.js
 node test-coverage/5-update-readme-badges.js
@@ -293,7 +299,15 @@ npm test
 
 # E2E tests
 npm run cypress:run
+
+# E2E CRUD only (user + role create/update/delete, UX flow)
+npm run cypress:run:crud
+
+# E2E CRUD with coverage (updates E2E coverage % in coverage-report.json)
+npm run crud:e2e:coverage
 ```
+
+Frontend unit tests cover user and role mutations (create/update/delete, success and failure). E2E CRUD tests live in `cypress/e2e/user-management/user-crud.cy.ts` and `cypress/e2e/role-management/role-crud.cy.ts` and follow the real user flow (login → sidebar navigation → create → open detail → update/delete).
 
 For detailed testing information, see [Testing Guide](Documentation/Testing-Guide.md).
 

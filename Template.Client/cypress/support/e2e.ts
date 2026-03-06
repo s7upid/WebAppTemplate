@@ -3,10 +3,11 @@
 import "./commands";
 import "./test-helpers";
 import "./base-test";
+import { ALL_PERMISSION_KEYS } from "../../src/config/generated/permissionKeys.generated";
 
-// Coverage collection - using custom c8-compatible approach
-const enableCoverage = Cypress.env("ENABLE_COVERAGE") === true || 
-                       Cypress.env("ENABLE_COVERAGE") === "true";
+// Coverage collection - using custom c8-compatible approach (Cypress.expose = public config)
+const enableCoverage = Cypress.expose("ENABLE_COVERAGE") === true ||
+                       Cypress.expose("ENABLE_COVERAGE") === "true";
 
 if (enableCoverage) {
   console.log("📊 Cypress coverage collection is ENABLED");
@@ -64,19 +65,40 @@ Cypress.on("uncaught:exception", () => false);
 
 // Global API interceptors - mock all API calls by default
 beforeEach(() => {
-  // Mock login endpoint
-  cy.intercept("POST", "**/api/auth/login", {
+  // Mock login endpoint - return full UserResponse shape so app's hasPermission/create buttons work
+  const adminRole = {
+    id: "1",
+    name: "Administrator",
+    description: "Full system access",
+    permissions: [],
+    users: [],
+    isSystem: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  // Match both /api/auth/login and /auth/login (depending on VITE_API_URL)
+  cy.intercept("POST", "**/auth/login", {
     statusCode: 200,
     body: {
       success: true,
       data: {
         token: "mock-jwt-token",
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         user: {
           id: "1",
           email: "admin@admin.com",
           firstName: "Admin",
           lastName: "User",
-          role: "administrator",
+          role: adminRole,
+          permissionKeys: [...ALL_PERMISSION_KEYS],
+          customPermissionsCount: 0,
+          isActive: true,
+          userStatus: 1,
+          lastLogin: undefined,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          avatar: undefined,
+          permissions: [],
         },
       },
     },
@@ -105,50 +127,36 @@ beforeEach(() => {
     },
   }).as("refreshTokenApi");
 
-  // Mock users endpoint
+  // Mock users endpoint (app expects data to be PagedResult: { items, totalCount, pageNumber, pageSize, totalPages })
+  const usersItems = [
+    { id: "1", email: "admin@admin.com", firstName: "Admin", lastName: "User", role: "administrator", status: "active" },
+    { id: "2", email: "john.doe@example.com", firstName: "John", lastName: "Doe", role: "admin", status: "active" },
+    { id: "3", email: "jane.smith@example.com", firstName: "Jane", lastName: "Smith", role: "manager", status: "active" },
+    { id: "4", email: "alice.johnson@example.com", firstName: "Alice", lastName: "Johnson", role: "user", status: "active" },
+  ];
   cy.intercept("GET", "**/api/users**", {
     statusCode: 200,
     body: {
       success: true,
-      data: [
-        {
-          id: "1",
-          email: "admin@admin.com",
-          firstName: "Admin",
-          lastName: "User",
-          role: "administrator",
-          status: "active",
-        },
-        {
-          id: "2",
-          email: "john.doe@example.com",
-          firstName: "John",
-          lastName: "Doe",
-          role: "admin",
-          status: "active",
-        },
-        {
-          id: "3",
-          email: "jane.smith@example.com",
-          firstName: "Jane",
-          lastName: "Smith",
-          role: "manager",
-          status: "active",
-        },
-        {
-          id: "4",
-          email: "alice.johnson@example.com",
-          firstName: "Alice",
-          lastName: "Johnson",
-          role: "user",
-          status: "active",
-        },
-      ],
-      totalCount: 4,
-      pageSize: 10,
-      currentPage: 1,
+      data: {
+        items: usersItems,
+        totalCount: 4,
+        pageNumber: 1,
+        pageSize: 10,
+        totalPages: 1,
+      },
     },
   }).as("getUsersApi");
+
+  // Mock get user by id (must be after list so it takes precedence for /api/users/:id)
+  cy.intercept("GET", "**/api/users/*", (req) => {
+    const id = req.url.split("/").pop()?.split("?")[0];
+    const user = usersItems.find((u) => u.id === id) || usersItems[0];
+    req.reply({
+      statusCode: 200,
+      body: { success: true, data: { ...user, role: { id: "1", name: user.role || "User", description: "", permissions: [], users: [] } } },
+    });
+  }).as("getUserByIdApi");
 
   // Mock create user endpoint
   cy.intercept("POST", "**/api/users", {
@@ -176,40 +184,36 @@ beforeEach(() => {
     body: { success: true },
   }).as("deleteUserApi");
 
-  // Mock roles endpoint
+  // Mock roles endpoint (app expects data to be PagedResult: { items, totalCount, pageNumber, pageSize, totalPages })
+  const rolesItems = [
+    { id: "1", name: "Administrator", description: "Full system access", isSystem: true },
+    { id: "2", name: "Admin", description: "Administrative access", isSystem: false },
+    { id: "3", name: "Manager", description: "Manager level access", isSystem: false },
+    { id: "4", name: "User", description: "Basic user access", isSystem: false },
+  ];
   cy.intercept("GET", "**/api/roles**", {
     statusCode: 200,
     body: {
       success: true,
-      data: [
-        {
-          id: "1",
-          name: "Administrator",
-          description: "Full system access",
-          isSystem: true,
-        },
-        {
-          id: "2",
-          name: "Admin",
-          description: "Administrative access",
-          isSystem: false,
-        },
-        {
-          id: "3",
-          name: "Manager",
-          description: "Manager level access",
-          isSystem: false,
-        },
-        {
-          id: "4",
-          name: "User",
-          description: "Basic user access",
-          isSystem: false,
-        },
-      ],
-      totalCount: 4,
+      data: {
+        items: rolesItems,
+        totalCount: 4,
+        pageNumber: 1,
+        pageSize: 10,
+        totalPages: 1,
+      },
     },
   }).as("getRolesApi");
+
+  // Mock get role by id (must be after list so it takes precedence for /api/roles/:id)
+  cy.intercept("GET", "**/api/roles/*", (req) => {
+    const id = req.url.split("/").pop()?.split("?")[0];
+    const role = rolesItems.find((r) => r.id === id) || rolesItems[0];
+    req.reply({
+      statusCode: 200,
+      body: { success: true, data: { ...role, permissions: [], users: [] } },
+    });
+  }).as("getRoleByIdApi");
 
   // Mock create role endpoint
   cy.intercept("POST", "**/api/roles", {

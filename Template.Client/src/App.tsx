@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Provider } from "react-redux";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -30,11 +30,12 @@ import {
   Navigate,
   useNavigate,
 } from "react-router-dom";
-import { setNavigateToLogin, resetLoginNavigationFlag } from "@/services/base/baseService";
+import { setNavigateToLogin, resetLoginNavigationFlag, setNetworkStatusHandler } from "@/services/base/baseService";
 import { NavigationItem } from "@/models";
 import { clearAuth } from "@/store/slices/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
+import { env } from "@/utils/env";
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -141,12 +142,50 @@ function AppWithTheme() {
   const { isLoading, token, isAuthenticated, refreshUser } = useAuth();
   const { toasts, removeToast } = useToast();
   const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
+  const [networkError, setNetworkError] = useState<string | null>(null);
 
   useEffect(() => {
     if (token && !isAuthenticated) {
       refreshUser();
     }
   }, [token, isAuthenticated, refreshUser]);
+
+  useEffect(() => {
+    setNetworkStatusHandler((online, errorMessage) => {
+      if (!online) {
+        setIsOffline(true);
+        if (errorMessage) {
+          setNetworkError(errorMessage);
+        }
+      } else {
+        setIsOffline(false);
+        setNetworkError(null);
+      }
+    });
+
+    return () => {
+      setNetworkStatusHandler(null);
+    };
+  }, []);
+
+  const handleRetryConnection = useCallback(async () => {
+    try {
+      const healthBase = env.VITE_API_URL.replace(/\/$/, "");
+      const res = await fetch(`${healthBase}/health`, { method: "GET" });
+      if (res.ok) {
+        setIsOffline(false);
+        setNetworkError(null);
+        queryClient.invalidateQueries();
+      }
+    } catch {
+      if (!networkError) {
+        setNetworkError(
+          "Unable to reach backend API. Please ensure it is running on port 5249."
+        );
+      }
+    }
+  }, [networkError]);
 
   useEffect(() => {
     if (isLoading) {
@@ -176,6 +215,26 @@ function AppWithTheme() {
 
   return (
     <div className="App">
+      {isOffline && (
+        <div className="fixed inset-x-0 top-0 z-50 flex flex-wrap items-center gap-x-3 gap-y-2 bg-slate-800 px-4 py-3 text-sm shadow-lg">
+          <LoadingSpinner size="sm" className="shrink-0 text-slate-200" />
+          <span className="font-medium text-white">
+            No connection to backend. Retrying…
+          </span>
+          {networkError && (
+            <span className="min-w-0 flex-1 break-words text-slate-100 text-sm max-w-full sm:max-w-[420px]" title={networkError}>
+              {networkError}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={handleRetryConnection}
+            className="ml-auto shrink-0 rounded-md bg-white/15 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-white/40 transition-colors"
+          >
+            Retry now
+          </button>
+        </div>
+      )}
       <Router>
         <AppRoutes />
       </Router>

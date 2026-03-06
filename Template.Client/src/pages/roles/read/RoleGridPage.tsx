@@ -1,7 +1,7 @@
 import { useGenericNavigationFunctions } from "@/utils";
-import { DataPage } from "solstice-ui";
+import { DataPage, EmptyState } from "solstice-ui";
 import { EntityToolbar } from "@/components";
-import { PagedResult, RoleResponse } from "@/models";
+import { PagedResult, RoleResponse, createEmptyPagedResult } from "@/models";
 import { TEST_IDS } from "@/config";
 import { useGridFilters, usePaginationWithScroll, type GridListPaginationHandlers } from "@/hooks";
 import {
@@ -15,12 +15,16 @@ interface RoleGridPageProps {
   paginationResult: PagedResult<RoleResponse>;
   paginationHandlers: GridListPaginationHandlers;
   isLoading: boolean;
+  error?: string | null;
+  onRetry?: () => void;
 }
 
 function RoleGridPage({
   paginationResult,
   paginationHandlers,
   isLoading,
+  error,
+  onRetry,
 }: RoleGridPageProps) {
   const nav = useGenericNavigationFunctions();
   const handleRoleClick = (role: RoleResponse) => nav.goToRoleDetail(role.id);
@@ -28,7 +32,20 @@ function RoleGridPage({
     useGridFilters(paginationHandlers);
   const { onPageChange, onPageSizeChange } =
     usePaginationWithScroll(paginationHandlers);
-  const { items, pageNumber, totalPages, pageSize } = paginationResult;
+  const result = isLoading
+    ? createEmptyPagedResult<RoleResponse>()
+    : (paginationResult ?? createEmptyPagedResult<RoleResponse>());
+  const { items, pageNumber, totalPages, pageSize } = result;
+
+  if (error && !isLoading) {
+    return (
+      <EmptyState
+        title="Failed to load roles"
+        description={error}
+        primaryAction={onRetry ? { label: "Retry", onClick: onRetry } : undefined}
+      />
+    );
+  }
 
   const toolbar = (
     <EntityToolbar

@@ -18,13 +18,13 @@
 }
 
 .row {
-  @apply flex flex-col gap-3 sm:flex-row sm:items-center;
+  @apply flex flex-col gap-3 sm:flex-row sm:items-end;
 }
 .search {
-  @apply flex-1;
+  @apply flex-1 min-w-0;
 }
 .filters {
-  @apply flex items-center gap-2;
+  @apply flex items-end gap-2 flex-shrink-0;
 }
 
 .filter {

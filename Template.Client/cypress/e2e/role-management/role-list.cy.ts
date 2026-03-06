@@ -290,14 +290,11 @@ describe("Role Management", () => {
     it("should support keyboard navigation", () => {
       // Already on /roles from top-level beforeEach
       cy.get("body").should("be.visible");
-
-      cy.get("body").then(($body) => {
-        if ($body.find("button, input, select, textarea, a[href]").length > 0) {
-          cy.get("button, input, select, textarea, a[href]")
-            .first()
-            .should("be.visible");
-        }
-      });
+      // Only assert a visible focusable (exclude hidden mobile sidebar)
+      cy.get("button, input, select, textarea, a[href]")
+        .filter(":visible")
+        .first()
+        .should("exist");
     });
   });
 
